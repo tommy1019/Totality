@@ -4,21 +4,28 @@ package self.trek;
 
 public abstract class ControllerElement
 {
-	//The inputListener is alerted if the state is changed
-	private InputListener inputListener;
-	
-	public void registerInputListener(InputListener listener)
-	{
-		inputListener = listener;
-	}
+	private boolean stateChanged = false;
 	
 	public void update()
 	{
 		
 	}
 	
-	public void stateChanged()
+	public void changeState()
 	{
-		inputListener.stateChanged();
+		stateChanged = true;
+	}
+	
+	public boolean isStateChanged()
+	{
+		if(stateChanged)
+		{
+			stateChanged = false;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

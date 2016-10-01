@@ -14,7 +14,7 @@ public class Button extends ControllerElement
 		
 		if(previousState != isPressed)
 		{
-			stateChanged();
+			changeState();
 		}
 	}
 }

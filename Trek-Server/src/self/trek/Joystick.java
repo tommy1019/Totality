@@ -41,7 +41,7 @@ public class Joystick extends ControllerElement
 		//If the joystick value has been changed, alert the GameController
 		if(Math.abs(xVal - oldXVal) >= sensitivity || yVal != oldYVal)
 		{
-			stateChanged();
+			changeState();
 		}
 	}
 	
