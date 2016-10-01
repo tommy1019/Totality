@@ -4,6 +4,8 @@ package self.trek;
 
 public abstract class ControllerElement
 {
+	private String name = "Default";
+	
 	private boolean stateChanged = false;
 	
 	public void update()
@@ -16,6 +18,7 @@ public abstract class ControllerElement
 		stateChanged = true;
 	}
 	
+	//Returns true if the state is different than the last time this was checked
 	public boolean isStateChanged()
 	{
 		if(stateChanged)
