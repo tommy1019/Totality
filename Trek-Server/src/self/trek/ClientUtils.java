@@ -1,0 +1,173 @@
+package self.trek;
+
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+
+public class ClientUtils
+{
+	public static final String MAGIC_WEBSOCKET_STRING = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+	
+	static Tuple<byte[], Integer> readMessageFully(DataInputStream in) throws EOFException
+	{
+		ArrayList<byte[]> finalData = new ArrayList<>();
+		boolean fin = true;
+		
+		int opcode = -1;
+		
+		do
+		{
+			try
+			{
+				byte byte1 = in.readByte();
+				byte byte2 = in.readByte();
+				
+				fin = (byte1 < 0);
+				if (opcode == -1)
+					opcode = (byte) (byte1 & 0b1111);
+				
+				boolean mask = (byte2 < 0);
+				if (!mask)
+				{
+					System.out.println("Error: Client must mask data as per spec");
+				}
+				byte[] maskBytes = new byte[4];
+				
+				int payloadLength = Byte.toUnsignedInt((byte) (byte2 & 0b01111111));
+				
+				if (payloadLength > 125)
+				{
+					if (payloadLength == 126)
+					{
+						
+					}
+					else
+					{
+						
+					}
+					throw new RuntimeException("I haven't coded this yet");
+				}
+				
+				if (mask)
+				{
+					in.read(maskBytes);
+				}
+				
+				byte[] data = new byte[payloadLength];
+				in.read(data);
+				
+				if (mask)
+				{
+					for (int i = 0; i < payloadLength; i++)
+						data[i] = (byte) (data[i] ^ maskBytes[i % 4]);
+				}
+				
+				finalData.add(data);
+			}
+			catch (EOFException e)
+			{
+				throw e;
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				return null;
+			}
+		}
+		while (!fin);
+		
+		if (finalData.size() == 1)
+			return new Tuple<byte[], Integer>(finalData.get(0), opcode);
+		
+		int size = 0;
+		for (byte[] b : finalData)
+			size += b.length;
+		byte[] bytes = new byte[size];
+		
+		int index = 0;
+		
+		for (byte[] b : finalData)
+		{
+			System.arraycopy(b, 0, bytes, index, b.length);
+			index += b.length;
+		}
+		
+		return new Tuple<byte[], Integer>(bytes, opcode);
+	}
+	
+	static void sendMessage(DataOutputStream out, int opcode, byte[] data)
+	{
+		try
+		{
+			out.writeByte(0b10000000 + opcode);
+			
+			if (data.length < 125)
+			{
+				out.writeByte(data.length);
+				out.write(data);
+			}
+			else
+			{
+				throw new RuntimeException("Not supported yet, sorry");
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	static HashMap<String, String> readHTTPSettings(BufferedReader in)
+	{
+		HashMap<String, String> clientHTTP = new HashMap<>();
+		String curLine;
+		
+		try
+		{
+			while ((curLine = in.readLine()) != null)
+			{
+				if (curLine.equals(""))
+					break;
+				
+				int colenIndex = curLine.indexOf(':');
+				
+				if (colenIndex == -1)
+				{
+					System.out.println("Can't find: ':'");
+					System.out.println(curLine);
+					break;
+				}
+				
+				clientHTTP.put(curLine.substring(0, colenIndex), curLine.substring(colenIndex + 2));
+			}
+			
+			return clientHTTP;
+		}
+		catch (IOException e)
+		{
+			System.out.println("Error reading client HTTP settings.");
+			return null;
+		}
+	}
+	
+	static String getWebsocketKey(String client)
+	{
+		try
+		{
+			return Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-1").digest((client + MAGIC_WEBSOCKET_STRING).getBytes()));
+		}
+		catch (NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+			System.exit(1);
+			return null;
+		}
+	}
+}
