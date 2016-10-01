@@ -6,8 +6,15 @@ public class Button extends ControllerElement
 	
 	public void update()
 	{
+		boolean previousState = isPressed;
+		
 		//TODO: implement this
 		//The value will be supplied by the javascript
 		//isPressed = 
+		
+		if(previousState != isPressed)
+		{
+			stateChanged();
+		}
 	}
 }

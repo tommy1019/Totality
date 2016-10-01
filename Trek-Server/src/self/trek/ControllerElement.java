@@ -1,9 +1,11 @@
 package self.trek;
 
+//A ControllerElement is the superclass for any button, joystick, etc on a GameController
+
 public abstract class ControllerElement
 {
 	//The inputListener is alerted if the state is changed
-	InputListener inputListener;
+	private InputListener inputListener;
 	
 	public void registerInputListener(InputListener listener)
 	{
@@ -13,5 +15,10 @@ public abstract class ControllerElement
 	public void update()
 	{
 		
+	}
+	
+	public void stateChanged()
+	{
+		inputListener.stateChanged();
 	}
 }

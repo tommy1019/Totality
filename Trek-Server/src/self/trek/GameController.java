@@ -2,18 +2,13 @@ package self.trek;
 
 import java.util.ArrayList;
 
-//The game controller is stored server-side and keeps
-//track of 
-
-public abstract class GameController implements InputListener
+public class GameController implements InputListener
 {
 	private ArrayList<ControllerElement> controllerElements = new ArrayList<ControllerElement>();
 	
-	private ArrayList<InputListener> listeners = new ArrayList<InputListener>();
-	
-	public void addListener(InputListener newListener)
+	public void addControllerElement(ControllerElement ce)
 	{
-		listeners.add(newListener);
+		controllerElements.add(ce);
 	}
 	
 	public void stateChanged()
