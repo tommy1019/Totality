@@ -75,10 +75,10 @@
 			context.appendChild(button);
 			
 			//Please be careful with this code, it is VERY finnicky
-			document.getElementById(buttonId).onmouseover = function(){onButtonHover(this.id);}
-			document.getElementById(buttonId).onmouseout = function(){onStopButtonHover(this.id);}
-			document.getElementById(buttonId).onmousedown = function(){onButtonPress(this.id);}
-			document.getElementById(buttonId).onmouseup = function(){onStopButtonPress(this.id);}
+			//document.getElementById(buttonId).ontouchstart = function(){onButtonHover(this.id);}
+			//document.getElementById(buttonId).ontouch = function(){onStopButtonHover(this.id);}
+			document.getElementById(buttonId).ontouchstart = function(){onButtonPress(this.id);}
+			document.getElementById(buttonId).ontouchend = function(){onStopButtonPress(this.id);}
 			
 		}
 		
