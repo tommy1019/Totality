@@ -20,11 +20,13 @@ import self.trek.TrekServer;
 public class Example extends JPanel
 {
 	private static final long serialVersionUID = 1L;
+	public static int windowWidth = 800;
+	public static int windowHeight = 600;
 	
 	public static void main(String args[])
 	{
 		JFrame frame = new JFrame("test!");
-		frame.setSize(800, 600);
+		frame.setSize(windowWidth, windowHeight);
 		frame.setLocationRelativeTo(null);
 		frame.setContentPane(new Example());
 		frame.setVisible(true);
