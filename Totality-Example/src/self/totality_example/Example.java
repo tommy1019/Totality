@@ -72,7 +72,7 @@ public class Example extends JPanel
 
 					if(u.xVel != 0 && u.yVel != 0)
 					{
-						u.angle = Math.atan2(u.yVel, u.xVel);
+						u.angle = Math.atan2(-u.yVel, u.xVel);
 					}
 				}
 				else if (e.type == ControllerElementType.BUTTON)
