@@ -102,13 +102,7 @@ public class Example extends JPanel
 				u.yPos = this.getHeight();
 			}
 			
-			//Draws the player in the appropriate color
-			if (u.pressed)
-				g.setColor(Color.green);
-			else
-				g.setColor(u.color);
-			
-			g.fillOval((int) u.xPos, this.getHeight() - (int) u.yPos, u.width, u.height);
+			u.draw(g);
 		}
 		
 		repaint();
