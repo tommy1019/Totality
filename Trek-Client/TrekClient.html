@@ -1,7 +1,8 @@
 <html>
 	<head>
 	<!-- Prevents mobile device from zooming in on double tap -->
-	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+	<meta name="viewport" content="width=device-width, user-scalable=no" />
+	<meta name="HandheldFriendly" content="true" />
 	
 	<script type="text/javascript">
 		
@@ -19,6 +20,11 @@
 		
 		buttonPressedImg = new Image();
 		buttonPressedImg.src = "buttonPressed.png"
+			
+		node.addEventListener('gesturestart', function (e) 
+		{
+			e.preventDefault();
+		});
 			
 		window.onload = function () 
 		{
@@ -81,8 +87,6 @@
 			context.appendChild(button);
 			
 			//Please be careful with this code, it is VERY finnicky
-			//document.getElementById(buttonId).ontouchstart = function(){onButtonHover(this.id);}
-			//document.getElementById(buttonId).ontouch = function(){onStopButtonHover(this.id);}
 			document.getElementById(buttonId).ontouchstart = function(){onButtonPress(this.id);}
 			document.getElementById(buttonId).ontouchend = function(){onStopButtonPress(this.id);}
 			
@@ -112,7 +116,7 @@
 		{
 			webSocket.send("BUTTON:" + buttonId + ":state:" + "false");
 		
-			document.images[buttonId + "Img"].src = buttonHoverImg.src;
+			document.images[buttonId + "Img"].src = buttonImg.src;
 			return true;
 		}
 	</script>
