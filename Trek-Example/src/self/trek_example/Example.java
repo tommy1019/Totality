@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 
 import self.trek.Button;
 import self.trek.ConnectListener;
-import self.trek.ConnectedClient;
 import self.trek.ControllerElement;
 import self.trek.ControllerElementType;
 import self.trek.DataListener;
@@ -41,6 +40,7 @@ public class Example extends JPanel
 		TrekServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button1");
 		TrekServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button2");
 		TrekServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick1");
+		//TrekServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick2");
 		
 		TrekServer.instance.addConnectListener(new ConnectListener()
 		{
@@ -84,12 +84,31 @@ public class Example extends JPanel
 			u.xPos += u.xVel;
 			u.yPos += u.yVel;
 			
+			//Keeps the players roughly contained within the window
+			if(u.xPos <= 0)
+			{
+				u.xPos = 0;
+			}
+			else if(u.xPos >= this.getWidth() - u.width)
+			{
+				u.xPos = this.getWidth() - u.width;
+			}
+			if(u.yPos - u.height <= 0)
+			{
+				u.yPos = u.height;
+			}
+			else if(u.yPos >= this.getHeight())
+			{
+				u.yPos = this.getHeight();
+			}
+			
+			//Draws the player in the appropriate color
 			if (u.pressed)
 				g.setColor(Color.green);
 			else
-				g.setColor(Color.red);
+				g.setColor(u.color);
 			
-			g.fillOval((int) u.xPos, 600 - (int) u.yPos, 20, 20);
+			g.fillOval((int) u.xPos, this.getHeight() - (int) u.yPos, u.width, u.height);
 		}
 		
 		repaint();
