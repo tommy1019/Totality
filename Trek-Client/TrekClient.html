@@ -29,8 +29,15 @@
             width: 50%;
             background: rgba(0, 0, 255, 0.1);
         }
+
+        .imgClass {
+            display: block; 
+            margin-left: auto; 
+            margin-right: auto
+        }
+
         </style>
-		
+
 		<div id="left"></div>
 		<div id="placeholder">
         <div id="right"
@@ -185,15 +192,15 @@
 		function createButton(context, buttonId)
 		{			
 			var img = document.createElement("img");
-			id = buttonId;
+			img.id = buttonId;
 			img.name = buttonId + "Img"; 
 			img.src = buttonImg.src; 
-			
+            img.className = "imgClass";
+
 			var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 						
 			img.width = screenHeight / 16 / (numButtons / 8);
 			img.height = screenHeight / 16 / (numButtons / 8); 
-			img.style = "display: block; margin-left: auto; margin-right: auto";
 
 			button = document.createElement("p");
 			button.href = "#";
@@ -245,7 +252,13 @@
         document.ontouchmove = function(event)
         {
             event.preventDefault();
-        }
+        };
+
+        //This is supposed to disable double tapping on ios
+        document.ontouchstart = function(event)
+        {
+            event.preventDefault();
+        };
 	</script>
 	</head>
 	
