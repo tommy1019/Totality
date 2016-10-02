@@ -6,35 +6,42 @@
 		
 		var webSocket = new WebSocket(ip);
 
-		var button1;
+		var elements = new Array();
+		
+		buttonImg = new Image();
+		buttonImg.src = "button.png";
+		
+		buttonHoverImg = new Image();
+		buttonHoverImg.src = "buttonHovered.png";
+		
+		buttonPressedImg = new Image();
+		buttonPressedImg.src = "buttonPressed.png"
 		
 		window.onload = function () 
 		{
-			button1 = document.getElementById("button1");
-					
-			if(button1 === null)
-			{
-				alert("Button is null!");
-			}
-			
-			button1.disabled = true;
 		};
 		
 		webSocket.onopen = function(event)
 		{
 			alert("Websocket open");
-		
-			button1.disabled = false;
 		}
+		
+		webSocket.onmessage = function(event) 
+		{
+			alert("Received data!");
+			
+			//elements = JSON.parse(event.data);
+			//alert(elements[0].name);
+		};
 		
 		function onButtonHover()
 		{
-			document.images["button1"].src= "buttonHovered.png";
+			document.images["button1"].src= buttonHoverImg.src;
 			return true;
 		}
 		function onStopButtonHover()
 		{
-			document.images["button1"].src = "button.png";
+			document.images["button1"].src = buttonImg.src;
 			return true;
 		}
 		function onButtonPress()
@@ -43,13 +50,13 @@
 		
 			webSocket.send("Do the hustle");
 			
-			document.images["button1"].src = "buttonPressed.png";
+			document.images["button1"].src = buttonPressedImg.src;
 			
 			return true;
 		}
 		function onStopButtonPress()
 		{
-			document.images["button1"].src = "buttonHovered.png";
+			document.images["button1"].src = buttonHoverImg.src;
 			return true;
 		}
 	</script>
@@ -57,10 +64,17 @@
 	</head>
 	
 	<body>
-		<a href="#" id="button1" onMouseOver="return onButtonHover()" onMouseOut= "return onStopButtonHover()"
-		onMouseDown="return onButtonPress()" onMouseUp="return onStopButtonPress()"
+		<a href="#" id="button1" 
+		onMouseOver="return onButtonHover()" 
+		onMouseOut="return onStopButtonHover()"
+		onMouseDown="return onButtonPress()" 
+		onMouseUp="return onStopButtonPress()"
 		><img
-		name="button1" src="button.png" width="100" height="100" border="0"
+		name="button1" 
+		src="button.png" 
+		width="100" 
+		height="100" 
+		border="0"
 		alt="javascript button"></a>
 	</body>
 </html>
