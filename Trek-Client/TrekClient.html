@@ -34,7 +34,7 @@
 		<div id="left"></div>
 		<div id="placeholder">
         <div id="right"
-		style="position: absolute; top: 25%; left: 20px; right: 20px;"
+		style="position: relative; top: 50%; -webkit-transform: translateY(-50%); -ms-transform: translateY(-50%); transform: translateY(-50%); left: 1px; right: 1px;"
 		></div>
 		</div>
 		
@@ -188,8 +188,13 @@
 			id = buttonId;
 			img.name = buttonId + "Img"; 
 			img.src = buttonImg.src; 
-			img.width = "150";
-			img.height = "150"; 
+			
+			var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+			
+			console.log(screenHeight / 10 / (numButtons / 8));
+			
+			img.width = screenHeight / 10 / (numButtons / 8);
+			img.height = screenHeight / 10 / (numButtons / 8); 
 			img.style = "display: block; margin:auto;";
 			
 
