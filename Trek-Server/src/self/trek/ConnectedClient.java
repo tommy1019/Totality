@@ -56,6 +56,9 @@ public class ConnectedClient extends Thread
 		{
 			e.printStackTrace();
 		}
+		
+		for (DisconnectListener l : TrekServer.instance.disconnectListeners)
+			l.onDisconnect(uuid);
 	}
 	
 	public void run()

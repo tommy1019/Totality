@@ -38,6 +38,7 @@ public class TrekServer
 	
 	ArrayList<ConnectListener> connectionListeners;
 	ArrayList<DataListener> dataListeners;
+	ArrayList<DisconnectListener> disconnectListeners;
 	
 	Gson gson;
 	
@@ -48,6 +49,7 @@ public class TrekServer
 		
 		connectionListeners = new ArrayList<>();
 		dataListeners = new ArrayList<>();
+		disconnectListeners = new ArrayList<>();
 		
 		GsonBuilder builder = new GsonBuilder();
 		gson = builder.serializeNulls().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
@@ -182,5 +184,10 @@ public class TrekServer
 	public void addDataListener(DataListener l)
 	{
 		dataListeners.add(l);
+	}
+	
+	public void addDisconnectListener(DisconnectListener l)
+	{
+		disconnectListeners.add(l);
 	}
 }
