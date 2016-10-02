@@ -3,6 +3,7 @@ package self.totality_example;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.UUID;
 
 import javax.swing.JFrame;
@@ -34,6 +35,7 @@ public class Example extends JPanel
 	}
 	
 	ArrayList<User> userList = new ArrayList<>();
+	ArrayList<Bullet> bulletList = new ArrayList<>();
 	HashMap<UUID, User> userMap = new HashMap<>();
 	
 	public Example()
@@ -68,7 +70,10 @@ public class Example extends JPanel
 					u.xVel = j.getXVal();
 					u.yVel = j.getYVal();
 					
-					u.angle = Math.atan2(u.yVel, u.xVel);
+					if(u.xVel != 0 && u.yVel != 0)
+					{
+						u.angle = Math.atan2(u.yVel, u.xVel);
+					}
 				}
 				else if (e.type == ControllerElementType.BUTTON)
 				{
@@ -105,7 +110,33 @@ public class Example extends JPanel
 				u.yPos = this.getHeight();
 			}
 			
+			if(u.pressed && u.timeSinceLastShot <= 200)
+			{
+				bulletList.add(new Bullet(u.angle));
+				u.timeSinceLastShot = 0;
+			}
+			
 			u.draw(g);
+		}
+		
+		Iterator<Bullet> itr = bulletList.iterator();
+		while (itr.hasNext())
+		{
+			Bullet b = itr.next();
+			
+			b.xPos += b.xVel;
+			b.yPos += b.yVel;
+			
+			b.draw(g);
+			
+			//Disposes of the bullet if it goes off screen
+			if(b.xPos + b.width <= 0
+					|| b.xPos >= this.getWidth()
+					|| b.yPos - b.height >= this.getHeight()
+					|| b.yPos <= 0)
+			{
+				itr.remove();
+			}			
 		}
 		
 		repaint();

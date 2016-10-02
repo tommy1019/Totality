@@ -21,6 +21,8 @@ public class User
 
 	double angle = 0;
 
+	int timeSinceLastShot = 0;
+	
 	Color color;
 
 	public User()
@@ -37,7 +39,7 @@ public class User
 			g.setColor(color);
 
 		g.fillOval((int) xPos, Example.windowHeight - (int) yPos, width, height);
-		g.fillOval((int) xPos + (int)(width * Math.cos(angle)), Example.windowHeight - (int) yPos + (int)(height * Math.sin(angle)), 
+		g.fillOval((int) xPos + (int)( 5 * width * Math.cos(angle)), Example.windowHeight - (int) yPos + (int)(5 * height * Math.sin(angle)), 
 				width / 2, height / 2);
 	}
 }
