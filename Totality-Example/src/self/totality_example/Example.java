@@ -112,12 +112,15 @@ public class Example extends JPanel
 					u.yPos = this.getHeight();
 				}
 
-				if(u.pressed && u.timeSinceLastShot <= 200)
+				if(u.pressed && u.timeSinceLastShot >= 200)
 				{
 					bulletList.add(new Bullet(u.angle));
 					u.timeSinceLastShot = 0;
 				}
-
+				else 
+				{
+					u.timeSinceLastShot++;
+				}
 
 				u.draw(g);
 			}
