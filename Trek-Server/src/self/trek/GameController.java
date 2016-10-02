@@ -1,14 +1,13 @@
 package self.trek;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import com.google.gson.annotations.Expose;
 
 public class GameController
 {
 	@Expose
-	private List<ControllerElement> controllerElements = new ArrayList<ControllerElement>();
+	public HashMap<String, ControllerElement> controllerElements = new HashMap<String, ControllerElement>();
 	
 	public GameController()
 	{
@@ -17,6 +16,6 @@ public class GameController
 	
 	public void addControllerElement(ControllerElement ce)
 	{
-		controllerElements.add(ce);
+		controllerElements.put(ce.getId(), ce);
 	}
 }

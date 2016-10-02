@@ -18,11 +18,27 @@ public class ConnectedClient extends Thread
 	DataInputStream in;
 	DataOutputStream out;
 	
+	public GameController gameController;
+	
 	boolean connected = true;
 	
 	public ConnectedClient(Socket socket)
 	{
 		this.socket = socket;
+		
+		gameController = new GameController();
+		
+		for (Tuple<ControllerElementType, String> t : TrekServer.instance.defaultController)
+		{
+			switch(t.x)
+			{
+				case BUTTON:
+					gameController.addControllerElement(new Button(t.y));
+					break;
+				default:
+					break;
+			}
+		}
 		
 		try
 		{
@@ -50,9 +66,9 @@ public class ConnectedClient extends Thread
 	
 	public void run()
 	{
-		//Send client initlization data
-		ClientUtils.sendMessage(out, TEXT_OPCODE, TrekServer.instance.gson.toJson(TrekServer.instance.defaultController).getBytes());
-				
+		// Send client initlization data
+		ClientUtils.sendMessage(out, TEXT_OPCODE, TrekServer.instance.gson.toJson(gameController.controllerElements.values()).getBytes());
+		
 		while (connected)
 		{
 			Tuple<byte[], Integer> clientMessage;
@@ -64,7 +80,22 @@ public class ConnectedClient extends Thread
 				{
 					case 1:
 					case 2:
+						String msg = new String(clientMessage.x);
+						
 						System.out.println(new String(clientMessage.x));
+						
+						String[] msgParts = msg.split(":");
+						
+						ControllerElement e = gameController.controllerElements.get(msgParts[1]);
+						
+						switch (msgParts[0])
+						{
+							case "BUTTON":
+								Button b = (Button) e;
+								b.isPressed = msgParts[3].equals("true");
+								break;
+						}
+						
 						break;
 					case 9:
 						ClientUtils.sendMessage(out, PONG_OPCODE, clientMessage.x);

@@ -28,17 +28,16 @@ public class TrekServer
 	boolean running = true;
 	
 	ServerSocket serverSocket;
-	ArrayList<ConnectedClient> connectedClients;
+	public ArrayList<ConnectedClient> connectedClients;
 	
-	public GameController defaultController;
+	ArrayList<Tuple<ControllerElementType, String>> defaultController;
 	
 	Gson gson;
 	
 	private TrekServer()
 	{
 		connectedClients = new ArrayList<>();
-		
-		defaultController = new GameController();
+		defaultController = new ArrayList<>();
 		
 		GsonBuilder builder = new GsonBuilder();
 		gson = builder.serializeNulls().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
@@ -111,5 +110,10 @@ public class TrekServer
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void addDefaultControllerElement(ControllerElementType type, String id)
+	{		
+		defaultController.add(new Tuple<ControllerElementType, String>(type, id));
 	}
 }

@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class ClientUtils
 {
-	public static final String MAGIC_WEBSOCKET_STRING = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+	static final String MAGIC_WEBSOCKET_STRING = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 	
 	static Tuple<byte[], Integer> readMessageFully(DataInputStream in) throws EOFException
 	{

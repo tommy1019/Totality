@@ -2,7 +2,7 @@ package self.trek;
 
 public class Button extends ControllerElement
 {
-	private boolean isPressed;
+	protected boolean isPressed;
 
 	public Button(String id)
 	{

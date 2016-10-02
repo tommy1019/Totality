@@ -7,7 +7,7 @@ import com.google.gson.annotations.Expose;
 public abstract class ControllerElement
 {
 	@Expose
-	private String id = "Default";
+	private String id;
 	
 	@Expose
 	private ControllerElementType type;
@@ -16,5 +16,10 @@ public abstract class ControllerElement
 	{
 		this.id = id;
 		this.type = type;
+	}
+	
+	public String getId()
+	{
+		return id;
 	}
 }
