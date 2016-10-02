@@ -21,13 +21,12 @@
 		buttonPressedImg = new Image();
 		buttonPressedImg.src = "buttonPressed.png"
 			
-		node.addEventListener('gesturestart', function (e) 
-		{
-			e.preventDefault();
-		});
-			
 		window.onload = function () 
 		{
+			window.gesturestart = function (e) 
+			{
+				e.preventDefault();
+			}
 		}
 		
 		webSocket.onopen = function(event)
