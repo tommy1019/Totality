@@ -1,8 +1,6 @@
 <html>
 	<head>
-        <meta name="viewport" content="width=device-width, height=device-height" />
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-	    <meta name="HandheldFriendly" content="true" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width, height=device-height" />
 	    <script type="text/javascript">
 		
 		var ip = "ws://192.168.1.142:8000";
@@ -31,7 +29,6 @@
 		{
 			document.body.style.webkitTouchCallout='none';
 			document.body.style.webkitUserSelect='none';
-			document.body.style.webkitTextSizeAdjust='none';
 		}
 		
 		webSocket.onopen = function(event)
@@ -128,6 +125,11 @@
         {
             event.preventDefault();      
         }, false);
+
+        document.ontouchmove = function(event)
+        {
+            event.preventDefault();
+        }
 
 	</script>
 	
