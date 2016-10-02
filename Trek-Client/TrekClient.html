@@ -83,7 +83,7 @@
 		{
 			console.log("Message received!");
 
-			elements = JSON.parse(event.data);
+			elements = JSON.parse(event.data).controllerElements;
 			
 			for(i = 0; i < elements.length; i++)
 			{
