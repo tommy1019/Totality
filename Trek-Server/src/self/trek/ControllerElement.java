@@ -4,13 +4,28 @@ package self.trek;
 
 public abstract class ControllerElement
 {
-	private String name = "Default";
+	private String name;
 	
 	private boolean stateChanged = false;
+	
+	public ControllerElement()
+	{
+		this("Default");
+	}
+	
+	public ControllerElement(String name)
+	{
+		this.name = name;
+	}
 	
 	public void update()
 	{
 		
+	}
+	
+	public void setName(String s)
+	{
+		name = s;
 	}
 	
 	public void changeState()
