@@ -62,11 +62,12 @@
 		
 		function createButton(context, buttonId)
 		{
-			button = document.createElement("button");
+			button = document.createElement("div");
 			button.href = "#";
 			button.id = buttonId;
 			button.style.background = "none";
 			button.style.border = "none";
+			button.style.outline = "none";
 			
 			var img = document.createElement("img");
 			id = buttonId;
