@@ -171,7 +171,7 @@
 		
 		joystick1.id = "joystick1";
 		
-		joystick1.on('start end', function (evt, data) 
+		joystick1.on('start', function (evt, data) 
 		{
 
         }).on('move', function (evt, data) 
@@ -184,6 +184,9 @@
 		}).on('removed', function (evt, nipple) 
 		{
 			nipple.off('move');
+		}).on('end', function (evt, nipple) 
+		{
+			webSocket.send("JOYSTICK:" + joystick1.id + ":state:" + 0 + ":" + 0);
 		});
         </script>
 	</body>
