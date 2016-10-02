@@ -1,5 +1,8 @@
 <html>
 	<head>
+	<!-- Prevents mobile device from zooming in on double tap -->
+	<meta name='viewport' content='user-scalable=0'>
+	
 	<script type="text/javascript">
 		
 		var ip = "ws://192.168.1.142:8000";
@@ -67,8 +70,8 @@
 			id = buttonId;
 			img.name = buttonId + "Img"; 
 			img.src = buttonImg.src; 
-			img.width = "100";
-			img.height = "100"; 
+			img.width = "300";
+			img.height = "300"; 
 			img.alt = "javascript button";
 
 			button.appendChild(img);
