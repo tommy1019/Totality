@@ -11,34 +11,52 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class TrekServer
 {
 	public static final int PORT = 8000;
 	
+	public static TrekServer instance;
+	
+	static
+	{
+		instance = new TrekServer();
+	}
+	
 	boolean running = true;
 	
 	ServerSocket serverSocket;
-	
 	ArrayList<ConnectedClient> connectedClients;
 	
-	public TrekServer()
+	ArrayList<ControllerElement> controllerElements;
+	
+	Gson gson;
+	
+	private TrekServer()
+	{
+		connectedClients = new ArrayList<>();
+		
+		controllerElements = new ArrayList<>();
+		
+		GsonBuilder builder = new GsonBuilder();
+		gson = builder.serializeNulls().setPrettyPrinting().create();
+	}
+	
+	public void start()
 	{
 		try
 		{
 			serverSocket = new ServerSocket(PORT);
 			serverSocket.setSoTimeout(1000);
-			
-			connectedClients = new ArrayList<>();
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 			System.exit(1);
 		}
-	}
-	
-	public void start()
-	{
+		
 		acceptLoop();
 	}
 	
@@ -70,7 +88,7 @@ public class TrekServer
 						System.out.println("No upgrade request.");
 						continue;
 					}
-								
+				
 				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 				out.write("HTTP/1.1 101 Switching Protocols\r\n");
 				out.write("Upgrade: websocket\r\n");

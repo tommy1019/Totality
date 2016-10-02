@@ -6,6 +6,8 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 
+import com.google.gson.Gson;
+
 public class ConnectedClient extends Thread
 {
 	public static final int TEXT_OPCODE = 1;
@@ -50,6 +52,9 @@ public class ConnectedClient extends Thread
 	
 	public void run()
 	{
+		//Send client initlization data
+		ClientUtils.sendMessage(out, TEXT_OPCODE, TrekServer.instance.gson.toJson(TrekServer.instance.controllerElements).getBytes());
+		
 		while (connected)
 		{
 			Tuple<byte[], Integer> clientMessage;
@@ -57,20 +62,17 @@ public class ConnectedClient extends Thread
 			{
 				clientMessage = ClientUtils.readMessageFully(in);
 				
-				System.out.println("message");
 				switch (clientMessage.y)
 				{
 					case 1:
 					case 2:
 						System.out.println(new String(clientMessage.x));
 						ClientUtils.sendMessage(out, TEXT_OPCODE, "Hello1".getBytes());
-						ClientUtils.sendMessage(out, PING_OPCODE, "Hello2".getBytes());
 						break;
 					case 9:
-						System.out.println("Ping");
+						ClientUtils.sendMessage(out, PONG_OPCODE, clientMessage.x);
 						break;
 					case 10:
-						System.out.println("Pong");
 						System.out.println(new String(clientMessage.x));
 						break;
 				}
