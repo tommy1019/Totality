@@ -21,6 +21,13 @@
 		buttonPressedImg = new Image();
 		buttonPressedImg.src = "buttonPressed.png"
 			
+		window.oncontextmenu = function(event) 
+		{
+			event.preventDefault();
+			event.stopPropagation();
+			return false;
+		};
+			
 		window.onload = function () 
 		{
 			window.gesturestart = function (e) 
@@ -66,14 +73,7 @@
 		};
 		
 		function createButton(context, buttonId)
-		{
-			button = document.createElement("div");
-			button.href = "#";
-			button.id = buttonId;
-			button.style.background = "none";
-			button.style.border = "none";
-			button.style.outline = "none";
-			
+		{			
 			var img = document.createElement("img");
 			id = buttonId;
 			img.name = buttonId + "Img"; 
@@ -82,6 +82,13 @@
 			img.height = "200"; 
 			img.alt = "javascript button";
 
+			button = document.createElement("p");
+			button.href = "#";
+			button.id = buttonId;
+			button.style.background = "none";
+			button.style.border = "none";
+			button.style.outline = "none";
+			
 			button.appendChild(img);
 			context.appendChild(button);
 			
