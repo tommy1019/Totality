@@ -8,7 +8,11 @@ public class User
 {
 	static Random random = new Random();
 
+	static final int RESPAWN_TIME = 200;
+	
 	boolean pressed = false;
+	
+	boolean alive = true;
 
 	int width = 20;
 	int height = 20;
@@ -22,6 +26,7 @@ public class User
 	double angle = 0;
 
 	int timeSinceLastShot = 0;
+	int timeSinceDeath = 0;
 	
 	Color color;
 

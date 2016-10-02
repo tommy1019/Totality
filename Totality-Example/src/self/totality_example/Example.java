@@ -22,7 +22,7 @@ public class Example extends JPanel
 	private static final long serialVersionUID = 1L;
 	public static int windowWidth = 800;
 	public static int windowHeight = 600;
-	
+
 	public static void main(String args[])
 	{
 		JFrame frame = new JFrame("test!");
@@ -30,21 +30,21 @@ public class Example extends JPanel
 		frame.setLocationRelativeTo(null);
 		frame.setContentPane(new Example());
 		frame.setVisible(true);
-		
+
 		TotalityServer.instance.start();
 	}
-	
+
 	ArrayList<User> userList = new ArrayList<>();
 	ArrayList<Bullet> bulletList = new ArrayList<>();
 	HashMap<UUID, User> userMap = new HashMap<>();
-	
+
 	public Example()
 	{
 		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button1");
 		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button2");
 		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick1");
 		//TrekServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick2");
-		
+
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
 			@Override
@@ -55,21 +55,21 @@ public class Example extends JPanel
 				userMap.put(uuid, user);
 			}
 		});
-		
+
 		TotalityServer.instance.addDataListener(new DataListener()
 		{
 			@Override
 			public void onDataUpdate(UUID uuid, ControllerElement e)
 			{
 				User u = userMap.get(uuid);
-				
+
 				if (e.type == ControllerElementType.JOYSTICK)
 				{
 					Joystick j = (Joystick) e;
-					
+
 					u.xVel = j.getXVal();
 					u.yVel = j.getYVal();
-					
+
 					if(u.xVel != 0 && u.yVel != 0)
 					{
 						u.angle = Math.atan2(u.yVel, u.xVel);
@@ -78,57 +78,70 @@ public class Example extends JPanel
 				else if (e.type == ControllerElementType.BUTTON)
 				{
 					Button b = (Button) e;
-					
+
 					u.pressed = b.pressed();
 				}
 			}
 		});
 	}
-	
+
 	public void paint(Graphics g)
 	{
 		for (User u : userList)
 		{
-			u.xPos += u.xVel;
-			u.yPos += u.yVel;
-			
-			//Keeps the players roughly contained within the window
-			if(u.xPos <= 0)
+			if(u.alive)
 			{
-				u.xPos = 0;
+				u.xPos += u.xVel;
+				u.yPos += u.yVel;
+
+				//Keeps the players roughly contained within the window
+				if(u.xPos <= 0)
+				{
+					u.xPos = 0;
+				}
+				else if(u.xPos >= this.getWidth() - u.width)
+				{
+					u.xPos = this.getWidth() - u.width;
+				}
+				if(u.yPos - u.height <= 0)
+				{
+					u.yPos = u.height;
+				}
+				else if(u.yPos >= this.getHeight())
+				{
+					u.yPos = this.getHeight();
+				}
+
+				if(u.pressed && u.timeSinceLastShot <= 200)
+				{
+					bulletList.add(new Bullet(u.angle));
+					u.timeSinceLastShot = 0;
+				}
+
+
+				u.draw(g);
 			}
-			else if(u.xPos >= this.getWidth() - u.width)
+			else if(u.timeSinceDeath >= User.RESPAWN_TIME)
 			{
-				u.xPos = this.getWidth() - u.width;
+				u.alive = true;
+				u.timeSinceDeath = 0;
 			}
-			if(u.yPos - u.height <= 0)
+			else
 			{
-				u.yPos = u.height;
+				u.timeSinceDeath++;
 			}
-			else if(u.yPos >= this.getHeight())
-			{
-				u.yPos = this.getHeight();
-			}
-			
-			if(u.pressed && u.timeSinceLastShot <= 200)
-			{
-				bulletList.add(new Bullet(u.angle));
-				u.timeSinceLastShot = 0;
-			}
-			
-			u.draw(g);
 		}
-		
+
 		Iterator<Bullet> itr = bulletList.iterator();
 		while (itr.hasNext())
 		{
 			Bullet b = itr.next();
-			
+
 			b.xPos += b.xVel;
 			b.yPos += b.yVel;
-			
+
 			b.draw(g);
-			
+
 			//Disposes of the bullet if it goes off screen
 			if(b.xPos + b.width <= 0
 					|| b.xPos >= this.getWidth()
@@ -137,8 +150,25 @@ public class Example extends JPanel
 			{
 				itr.remove();
 			}			
+			else
+			{
+				Iterator<User> userItr = userList.iterator();
+				while(userItr.hasNext())
+				{
+					User u = userItr.next();
+
+					if(u.alive)
+					{
+						if(Math.sqrt(Math.pow(u.xPos - b.xPos, 2) + Math.pow(u.yPos - b.yPos, 2)) < u.width + b.width)
+						{
+							u.alive = false;
+							itr.remove();
+						}
+					}
+				}
+			}
 		}
-		
+
 		repaint();
 	}
 }
