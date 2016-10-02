@@ -190,13 +190,10 @@
 			img.src = buttonImg.src; 
 			
 			var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-			
-			console.log(screenHeight / 10 / (numButtons / 8));
-			
-			img.width = screenHeight / 10 / (numButtons / 8);
-			img.height = screenHeight / 10 / (numButtons / 8); 
-			img.style = "display: block; margin:auto;";
-			
+						
+			img.width = screenHeight / 16 / (numButtons / 8);
+			img.height = screenHeight / 16 / (numButtons / 8); 
+			img.style = "display: block; margin-left: auto; margin-right: auto";
 
 			button = document.createElement("p");
 			button.href = "#";
