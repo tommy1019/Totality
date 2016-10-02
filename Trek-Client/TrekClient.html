@@ -1,7 +1,7 @@
 <html>
 	<head>
 	<!-- Prevents mobile device from zooming in on double tap -->
-	<meta name="viewport" content="width=device-width, user-scalable=no", "shrink-to-fit=no" />
+	<meta name="viewport" content="width=device-width, user-scalable=no", "shrink-to-fit=no", "target-densitydpi=device-dpi" />
 	<meta name="HandheldFriendly" content="true" />
 	
 	<script type="text/javascript">
@@ -34,12 +34,6 @@
 			document.body.style.webkitUserSelect='none';
 			document.body.style.webkitTextSizeAdjust='none';
 			
-			
-			
-			window.gesturestart = function (e) 
-			{
-				e.preventDefault();
-			}
 			
 		}
 		
