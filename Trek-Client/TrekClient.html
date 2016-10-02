@@ -1,7 +1,37 @@
 <html>
 	<head>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width, height=device-height" />
-	    <script type="text/javascript">
+	    <style>
+        html, body {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 0;
+            margin: 0;
+        }
+
+        #left {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        #right {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            background: rgba(0, 0, 255, 0.1);
+        }
+        </style>
+		
+		<script type="text/javascript">
 		
 		var ip = "ws://192.168.1.142:8000";
 		
@@ -85,7 +115,7 @@
 			button.style.outline = "none";
 			
 			button.appendChild(img);
-			context.appendChild(button);
+			document.getElementById("right").appendChild(button);
 			
 			//Please be careful with this code, it is VERY finnicky
 			document.getElementById(buttonId).ontouchstart = function(){onButtonPress(this.id);}
@@ -132,9 +162,20 @@
         }
 
 	</script>
-	
 	</head>
 	
 	<body>
+	    <div id="left"></div>
+        <div id="right"></div>
+        <script src="dist/nipplejs.min.js" charset="utf-8"></script>
+        <script>
+        var joystickL = nipplejs.create({
+            zone: document.getElementById('left'),
+            mode: 'static',
+            position: { left: '20%', top: '50%' },
+            color: 'green',
+            size: 200
+        });
+        </script>
 	</body>
 </html>
