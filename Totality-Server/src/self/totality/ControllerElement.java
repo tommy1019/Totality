@@ -1,4 +1,4 @@
-package self.trek;
+package self.totality;
 
 import com.google.gson.annotations.Expose;
 

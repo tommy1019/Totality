@@ -1,4 +1,4 @@
-package self.trek;
+package self.totality;
 
 //Joystick emulates the behavior of an analog joystick on a controller
 //Joystick has an xVal and yVal that represent its current position

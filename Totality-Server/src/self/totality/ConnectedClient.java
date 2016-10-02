@@ -1,4 +1,4 @@
-package self.trek;
+package self.totality;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -57,16 +57,16 @@ public class ConnectedClient extends Thread
 			e.printStackTrace();
 		}
 		
-		for (DisconnectListener l : TrekServer.instance.disconnectListeners)
+		for (DisconnectListener l : TotalityServer.instance.disconnectListeners)
 			l.onDisconnect(uuid);
 	}
 	
 	public void run()
 	{
-		for (ConnectListener l : TrekServer.instance.connectionListeners)
+		for (ConnectListener l : TotalityServer.instance.connectionListeners)
 			l.onConnect(uuid);
 		
-		ClientUtils.sendMessage(out, TEXT_OPCODE, TrekServer.instance.gson.toJson(TrekServer.instance.defaultController).getBytes());
+		ClientUtils.sendMessage(out, TEXT_OPCODE, TotalityServer.instance.gson.toJson(TotalityServer.instance.defaultController).getBytes());
 		
 		while (connected)
 		{
@@ -97,7 +97,7 @@ public class ConnectedClient extends Thread
 								break;
 						}
 						
-						for (DataListener l : TrekServer.instance.dataListeners)
+						for (DataListener l : TotalityServer.instance.dataListeners)
 							l.onDataUpdate(uuid, e);
 						
 						break;

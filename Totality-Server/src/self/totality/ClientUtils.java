@@ -1,4 +1,4 @@
-package self.trek;
+package self.totality;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;

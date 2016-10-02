@@ -1,4 +1,4 @@
-package self.trek;
+package self.totality;
 
 public class Tuple<X, Y>
 {

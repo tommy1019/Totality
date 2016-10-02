@@ -1,4 +1,4 @@
-package self.trek_example;
+package self.totality_example;
 
 import java.awt.Color;
 import java.awt.Graphics;

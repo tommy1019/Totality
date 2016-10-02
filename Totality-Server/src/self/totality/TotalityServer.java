@@ -1,4 +1,4 @@
-package self.trek;
+package self.totality;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,15 +18,15 @@ import javax.jmdns.ServiceInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class TrekServer
+public class TotalityServer
 {
 	public static final int PORT = 8000;
 	
-	public static TrekServer instance;
+	public static TotalityServer instance;
 	
 	static
 	{
-		instance = new TrekServer();
+		instance = new TotalityServer();
 	}
 	
 	boolean running = true;
@@ -42,7 +42,7 @@ public class TrekServer
 	
 	Gson gson;
 	
-	private TrekServer()
+	private TotalityServer()
 	{
 		connectedClients = new ArrayList<>();
 		defaultController = new GameController();

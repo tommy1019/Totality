@@ -1,6 +1,5 @@
-package self.trek_example;
+package self.totality_example;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,13 +8,13 @@ import java.util.UUID;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import self.trek.Button;
-import self.trek.ConnectListener;
-import self.trek.ControllerElement;
-import self.trek.ControllerElementType;
-import self.trek.DataListener;
-import self.trek.Joystick;
-import self.trek.TrekServer;
+import self.totality.Button;
+import self.totality.ConnectListener;
+import self.totality.ControllerElement;
+import self.totality.ControllerElementType;
+import self.totality.DataListener;
+import self.totality.Joystick;
+import self.totality.TotalityServer;
 
 public class Example extends JPanel
 {
@@ -31,7 +30,7 @@ public class Example extends JPanel
 		frame.setContentPane(new Example());
 		frame.setVisible(true);
 		
-		TrekServer.instance.start();
+		TotalityServer.instance.start();
 	}
 	
 	ArrayList<User> userList = new ArrayList<>();
@@ -39,12 +38,12 @@ public class Example extends JPanel
 	
 	public Example()
 	{
-		TrekServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button1");
-		TrekServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button2");
-		TrekServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick1");
+		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button1");
+		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button2");
+		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick1");
 		//TrekServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick2");
 		
-		TrekServer.instance.addConnectListener(new ConnectListener()
+		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
 			@Override
 			public void onConnect(UUID uuid)
@@ -55,7 +54,7 @@ public class Example extends JPanel
 			}
 		});
 		
-		TrekServer.instance.addDataListener(new DataListener()
+		TotalityServer.instance.addDataListener(new DataListener()
 		{
 			@Override
 			public void onDataUpdate(UUID uuid, ControllerElement e)
