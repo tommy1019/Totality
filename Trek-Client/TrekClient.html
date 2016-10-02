@@ -1,9 +1,9 @@
 <html>
 	<head>
-        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, height=device-height" />
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-	<meta name="HandheldFriendly" content="true" />
-	<script type="text/javascript">
+	    <meta name="HandheldFriendly" content="true" />
+	    <script type="text/javascript">
 		
 		var ip = "ws://192.168.1.142:8000";
 		
@@ -123,6 +123,12 @@
 			document.images[buttonId + "Img"].src = buttonImg.src;
 			return true;
 		}
+        
+        document.documentElement.addEventListener('gesturestart', function (event) 
+        {
+            event.preventDefault();      
+        }, false);
+
 	</script>
 	
 	</head>
