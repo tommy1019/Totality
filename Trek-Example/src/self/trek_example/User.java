@@ -37,7 +37,7 @@ public class User
 			g.setColor(color);
 
 		g.fillOval((int) xPos, Example.windowHeight - (int) yPos, width, height);
-		g.fillOval((int) xPos + (int)(width / 2 * Math.cos(angle)), Example.windowHeight - (int) yPos + (int)(height / 2 * Math.sin(angle)), 
+		g.fillOval((int) xPos + (int)(width * Math.cos(angle)), Example.windowHeight - (int) yPos + (int)(height * Math.sin(angle)), 
 				width / 2, height / 2);
 	}
 }
