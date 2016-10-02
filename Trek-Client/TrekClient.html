@@ -118,6 +118,8 @@
 			document.getElementById("right").appendChild(button);
 			
 			//Please be careful with this code, it is VERY finnicky
+			document.getElementById(buttonId).onmousedown = function(){onButtonPress(this.id);}
+			document.getElementById(buttonId).onmouseup = function(){onStopButtonPress(this.id);}
 			document.getElementById(buttonId).ontouchstart = function(){onButtonPress(this.id);}
 			document.getElementById(buttonId).ontouchend = function(){onStopButtonPress(this.id);}
 			
