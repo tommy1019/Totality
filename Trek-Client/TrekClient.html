@@ -6,7 +6,7 @@
 		
 		var webSocket = new WebSocket(ip);
 
-		var elements = new Array();
+		var elements;
 		
 		buttonImg = new Image();
 		buttonImg.src = "button.png";
@@ -16,47 +16,97 @@
 		
 		buttonPressedImg = new Image();
 		buttonPressedImg.src = "buttonPressed.png"
-		
+			
 		window.onload = function () 
 		{
-		};
+		}
 		
 		webSocket.onopen = function(event)
 		{
-			alert("Websocket open");
+			console.log("Websocket open");
+		}
+		
+		webSocket.onerror = function(event)
+		{
+			alert("There was an error connecting to the server");
 		}
 		
 		webSocket.onmessage = function(event) 
 		{
-			alert("Received data!");
+			console.log("Message received!");
+
+			elements = JSON.parse(event.data).controllerElements;
 			
-			//elements = JSON.parse(event.data);
-			//alert(elements[0].name);
+			console.log(elements.length);
+			
+			for(i = 0; i < elements.length; i++)
+			{
+				switch(elements[i].type)
+				{
+					case "BUTTON":
+						console.log("Recieved button: " + elements[i].id);
+						createButton(document.body, elements[i].id);
+						break;
+					case "JOYSTICK":
+						console.log("Received joystick: " + elements[i].id);
+						break;
+					default:
+						console.log("Received unknown element: " + elements[i].id);
+						break;
+				}
+			}
 		};
 		
-		function onButtonHover()
+		function createButton(context, buttonId)
 		{
-			document.images["button1"].src= buttonHoverImg.src;
+			button = document.createElement("a");
+			button.href = "#";
+			button.id = buttonId;
+			
+			var img = document.createElement("img");
+			id = buttonId;
+			img.name = buttonId + "Img"; 
+			img.src = buttonImg.src; 
+			img.width = "100";
+			img.height = "100"; 
+			img.alt = "javascript button";
+
+			button.appendChild(img);
+			context.appendChild(button);
+			
+			//Please be careful with this code, it is VERY finnicky
+			document.getElementById(buttonId).onmouseover = function(){onButtonHover(this.id);}
+			document.getElementById(buttonId).onmouseout = function(){onStopButtonHover(this.id);}
+			document.getElementById(buttonId).onmousedown = function(){onButtonPress(this.id);}
+			document.getElementById(buttonId).onmouseup = function(){onStopButtonPress(this.id);}
+			
+		}
+		
+		function onButtonHover(buttonId)
+		{
+			document.images[buttonId + "Img"].src = buttonHoverImg.src;
 			return true;
 		}
-		function onStopButtonHover()
+		function onStopButtonHover(buttonId)
 		{
-			document.images["button1"].src = buttonImg.src;
+			document.images[buttonId + "Img"].src = buttonImg.src;
 			return true;
 		}
-		function onButtonPress()
+		function onButtonPress(buttonId)
 		{
 			//When the button is pressed, send the server some data
 		
-			webSocket.send("Do the hustle");
+			webSocket.send("BUTTON:" + buttonId + ":state:" + "true");
 			
-			document.images["button1"].src = buttonPressedImg.src;
+			document.images[buttonId + "Img"].src = buttonPressedImg.src;
 			
 			return true;
 		}
-		function onStopButtonPress()
+		function onStopButtonPress(buttonId)
 		{
-			document.images["button1"].src = buttonHoverImg.src;
+			webSocket.send("BUTTON:" + buttonId + ":state:" + "false");
+		
+			document.images[buttonId + "Img"].src = buttonHoverImg.src;
 			return true;
 		}
 	</script>
@@ -64,17 +114,5 @@
 	</head>
 	
 	<body>
-		<a href="#" id="button1" 
-		onMouseOver="return onButtonHover()" 
-		onMouseOut="return onStopButtonHover()"
-		onMouseDown="return onButtonPress()" 
-		onMouseUp="return onStopButtonPress()"
-		><img
-		name="button1" 
-		src="button.png" 
-		width="100" 
-		height="100" 
-		border="0"
-		alt="javascript button"></a>
 	</body>
 </html>
