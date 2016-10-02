@@ -117,10 +117,8 @@ public class Example extends JPanel
 					bulletList.add(new Bullet(u.angle));
 					u.timeSinceLastShot = 0;
 				}
-				else 
-				{
-					u.timeSinceLastShot++;
-				}
+					
+				u.timeSinceLastShot++;
 
 				u.draw(g);
 			}
