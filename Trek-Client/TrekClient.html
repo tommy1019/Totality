@@ -1,7 +1,7 @@
 <html>
 	<head>
 	<!-- Prevents mobile device from zooming in on double tap -->
-	<meta name='viewport' content='user-scalable=0'>
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 	
 	<script type="text/javascript">
 		
@@ -65,6 +65,8 @@
 			button = document.createElement("button");
 			button.href = "#";
 			button.id = buttonId;
+			button.style.background = "none";
+			button.style.border = "none";
 			
 			var img = document.createElement("img");
 			id = buttonId;
