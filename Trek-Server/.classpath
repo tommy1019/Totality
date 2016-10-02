@@ -7,5 +7,11 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/Trek-Server/gson-2.7-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="jmdns-3.5.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/Trek-Server/jmdns-3.5.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="slf4j-api-1.7.21.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Random;
+import java.util.UUID;
 
 public class ConnectedClient extends Thread
 {
@@ -17,28 +19,20 @@ public class ConnectedClient extends Thread
 	
 	DataInputStream in;
 	DataOutputStream out;
-	
-	public GameController gameController;
+		
+	public float tmpX = 0.0f;
+	public float tmpY = 0.0f;
 	
 	boolean connected = true;
+	
+	UUID uuid;
 	
 	public ConnectedClient(Socket socket)
 	{
 		this.socket = socket;
-		
-		gameController = new GameController();
-		
-		for (Tuple<ControllerElementType, String> t : TrekServer.instance.defaultController)
-		{
-			switch(t.x)
-			{
-				case BUTTON:
-					gameController.addControllerElement(new Button(t.y));
-					break;
-				default:
-					break;
-			}
-		}
+				
+		Random random = new Random();
+		uuid = new UUID(random.nextLong(), random.nextLong());
 		
 		try
 		{
@@ -66,8 +60,10 @@ public class ConnectedClient extends Thread
 	
 	public void run()
 	{
-		// Send client initlization data
-		ClientUtils.sendMessage(out, TEXT_OPCODE, TrekServer.instance.gson.toJson(gameController.controllerElements.values()).getBytes());
+		for (ConnectListener l : TrekServer.instance.connectionListeners)
+			l.onConnect(uuid);
+		
+		ClientUtils.sendMessage(out, TEXT_OPCODE, TrekServer.instance.gson.toJson(TrekServer.instance.defaultController).getBytes());
 		
 		while (connected)
 		{
@@ -82,19 +78,24 @@ public class ConnectedClient extends Thread
 					case 2:
 						String msg = new String(clientMessage.x);
 						
-						System.out.println(new String(clientMessage.x));
+						//System.out.println(new String(clientMessage.x));
 						
 						String[] msgParts = msg.split(":");
 						
-						ControllerElement e = gameController.controllerElements.get(msgParts[1]);
+						ControllerElement e = null;
 						
 						switch (msgParts[0])
 						{
 							case "BUTTON":
-								Button b = (Button) e;
-								b.isPressed = msgParts[3].equals("true");
+								e = new Button(msgParts[1], msgParts[3].equals("true"));
+								break;
+							case "JOYSTICK":
+								e = new Joystick(msgParts[1], Double.parseDouble(msgParts[3]), Double.parseDouble(msgParts[4]));
 								break;
 						}
+						
+						for (DataListener l : TrekServer.instance.dataListeners)
+							l.onDataUpdate(uuid, e);
 						
 						break;
 					case 9:

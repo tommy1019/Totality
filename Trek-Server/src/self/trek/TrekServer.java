@@ -5,11 +5,15 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,14 +34,20 @@ public class TrekServer
 	ServerSocket serverSocket;
 	public ArrayList<ConnectedClient> connectedClients;
 	
-	ArrayList<Tuple<ControllerElementType, String>> defaultController;
+	GameController defaultController;
+	
+	ArrayList<ConnectListener> connectionListeners;
+	ArrayList<DataListener> dataListeners;
 	
 	Gson gson;
 	
 	private TrekServer()
 	{
 		connectedClients = new ArrayList<>();
-		defaultController = new ArrayList<>();
+		defaultController = new GameController();
+		
+		connectionListeners = new ArrayList<>();
+		dataListeners = new ArrayList<>();
 		
 		GsonBuilder builder = new GsonBuilder();
 		gson = builder.serializeNulls().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
@@ -49,12 +59,49 @@ public class TrekServer
 		{
 			serverSocket = new ServerSocket(PORT);
 			serverSocket.setSoTimeout(1000);
+			
+			try
+			{
+				JmDNS jmDNS = JmDNS.create(InetAddress.getByName("192.168.1.142"), "trek");
+				ServiceInfo info = ServiceInfo.create("_http._tcp.local.", "trek", 80, "Trek Webserver");
+				
+				jmDNS.registerService(info);
+			}
+			catch (IOException e)
+			{
+				System.out.println("Error setting up bonjour");
+				e.printStackTrace();
+			}
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 			System.exit(1);
 		}
+		
+		new Thread(new Runnable()
+		{
+			
+			@Override
+			public void run()
+			{
+				while(true)
+				{
+					for (int i = 0; i < connectedClients.size(); i++)
+						if (!connectedClients.get(i).connected)
+							connectedClients.remove(i);
+					
+					try
+					{
+						Thread.sleep(1000);
+					}
+					catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
 		
 		acceptLoop();
 	}
@@ -113,7 +160,27 @@ public class TrekServer
 	}
 	
 	public void addDefaultControllerElement(ControllerElementType type, String id)
-	{		
-		defaultController.add(new Tuple<ControllerElementType, String>(type, id));
+	{
+		switch (type)
+		{
+			case BUTTON:
+				defaultController.controllerElements.add(new Button(id, false));
+				break;
+			case JOYSTICK:
+				defaultController.controllerElements.add(new Joystick(id, 0, 0));
+				break;
+			default:
+				break;
+		}
+	}
+	
+	public void addConnectListener(ConnectListener l)
+	{
+		connectionListeners.add(l);
+	}
+	
+	public void addDataListener(DataListener l)
+	{
+		dataListeners.add(l);
 	}
 }

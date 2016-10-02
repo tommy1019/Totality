@@ -2,15 +2,17 @@ package self.trek;
 
 public class Button extends ControllerElement
 {
-	protected boolean isPressed;
+	protected boolean pressed;
 
-	public Button(String id)
+	protected Button(String id, boolean isPressed)
 	{
 		super(id, ControllerElementType.BUTTON);
+		
+		this.pressed = isPressed;
 	}
 
-	public boolean isPressed()
+	public boolean pressed()
 	{
-		return isPressed;
+		return pressed;
 	}
 }
