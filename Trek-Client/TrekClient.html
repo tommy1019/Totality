@@ -21,7 +21,7 @@
             background: rgba(0, 255, 0, 0.1);
         }
 
-        #right {
+        #placeholder {
             position: absolute;
             right: 0;
             top: 0;
@@ -32,7 +32,11 @@
         </style>
 		
 		<div id="left"></div>
-        <div id="right"></div>
+		<div id="placeholder">
+        <div id="right"
+		style="position: absolute; top: 25%; left: 20px; right: 20px;"
+		></div>
+		</div>
 		
 		<script type="text/javascript">
 		
@@ -42,6 +46,9 @@
 
 		var elements;
 
+		var numButtons = 0;
+		var numJoysticks = 0;
+		
 		var percentJoyDataSent = 50;
 		
 		buttonImg = new Image();
@@ -89,12 +96,29 @@
 			{
 				switch(elements[i].type)
 				{
+					case "JOYSTICK":
+						numJoysticks++;
+						break;
+					case "BUTTON":
+						numButtons++;
+						break;
+					default:
+						alert("Received unknown element: " + elements[i].id);
+						break;
+				}
+			}
+			
+			for(i = 0; i < elements.length; i++)
+			{
+				switch(elements[i].type)
+				{
+					case "JOYSTICK":
+						console.log("Received joystick: " + elements[i].id);
+						createJoystick(document.body, elements[i].id);
+						break;
 					case "BUTTON":
 						console.log("Recieved button: " + elements[i].id);
 						createButton(document.body, elements[i].id);
-						break;
-					case "JOYSTICK":
-						console.log("Received joystick: " + elements[i].id);
 						break;
 					default:
 						console.log("Received unknown element: " + elements[i].id);
@@ -103,6 +127,61 @@
 			}
 		};
 		
+		//Programatically creates a joystick with the given id and adds it to the given context
+		function createJoystick(context, joystickId)
+		{
+			var  verticalPosition = Math.round(100 / (numJoysticks + 1));
+			
+			var joystickNum = 0;
+			joystickNum = parseInt(joystickId.substring(8));
+			console.log("joystickNum: " + joystickNum);
+			
+			console.log("verticalPosition: " + verticalPosition);
+			
+			var joystick = nipplejs.create(
+			{
+				zone: document.getElementById('left'),
+				mode: 'static',
+				position: { left: '50%', top: joystickNum * verticalPosition + '%' },
+				color: 'green',
+				size: (200 / (numJoysticks - 1))
+			});
+			
+			joystick.id = joystickId;
+			
+			//These keep track of the movement of the joystick
+			var dx;
+			var dy;
+			
+			var count = 0;
+			
+			joystick.on('move', function (evt, data) 
+			{
+				count++;
+				
+				if(count % Math.round(100 / percentJoyDataSent) == 0)
+				{
+					dx = Math.cos(data.angle.radian);
+					dy = Math.sin(data.angle.radian);
+				
+					webSocket.send("JOYSTICK:" + joystick.id + ":state:" + dx + ":" + dy);
+				}
+				if(count >= 10)
+				{
+					count = 0;
+				}
+				
+			}).on('removed', function (evt, nipple) 
+			{
+				nipple.off('move', 'end');
+				
+			}).on('end', function (evt, nipple) 
+			{
+				webSocket.send("JOYSTICK:" + joystick.id + ":state:" + 0 + ":" + 0);
+			});
+		}
+		
+		//Programatically creates a button with the given id and adds it to the given context
 		function createButton(context, buttonId)
 		{			
 			var img = document.createElement("img");
@@ -111,6 +190,8 @@
 			img.src = buttonImg.src; 
 			img.width = "200";
 			img.height = "200"; 
+			img.style = "display: block; margin:auto;";
+			
 
 			button = document.createElement("p");
 			button.href = "#";
@@ -169,49 +250,7 @@
 	<body>
         <script src="dist/nipplejs.min.js" charset="utf-8"></script>
         <script>
-		//Creates a joystick on the left half of the screen
-		//For now this is hard-coded in
-        var joystick1 = nipplejs.create(
-		{
-            zone: document.getElementById('left'),
-            mode: 'static',
-            position: { left: '50%', top: '50%' },
-            color: 'green',
-            size: 200
-        });
-		
-		joystick1.id = "joystick1";
-		
-		//These keep track of the movement of the joystick
-		var dx;
-		var dy;
-		
-		var count = 0;
-		
-		joystick1.on('move', function (evt, data) 
-		{
-			count++;
-			
-			if(count % Math.round(100 / percentJoyDataSent) == 0)
-			{
-				dx = Math.cos(data.angle.radian);
-				dy = Math.sin(data.angle.radian);
-			
-				webSocket.send("JOYSTICK:" + joystick1.id + ":state:" + dx + ":" + dy);
-			}
-			if(count >= 10)
-			{
-				count = 0;
-			}
-			
-		}).on('removed', function (evt, nipple) 
-		{
-			nipple.off('move', 'end');
-			
-		}).on('end', function (evt, nipple) 
-		{
-			webSocket.send("JOYSTICK:" + joystick1.id + ":state:" + 0 + ":" + 0);
-		});
+
         </script>
 	</body>
 </html>
