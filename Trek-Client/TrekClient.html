@@ -103,7 +103,7 @@
 			id = buttonId;
 			img.name = buttonId + "Img"; 
 			img.src = buttonImg.src; 
-			img.width = "200";
+			img.width = "75%";
 			img.height = "200"; 
 			img.alt = "javascript button";
 
@@ -125,16 +125,6 @@
 			
 		}
 		
-		function onButtonHover(buttonId)
-		{
-			document.images[buttonId + "Img"].src = buttonHoverImg.src;
-			return true;
-		}
-		function onStopButtonHover(buttonId)
-		{
-			document.images[buttonId + "Img"].src = buttonImg.src;
-			return true;
-		}
 		function onButtonPress(buttonId)
 		{
 			//When the button is pressed, send the server some data
@@ -162,7 +152,6 @@
         {
             event.preventDefault();
         }
-
 	</script>
 	</head>
 	
@@ -171,13 +160,26 @@
         <div id="right"></div>
         <script src="dist/nipplejs.min.js" charset="utf-8"></script>
         <script>
-        var joystickL = nipplejs.create({
+        var joystick1 = nipplejs.create(
+		{
             zone: document.getElementById('left'),
             mode: 'static',
-            position: { left: '20%', top: '50%' },
+            position: { left: '50%', top: '50%' },
             color: 'green',
             size: 200
         });
+		
+		joystick1.on('start end', function (evt, data) 
+		{
+
+        }).on('move', function (evt, data) 
+		{
+			webSocket.send("JOYSTICK:" + joystick1.id + ":state:" + data.position.x + ":" + data.position.y);
+			
+		}).on('removed', function (evt, nipple) 
+		{
+			nipple.off('move');
+		});
         </script>
 	</body>
 </html>
