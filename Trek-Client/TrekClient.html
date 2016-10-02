@@ -176,7 +176,10 @@
 
         }).on('move', function (evt, data) 
 		{
-			webSocket.send("JOYSTICK:" + joystick1.id + ":state:" + data.position.x + ":" + data.position.y);
+			var dx = Math.cos(data.angle.radian);
+			var dy = Math.sin(data.angle.radian);
+			
+			webSocket.send("JOYSTICK:" + joystick1.id + ":state:" + dx + ":" + dy);
 			
 		}).on('removed', function (evt, nipple) 
 		{
