@@ -7,46 +7,14 @@ import com.google.gson.annotations.Expose;
 public abstract class ControllerElement
 {
 	@Expose
-	private String name = "Default";
+	private String id = "Default";
 	
-	private boolean stateChanged = false;
-	
-	public ControllerElement()
-	{
-		this("Default");
-	}
-	
-	public ControllerElement(String name)
-	{
-		this.name = name;
-	}
-	
-	public void update()
-	{
+	@Expose
+	private ControllerElementType type;
 		
-	}
-	
-	public void setName(String s)
+	public ControllerElement(String id, ControllerElementType type)
 	{
-		name = s;
-	}
-	
-	public void changeState()
-	{
-		stateChanged = true;
-	}
-	
-	//Returns true if the state is different than the last time this was checked
-	public boolean isStateChanged()
-	{
-		if(stateChanged)
-		{
-			stateChanged = false;
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		this.id = id;
+		this.type = type;
 	}
 }

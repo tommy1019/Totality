@@ -113,10 +113,14 @@ public class ClientUtils
 				out.writeByte(data.length);
 				out.write(data);
 			}
-			else
+			else if (data.length < 65536)
 			{
-				throw new RuntimeException("Not supported yet, sorry");
+				out.writeByte(126);
+				out.writeChar(data.length);
+				out.write(data);
 			}
+			else
+				throw new RuntimeException("Not supported yet, sorry");
 		}
 		catch (IOException e)
 		{

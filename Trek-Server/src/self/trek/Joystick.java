@@ -12,37 +12,10 @@ public class Joystick extends ControllerElement
 	//These are floats ranging from -1 to 1 that represent the coordinates of the joystick
 	private double xVal = 0;
 	private double yVal = 0;
-	
-	private double sensitivity = 0.05;
-	
-	
-	public void update()
+		
+	public Joystick(String id)
 	{
-		double oldXVal = xVal;
-		double oldYVal = yVal;
-		
-		//TODO: implement this
-		//Update xVal and yVal to reflect the position on the player's phone
-		//xVal = newXVal;
-		//yVal = newYVal;
-		
-		
-		//If the x or y axes are inverted, change the values accordingly
-		if(xInvert)
-		{
-			xVal = -xVal;
-		}
-		
-		if(yInvert)
-		{
-			yVal = -yVal;
-		}
-		
-		//If the joystick value has been changed, alert the GameController
-		if(Math.abs(xVal - oldXVal) >= sensitivity || yVal != oldYVal)
-		{
-			changeState();
-		}
+		super(id, ControllerElementType.JOYSTICK);
 	}
 	
 	//Returns a value between -1 and 1 that reflects the x position of the joystick
@@ -60,27 +33,13 @@ public class Joystick extends ControllerElement
 	//Toggles whether or not the x axis is inverted
 	public void invertX()
 	{
-		if(xInvert)
-		{
-			xInvert = false;
-		}
-		else
-		{
-			xInvert = true;
-		}
+		xInvert = !xInvert;
 	}
 	
 	//Toggles whether or not the y axis is inverted
 	public void invertY()
 	{
-		if(xInvert)
-		{
-			yInvert = false;
-		}
-		else
-		{
-			yInvert = true;
-		}
+		yInvert = !yInvert;
 	}
 	
 	//Returns true if the x axis is inverted

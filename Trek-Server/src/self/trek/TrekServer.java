@@ -30,7 +30,7 @@ public class TrekServer
 	ServerSocket serverSocket;
 	ArrayList<ConnectedClient> connectedClients;
 	
-	ArrayList<ControllerElement> controllerElements;
+	public GameController defaultController;
 	
 	Gson gson;
 	
@@ -38,10 +38,10 @@ public class TrekServer
 	{
 		connectedClients = new ArrayList<>();
 		
-		controllerElements = new ArrayList<>();
+		defaultController = new GameController();
 		
 		GsonBuilder builder = new GsonBuilder();
-		gson = builder.serializeNulls().setPrettyPrinting().create();
+		gson = builder.serializeNulls().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
 	}
 	
 	public void start()
