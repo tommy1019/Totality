@@ -171,7 +171,7 @@
 					dx = Math.cos(data.angle.radian);
 					dy = Math.sin(data.angle.radian);
 				
-					webSocket.send("JOYSTICK:" + joystick.id + ":state:" + dx + ":" + dy);
+					webSocket.send("JOYSTICK:" + joystick.id + ":state:" + dx + ":" + dy + ":" + data.distance);
 				}
 				if(count >= 10)
 				{
@@ -184,7 +184,7 @@
 				
 			}).on('end', function (evt, nipple) 
 			{
-				webSocket.send("JOYSTICK:" + joystick.id + ":state:" + 0 + ":" + 0);
+				webSocket.send("JOYSTICK:" + joystick.id + ":state:" + 0 + ":" + 0 + ":" + 0);
 			});
 		}
 		

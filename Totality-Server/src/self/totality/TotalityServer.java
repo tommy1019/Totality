@@ -64,8 +64,8 @@ public class TotalityServer
 			
 			try
 			{
-				JmDNS jmDNS = JmDNS.create(InetAddress.getByName("192.168.1.142"), "trek");
-				ServiceInfo info = ServiceInfo.create("_http._tcp.local.", "trek", 80, "Trek Webserver");
+				JmDNS jmDNS = JmDNS.create(InetAddress.getByName("192.168.1.142"), "totality");
+				ServiceInfo info = ServiceInfo.create("_http._tcp.local.", "totality", 80, "Totality Webserver");
 				
 				jmDNS.registerService(info);
 			}
@@ -169,7 +169,7 @@ public class TotalityServer
 				defaultController.controllerElements.add(new Button(id, false));
 				break;
 			case JOYSTICK:
-				defaultController.controllerElements.add(new Joystick(id, 0, 0));
+				defaultController.controllerElements.add(new Joystick(id, 0, 0, 0));
 				break;
 			default:
 				break;

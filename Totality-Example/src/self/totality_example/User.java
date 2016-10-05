@@ -8,9 +8,11 @@ public class User
 {
 	static Random random = new Random();
 
-	static final int RESPAWN_TIME = 200;
+	static final int RESPAWN_TIME = 800;
+	static final int FIRE_RATE = 50;
 	
-	boolean pressed = false;
+	boolean pressed1 = false;
+	boolean pressed2 = false;
 	
 	boolean alive = true;
 
@@ -22,6 +24,8 @@ public class User
 
 	double xVel = 0;
 	double yVel = 0;
+	
+	double speed = 0;
 
 	double angle = 0;
 
@@ -38,7 +42,7 @@ public class User
 	public void draw(Graphics g)
 	{
 		//Draws the player in the appropriate color
-		if (pressed)
+		if (pressed1 || pressed2)
 			g.setColor(Color.green);
 		else
 			g.setColor(color);
