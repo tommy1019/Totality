@@ -101,12 +101,10 @@
 					{
 						switch(elements[i].type)
 						{
-							/*
 							case "JOYSTICK":
 								console.log("Received joystick: " + elements[i].id);
 								createJoystick(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
 								break;
-							*/
 							case "BUTTON":
 								console.log("Recieved button: " + elements[i].id);
 								createButton(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
@@ -134,6 +132,20 @@
 			joystickDiv.style.border = "none";
 			joystickDiv.style.outline = "none";
 
+			// Programatically sets the width and height of the button
+			joystickDiv.width  = width * screenWidth;
+			joystickDiv.height = height * screenHeight;
+			
+			// Preserve the aspect ratio of the button by limiting the size to the smallest component
+			if(joystickDiv.width < joystickDiv.height)
+			{
+				joystickDiv.height = joystickDiv.width;
+			}
+			else
+			{
+				joystickDiv.width = joystickDiv.height;
+			}
+			
 			// Set position of the button			
 			joystickDiv.style.position = "absolute";
 			joystickDiv.style.left = xPos * screenWidth + "px";
