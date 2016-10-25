@@ -43,15 +43,13 @@ public class WebServerConnection extends Thread
 				out.flush();
 				return;
 			}
-			
-			System.out.println(requestParts[1]);
-			
+						
 			switch (requestParts[1])
 			{
 				case "/":
 					handelFile(INDEX_PAGE, out);
 					break;
-				case "/ip.txt":
+				case "/webSocketIp.txt":
 					handelIp(out);
 					break;
 				default:
@@ -69,13 +67,15 @@ public class WebServerConnection extends Thread
 	
 	void handelIp(BufferedWriter out) throws IOException
 	{
+		String ip = TotalityServer.instance.localIp + ":" + WebSocketServer.PORT;
+		
 		out.write("HTTP/1.1 200 OK\r\n");
-		out.write("Content-Length: " + TotalityServer.instance.localIp.length());
+		out.write("Content-Length: " + ip.length());
 		out.write("Content-Type: text/plain\r\n");
 		out.write("Content-Encoding: UTF-8\r\n");
 		out.write("Connection: close\r\n");
 		out.write("\r\n");
-		out.write(TotalityServer.instance.localIp);
+		out.write(ip);
 		out.flush();
 	}
 	
