@@ -1,4 +1,4 @@
-package self.totality;
+package self.totality.webserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class WebUtils
 {
-	static HashMap<String, String> readHTTPSettings(BufferedReader in)
+	public static HashMap<String, String> readHTTPSettings(BufferedReader in)
 	{
 		HashMap<String, String> clientHTTP = new HashMap<>();
 		String curLine;

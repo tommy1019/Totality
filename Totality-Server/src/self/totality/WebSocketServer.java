@@ -11,6 +11,8 @@ import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.UUID;
 
+import self.totality.webserver.WebUtils;
+
 public class WebSocketServer extends Thread
 {
 	public static final int PORT = 8000;

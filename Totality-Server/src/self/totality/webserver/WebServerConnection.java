@@ -1,4 +1,4 @@
-package self.totality;
+package self.totality.webserver;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.file.Files;
+
+import self.totality.TotalityServer;
+import self.totality.WebSocketServer;
 
 public class WebServerConnection extends Thread
 {
@@ -67,7 +70,7 @@ public class WebServerConnection extends Thread
 	
 	void handelIp(BufferedWriter out) throws IOException
 	{
-		String ip = TotalityServer.instance.localIp + ":" + WebSocketServer.PORT;
+		String ip = TotalityServer.localIp + ":" + WebSocketServer.PORT;
 		
 		out.write("HTTP/1.1 200 OK\r\n");
 		out.write("Content-Length: " + ip.length());

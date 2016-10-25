@@ -7,19 +7,21 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import self.totality.webserver.WebServer;
+
 public class TotalityServer
 {
 
 	public static TotalityServer instance;
-
+	
+	public static String localIp;
+	
 	static
 	{
 		instance = new TotalityServer();
 	}
 
 	boolean running = true;
-
-	String localIp;
 	
 	WebServer webServer;
 	WebSocketServer webSocketServer;
