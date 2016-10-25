@@ -38,4 +38,31 @@ public class WebUtils
 			return null;
 		}
 	}
+	
+	static String getMimeType(String extension)
+	{
+		switch(extension)
+		{
+			case "html":
+				return "text/html";
+			case "css":
+				return "text/css";
+			case "js":
+				return "text/javascript";
+				
+			case "txt":
+				return "text/plain";
+				
+			case "png":
+				return "image/png";
+			case "gif":
+				return "image/gif";
+			case "jpeg":
+				return "image/jpeg";
+			case "bmp":
+				return "image/bmp";
+		}
+		
+		return "application/unknown";
+	}
 }
