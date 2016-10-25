@@ -2,33 +2,33 @@
 	<head>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width, height=device-height" />
 	    <style>
-        .imgClass 
+        .imgClass
 		{
             display: block;
             margin-left: auto;
             margin-right: auto
         }
         </style>
-		
+
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
 		<script src="dist/nipplejs.min.js" charset="utf-8"></script>
 		<script type="text/javascript">
-		
+
 		var ip;
-		
+
 		var webSocket;
-		
+
 		var elements;
-		
+
 		var numButtons = 0;
 		var numJoysticks = 0;
 
 		var percentJoyDataSent = 50;
-		
+
 		var screenWidth;
 		var screenHeight;
-		
+
 
 		buttonImg = new Image();
 		buttonImg.src = "button.png";
@@ -43,44 +43,44 @@
 			event.stopPropagation();
 			return false;
 		};
-		
+
 		window.onload = function ()
 		{
 			// This is necessary to remove force touch on ios
 			document.body.style.webkitTouchCallout = 'none';
 			document.body.style.webkitUserSelect = 'none';
-			
+
 			screenWidth = window.innerWidth;  //|| document.documentElement.clientWidth  || document.body.clientWidth;
 			screenHeight = window.innerHeight; //|| document.documentElement.clientHeight || document.body.clientHeight;
-			
+
 			// Get the ip of the websocket server from the web server
 			// Once this is done, initialize the websocket with the new ip
-			jQuery.get('webSocketIp.txt', function(data) 
+			jQuery.get('webSocketIp.txt', function(data)
 			{
 				ip = "ws://" + data;
-				
+
 				webSocket = new WebSocket(ip);
-				
+
 				//Print to the console when the websocket connects
 				webSocket.onopen = function(event)
 				{
 					console.log("Websocket open");
 				}
-		
+
 				//If the websocket fails for some reason, pop up an alert window
 				webSocket.onerror = function(event)
 				{
 					alert("There was an error connecting to the server");
 				}
-		
+
 				//The server will send data to the client telling it what kind of buttons and joysticks it needs
 				//When this happens, parse the data and build the elements
-				webSocket.onmessage = function(event) 
+				webSocket.onmessage = function(event)
 				{
 					console.log("Message received!");
-	
+
 					elements = JSON.parse(event.data).controllerElements;
-			
+
 					for(i = 0; i < elements.length; i++)
 					{
 						switch(elements[i].type)
@@ -96,7 +96,7 @@
 								break;
 						}
 					}
-			
+
 					for(i = 0; i < elements.length; i++)
 					{
 						switch(elements[i].type)
@@ -117,10 +117,10 @@
 				};
 			});
 		}
-		
+
 		//Programatically creates a joystick with the given id and adds it to the given context
 		function createJoystick(joystickId, xPos, yPos, width, height)
-		{			
+		{
 			joystickDiv = document.createElement("div");
 			joystickDiv.href = "#";
 			joystickDiv.id = joystickId + "div";
@@ -131,7 +131,7 @@
 			// Programatically sets the width and height of the button
 			joystickDiv.width  = width * screenWidth;
 			joystickDiv.height = height * screenHeight;
-			
+
 			// Preserve the aspect ratio of the button by limiting the size to the smallest component
 			if(joystickDiv.width < joystickDiv.height)
 			{
@@ -141,19 +141,19 @@
 			{
 				joystickDiv.width = joystickDiv.height;
 			}
-			
-			// Set position of the button			
+
+			// Set position of the button
 			joystickDiv.style.position = "absolute";
 			joystickDiv.style.left = xPos * screenWidth + "px";
 			joystickDiv.style.top = yPos * screenHeight + "px";
-			
+
 			document.body.appendChild(joystickDiv);
-			
+
 			var joystick = nipplejs.create(
 			{
 				zone: joystickDiv,
 				mode: 'static',
-				position: { left: '50%', top: '50%' },
+				position: { x: xPos * screenWidth + joystickDiv.width / 2, y: yPos * screenHeight + joystickDiv.width / 2 },
 				color: 'green',
 				size: (joystickDiv.width)
 			});
@@ -174,7 +174,7 @@
 				{
 					dx = Math.cos(data.angle.radian);
 					dy = Math.sin(data.angle.radian);
-				
+
 					webSocket.send("JOYSTICK:" + joystick.id + ":state:" + dx + ":" + dy + ":" + data.distance);
 				}
 				if(count >= 10)
@@ -194,7 +194,7 @@
 
 		//Programatically creates a button with the given id and adds it to the given context
 		function createButton(buttonId, xPos, yPos, width, height)
-		{			
+		{
 			var img = document.createElement("img");
 			img.id = buttonId;
 			img.name = buttonId + "Img";
@@ -204,7 +204,7 @@
 			// Programatically sets the width and height of the button
 			img.width  = width * screenWidth;
 			img.height = height * screenHeight;
-			
+
 			// Preserve the aspect ratio of the button by limiting the size to the smallest component
 			if(img.width < img.height)
 			{
@@ -223,11 +223,11 @@
 			button.style.outline = "none";
 			button.appendChild(img);
 
-			// Set position of the button			
+			// Set position of the button
 			button.style.position = "absolute";
 			button.style.left = xPos * screenWidth + "px";
 			button.style.top = yPos * screenHeight + "px";
-			
+
 			document.body.appendChild(button);
 
 			// Adds touch and mouse listeners to each button
@@ -249,7 +249,7 @@
 
 			return true;
 		}
-		
+
 		function onStopButtonPress(buttonId)
 		{
 			//When a button is released, tell the server

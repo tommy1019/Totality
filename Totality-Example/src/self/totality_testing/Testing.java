@@ -13,9 +13,11 @@ public class Testing
 {
 	public static void main(String args[])
 	{
-		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button1", 0.1f, 0.1f, 0.2f, 0.2f);
-		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button2", 0.1f, 0.4f, 0.2f, 0.2f);
-		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick1", 0.6f, 0.3f, 0.4f, 0.4f);
+		for (int i = 0; i < 10; i++)
+		{
+			TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button" + i, 0.1f, 0.1f * i, 0.1f, 0.1f);
+			TotalityServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick" + i, 0.6f, 0.1f * i, 0.1f, 0.1f);
+		}
 		
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
@@ -25,7 +27,7 @@ public class Testing
 				System.out.println("Connection: " + uuid);
 			}
 		});
-
+		
 		TotalityServer.instance.addDisconnectListener(new DisconnectListener()
 		{
 			@Override
@@ -34,7 +36,7 @@ public class Testing
 				System.out.println("Disconnection: " + uuid);
 			}
 		});
-
+		
 		TotalityServer.instance.addDataListener(new DataListener()
 		{
 			@Override
