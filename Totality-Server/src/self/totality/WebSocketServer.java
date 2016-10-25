@@ -74,7 +74,6 @@ public class WebSocketServer extends Thread
 				out.write("\r\n");
 				out.flush();
 
-				System.out.println("Client connected");
 				ConnectedClient client = new ConnectedClient(socket);
 				
 				connectedClients.put(client.uuid, client);

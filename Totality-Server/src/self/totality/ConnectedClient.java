@@ -107,7 +107,6 @@ public class ConnectedClient extends Thread
 			}
 			catch (EOFException e)
 			{
-				System.out.println("Reached end of stream for client.");
 				connected = false;
 			}
 		}

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import self.totality.ConnectListener;
 import self.totality.ControllerElement;
+import self.totality.ControllerElementType;
 import self.totality.DataListener;
 import self.totality.DisconnectListener;
 import self.totality.TotalityServer;
@@ -12,6 +13,10 @@ public class Testing
 {
 	public static void main(String args[])
 	{
+		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button1");
+		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button2");
+		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick1");
+		
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
 			@Override
