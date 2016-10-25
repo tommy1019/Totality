@@ -216,9 +216,9 @@
 			button.appendChild(img);
 
 			// Set position of the button			
-			//button.style.position = "absolute";
-			button.style.left = xPos + "%";
-			button.style.top = yPos + "%";
+			button.style.position = "absolute";
+			button.style.left = xPos * screenWidth + "px";
+			button.style.top = yPos * screenHeight + "px";
 			
 			document.body.appendChild(button);
 
