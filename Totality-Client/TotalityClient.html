@@ -2,51 +2,17 @@
 	<head>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width, height=device-height" />
 	    <style>
-        html, body {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 0;
-            margin: 0;
-        }
-
-        #left {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 50%;
-            background: rgba(0, 255, 0, 0.1);
-        }
-
-        #placeholder {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 50%;
-            background: rgba(0, 0, 255, 0.1);
-        }
-
-        .imgClass {
+        .imgClass 
+		{
             display: block;
             margin-left: auto;
             margin-right: auto
         }
-
         </style>
-
-		<div id="left"></div>
-		<div id="placeholder">
-        <div id="right"
-		style="position: relative; top: 50%; -webkit-transform: translateY(-50%); -ms-transform: translateY(-50%); transform: translateY(-50%); left: 1px; right: 1px;"
-		></div>
-		</div>
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+		<script src="dist/nipplejs.min.js" charset="utf-8"></script>
 		<script type="text/javascript">
 		
 		var ip;
@@ -55,13 +21,14 @@
 		
 		var elements;
 		
-		var numRows = 10;
-		var numColumns = 10;
-
 		var numButtons = 0;
 		var numJoysticks = 0;
 
 		var percentJoyDataSent = 50;
+		
+		var screenWidth;
+		var screenHeight;
+		
 
 		buttonImg = new Image();
 		buttonImg.src = "button.png";
@@ -77,12 +44,17 @@
 			return false;
 		};
 		
-		//This is necessary to remove force touch on ios
 		window.onload = function ()
 		{
-			document.body.style.webkitTouchCallout='none';
-			document.body.style.webkitUserSelect='none';
+			// This is necessary to remove force touch on ios
+			document.body.style.webkitTouchCallout = 'none';
+			document.body.style.webkitUserSelect = 'none';
 			
+			screenWidth = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
+			screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+			
+			// Get the ip of the websocket server from the web server
+			// Once this is done, initialize the websocket with the new ip
 			jQuery.get('webSocketIp.txt', function(data) 
 			{
 				ip = "ws://" + data;
@@ -129,15 +101,15 @@
 					{
 						switch(elements[i].type)
 						{
-					/*
+							/*
 							case "JOYSTICK":
 								console.log("Received joystick: " + elements[i].id);
-								createJoystick(document.body, elements[i].id);
+								createJoystick(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
 								break;
-					*/
+							*/
 							case "BUTTON":
 								console.log("Recieved button: " + elements[i].id);
-								createButton(document.body, elements[i].id, i, i + 1, i, i + 1);
+								createButton(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
 								break;
 							default:
 								console.log("Received unknown element: " + elements[i].id);
@@ -149,21 +121,31 @@
 		}
 		
 		//Programatically creates a joystick with the given id and adds it to the given context
-		function createJoystick(context, joystickId)
+		function createJoystick(joystickId, xPos, yPos, width, height)
 		{
-			var  verticalPosition = Math.round(100 / (numJoysticks + 1));
-
 			var joystickNum = 0;
 			joystickNum = parseInt(joystickId.substring(8));
 			console.log("joystickNum: " + joystickNum);
 
-			console.log("verticalPosition: " + verticalPosition);
+			joystickDiv = document.createElement("div");
+			joystickDiv.href = "#";
+			//joystickDiv.id = joystickId;
+			joystickDiv.style.background = "none";
+			joystickDiv.style.border = "none";
+			joystickDiv.style.outline = "none";
 
+			// Set position of the button			
+			joystickDiv.style.position = "absolute";
+			joystickDiv.style.left = xPos + "%";
+			joystickDiv.style.top = yPos + "%";
+			
+			document.body.appendChild(button);
+			
 			var joystick = nipplejs.create(
 			{
-				zone: document.getElementById('left'),
+				zone: joystickDiv,
 				mode: 'static',
-				position: { left: '50%', top: joystickNum * verticalPosition + '%' },
+				position: { left: '0%', top: '0%' },
 				color: 'green',
 				size: (window.screen.availWidth / 5)
 			});
@@ -203,7 +185,7 @@
 		}
 
 		//Programatically creates a button with the given id and adds it to the given context
-		function createButton(context, buttonId, rowStart, rowEnd, colStart, colEnd)
+		function createButton(buttonId, xPos, yPos, width, height)
 		{			
 			var img = document.createElement("img");
 			img.id = buttonId;
@@ -211,12 +193,19 @@
 			img.src = buttonImg.src;
             img.className = "imgClass";
 
-			var screenWidth  = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
-			var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-		
 			// Programatically sets the width and height of the button
-			img.width  = screenWidth / numColumns * (colEnd - colStart); 
-			img.height = screenHeight / numRows * (rowEnd - rowStart);
+			img.width  = width * screenWidth;
+			img.height = height * screenHeight;
+			
+			// Preserve the aspect ratio of the button by limiting the size to the smallest component
+			if(img.width > img.height)
+			{
+				img.height = img.width;
+			}
+			else
+			{
+				img.width = img.height;
+			}
 
 			button = document.createElement("div");
 			button.href = "#";
@@ -226,17 +215,15 @@
 			button.style.outline = "none";
 			button.appendChild(img);
 
-			// Set position of the button
-			var xPos = (screenWidth / numColumns * colStart) + "px";
-			var yPos = (screenHeight / numRows * rowStart) + "px";
-			
-			button.style.left = xPos;
-			button.style.top = yPos;
+			// Set position of the button			
+			button.style.position = "absolute";
+			button.style.left = xPos + "%";
+			button.style.top = yPos + "%";
 			
 			document.body.appendChild(button);
 
-			//Adds touch and mouse listeners to each button
-			//Please be careful with this code, it is VERY finnicky
+			// Adds touch and mouse listeners to each button
+			// Please be careful with this code, it is VERY finnicky
 			document.getElementById(buttonId).onmousedown = function(){onButtonPress(this.id);}
 			document.getElementById(buttonId).onmouseup = function(){onStopButtonPress(this.id);}
 			document.getElementById(buttonId).ontouchstart = function(){onButtonPress(this.id);}
@@ -254,6 +241,7 @@
 
 			return true;
 		}
+		
 		function onStopButtonPress(buttonId)
 		{
 			//When a button is released, tell the server
@@ -284,11 +272,4 @@
         };
 	</script>
 	</head>
-
-	<body>
-        <script src="dist/nipplejs.min.js" charset="utf-8"></script>
-        <script>
-
-        </script>
-	</body>
 </html>
