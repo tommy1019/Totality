@@ -65,21 +65,6 @@ public class TotalityServer
 		}
 		
 		System.out.println("[Totality server] Local ip: " + localIp);
-		
-		try
-		{
-			JmDNS jmDNS = JmDNS.create(InetAddress.getByName(localIp), "totality");
-			ServiceInfo info = ServiceInfo.create("_http._tcp.local.", "totality", 8080, "Totality Webserver");
-
-			jmDNS.registerService(info);
-			
-			System.out.println("[Totality server] Registered JmDNS service.");
-		}
-		catch (IOException e)
-		{
-			System.out.println("Error setting up bonjour");
-			e.printStackTrace();
-		}
 
 		// TODO: Better system for removing users
 		// new Thread(new Runnable()
