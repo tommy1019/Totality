@@ -1,12 +1,8 @@
 package self.totality;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-
-import javax.jmdns.JmDNS;
-import javax.jmdns.ServiceInfo;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
