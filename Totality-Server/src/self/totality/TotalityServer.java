@@ -2,6 +2,7 @@ package self.totality;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.jmdns.JmDNS;
@@ -22,6 +23,8 @@ public class TotalityServer
 
 	boolean running = true;
 
+	String localIp = "0.0.0.0";
+	
 	WebServer webServer;
 	WebSocketServer webSocketServer;
 
@@ -50,12 +53,27 @@ public class TotalityServer
 
 	public void start()
 	{
+		System.out.println("[Totality server] Starting");
+		
 		try
 		{
-			JmDNS jmDNS = JmDNS.create(InetAddress.getByName("192.168.1.175"), "totality");
+			localIp = InetAddress.getLocalHost().getHostAddress();
+		}
+		catch (UnknownHostException e)
+		{
+			
+		}
+		
+		System.out.println("[Totality server] Local ip: " + localIp);
+		
+		try
+		{
+			JmDNS jmDNS = JmDNS.create(InetAddress.getByName(localIp), "totality");
 			ServiceInfo info = ServiceInfo.create("_http._tcp.local.", "totality", 8080, "Totality Webserver");
 
 			jmDNS.registerService(info);
+			
+			System.out.println("[Totality server] Registered JmDNS service.");
 		}
 		catch (IOException e)
 		{
@@ -89,7 +107,10 @@ public class TotalityServer
 		// }).start();
 
 		webSocketServer.start();
+		System.out.println("[Totality server] Started web socket server.");
+		
 		webServer.start();
+		System.out.println("[Totality server] Started web server.");
 	}
 
 	public void addDefaultControllerElement(ControllerElementType type, String id)
