@@ -20,7 +20,7 @@ public class WebServer extends Thread
 		}
 		catch (IOException e)
 		{
-			System.out.println("Error starting web server");
+			System.out.println("[TotalityServer] Error starting web server");
 			e.printStackTrace();
 			System.exit(1);
 		}
