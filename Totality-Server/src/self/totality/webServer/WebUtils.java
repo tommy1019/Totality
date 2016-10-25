@@ -22,8 +22,6 @@ public class WebUtils
 
 				if (colenIndex == -1)
 				{
-					System.out.println("Can't find: ':'");
-					System.out.println(curLine);
 					break;
 				}
 
@@ -34,7 +32,6 @@ public class WebUtils
 		}
 		catch (IOException e)
 		{
-			System.out.println("Error reading client HTTP settings.");
 			return null;
 		}
 	}

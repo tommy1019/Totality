@@ -53,7 +53,6 @@ public class WebSocketServer extends Thread
 
 				if (!curLine.equals("GET / HTTP/1.1"))
 				{
-					System.out.println("Failed to get a GET request.");
 					continue;
 				}
 
@@ -62,7 +61,6 @@ public class WebSocketServer extends Thread
 				if (clientHTTP.containsKey("Connection") && clientHTTP.containsKey("Upgrade"))
 					if (!(clientHTTP.get("Connection").contains("Upgrade") && clientHTTP.get("Upgrade").equals("websocket")))
 					{
-						System.out.println("No upgrade request.");
 						continue;
 					}
 

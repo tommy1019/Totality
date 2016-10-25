@@ -34,7 +34,7 @@ public class ClientUtils
 				boolean mask = (byte2 < 0);
 				if (!mask)
 				{
-					System.out.println("Error: Client must mask data as per spec");
+					throw new RuntimeException("Error: Client must mask data as per spec");
 				}
 				byte[] maskBytes = new byte[4];
 				
@@ -50,7 +50,7 @@ public class ClientUtils
 					{
 						
 					}
-					throw new RuntimeException("I haven't coded this yet");
+					throw new RuntimeException("Large packet sizes not supported.");
 				}
 				
 				if (mask)
@@ -118,7 +118,7 @@ public class ClientUtils
 				out.write(data);
 			}
 			else
-				throw new RuntimeException("Not supported yet, sorry");
+				throw new RuntimeException("Packet size not supported");
 		}
 		catch (IOException e)
 		{
