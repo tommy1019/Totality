@@ -1,4 +1,4 @@
-package self.totality;
+package self.totality.webSocketServer.controller;
 
 //Joystick emulates the behavior of an analog joystick on a controller
 //Joystick has an xVal and yVal that represent its current position
@@ -12,7 +12,7 @@ public class Joystick extends ControllerElement
 	protected double yVal = 0;
 	protected double force = 0;	
 	
-	protected Joystick(String id, double xVal, double yVal, double force)
+	public Joystick(String id, double xVal, double yVal, double force)
 	{
 		super(id, ControllerElementType.JOYSTICK);
 		

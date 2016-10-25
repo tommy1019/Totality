@@ -8,14 +8,14 @@ import java.util.UUID;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import self.totality.Button;
-import self.totality.ConnectListener;
-import self.totality.ControllerElement;
-import self.totality.ControllerElementType;
-import self.totality.DataListener;
-import self.totality.DisconnectListener;
-import self.totality.Joystick;
 import self.totality.TotalityServer;
+import self.totality.webSocketServer.controller.Button;
+import self.totality.webSocketServer.controller.ControllerElement;
+import self.totality.webSocketServer.controller.ControllerElementType;
+import self.totality.webSocketServer.controller.Joystick;
+import self.totality.webSocketServer.listener.ConnectListener;
+import self.totality.webSocketServer.listener.DataListener;
+import self.totality.webSocketServer.listener.DisconnectListener;
 
 public class Example extends JPanel
 {

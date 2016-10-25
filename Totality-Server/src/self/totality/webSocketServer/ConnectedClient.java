@@ -1,4 +1,4 @@
-package self.totality;
+package self.totality.webSocketServer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -7,6 +7,14 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Random;
 import java.util.UUID;
+
+import self.totality.TotalityServer;
+import self.totality.webSocketServer.controller.Button;
+import self.totality.webSocketServer.controller.ControllerElement;
+import self.totality.webSocketServer.controller.Joystick;
+import self.totality.webSocketServer.listener.ConnectListener;
+import self.totality.webSocketServer.listener.DataListener;
+import self.totality.webSocketServer.listener.DisconnectListener;
 
 public class ConnectedClient extends Thread
 {
@@ -24,10 +32,13 @@ public class ConnectedClient extends Thread
 	
 	UUID uuid;
 	
-	public ConnectedClient(Socket socket)
+	WebSocketServer server;
+	
+	public ConnectedClient(Socket socket, WebSocketServer server)
 	{
 		this.socket = socket;
-				
+		this.server = server;
+		
 		Random random = new Random();
 		uuid = new UUID(random.nextLong(), random.nextLong());
 		
@@ -54,18 +65,18 @@ public class ConnectedClient extends Thread
 			e.printStackTrace();
 		}
 		
-		TotalityServer.instance.webSocketServer.connectedClients.remove(uuid);
+		server.connectedClients.remove(uuid);
 		
-		for (DisconnectListener l : TotalityServer.instance.disconnectListeners)
+		for (DisconnectListener l : TotalityServer.instance.getDisconnectListeners())
 			l.onDisconnect(uuid);
 	}
 	
 	public void run()
 	{
-		for (ConnectListener l : TotalityServer.instance.connectionListeners)
+		for (ConnectListener l : TotalityServer.instance.getConnectListeners())
 			l.onConnect(uuid);
 		
-		ClientUtils.sendMessage(out, TEXT_OPCODE, TotalityServer.instance.gson.toJson(TotalityServer.instance.defaultController).getBytes());
+		ClientUtils.sendMessage(out, TEXT_OPCODE, TotalityServer.gson.toJson(TotalityServer.instance.getDefaultController()).getBytes());
 		
 		while (connected)
 		{
@@ -89,11 +100,12 @@ public class ConnectedClient extends Thread
 								e = new Button(msgParts[1], msgParts[3].equals("true"));
 								break;
 							case "JOYSTICK":
-								e = new Joystick(msgParts[1], Double.parseDouble(msgParts[3]), Double.parseDouble(msgParts[4]), Double.parseDouble(msgParts[5]));
+								e = new Joystick(msgParts[1], Double.parseDouble(msgParts[3]), Double.parseDouble(msgParts[4]),
+										Double.parseDouble(msgParts[5]));
 								break;
 						}
 						
-						for (DataListener l : TotalityServer.instance.dataListeners)
+						for (DataListener l : TotalityServer.instance.getDataListeners())
 							l.onDataUpdate(uuid, e);
 						
 						break;

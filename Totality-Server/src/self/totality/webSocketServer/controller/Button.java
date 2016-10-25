@@ -1,10 +1,10 @@
-package self.totality;
+package self.totality.webSocketServer.controller;
 
 public class Button extends ControllerElement
 {
 	protected boolean pressed;
 
-	protected Button(String id, boolean isPressed)
+	public Button(String id, boolean isPressed)
 	{
 		super(id, ControllerElementType.BUTTON);
 		

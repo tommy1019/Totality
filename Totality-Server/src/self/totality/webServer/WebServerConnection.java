@@ -1,4 +1,4 @@
-package self.totality.webserver;
+package self.totality.webServer;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.nio.file.Files;
 
 import self.totality.TotalityServer;
-import self.totality.WebSocketServer;
+import self.totality.webSocketServer.WebSocketServer;
 
 public class WebServerConnection extends Thread
 {

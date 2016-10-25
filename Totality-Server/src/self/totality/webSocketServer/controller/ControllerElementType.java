@@ -1,4 +1,4 @@
-package self.totality;
+package self.totality.webSocketServer.controller;
 
 public enum ControllerElementType
 {

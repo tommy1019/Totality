@@ -1,4 +1,4 @@
-package self.totality;
+package self.totality.webSocketServer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

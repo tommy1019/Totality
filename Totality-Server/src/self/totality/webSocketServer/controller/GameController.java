@@ -1,4 +1,4 @@
-package self.totality;
+package self.totality.webSocketServer.controller;
 
 import java.util.ArrayList;
 

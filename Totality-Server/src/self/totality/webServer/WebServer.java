@@ -1,4 +1,4 @@
-package self.totality.webserver;
+package self.totality.webServer;
 
 import java.io.IOException;
 import java.net.ServerSocket;

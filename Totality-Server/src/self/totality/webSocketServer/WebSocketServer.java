@@ -1,4 +1,4 @@
-package self.totality;
+package self.totality.webSocketServer;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,7 +11,7 @@ import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.UUID;
 
-import self.totality.webserver.WebUtils;
+import self.totality.webServer.WebUtils;
 
 public class WebSocketServer extends Thread
 {
@@ -74,7 +74,7 @@ public class WebSocketServer extends Thread
 				out.write("\r\n");
 				out.flush();
 
-				ConnectedClient client = new ConnectedClient(socket);
+				ConnectedClient client = new ConnectedClient(socket, this);
 				
 				connectedClients.put(client.uuid, client);
 				client.start();

@@ -1,4 +1,4 @@
-package self.totality.webserver;
+package self.totality.webServer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
