@@ -78,15 +78,15 @@ public class TotalityServer
 		System.out.println("[Totality server] Started web server.");
 	}
 	
-	public void addDefaultControllerElement(ControllerElementType type, String id)
+	public void addDefaultControllerElement(ControllerElementType type, String id, float x, float y, float width, float height)
 	{
 		switch (type)
 		{
 			case BUTTON:
-				defaultController.controllerElements.add(new Button(id, false));
+				defaultController.controllerElements.add(new Button(id, false, x, y, width, height));
 				break;
 			case JOYSTICK:
-				defaultController.controllerElements.add(new Joystick(id, 0, 0, 0));
+				defaultController.controllerElements.add(new Joystick(id, 0, 0, 0, x, y, width, height));
 				break;
 			default:
 				break;
