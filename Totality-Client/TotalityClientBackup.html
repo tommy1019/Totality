@@ -45,19 +45,13 @@
 		></div>
 		</div>
 		
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-		<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
 		<script type="text/javascript">
 		
-		//var ip = "ws://192.168.1.142:8000";
-		var ip;
+		var ip = "ws://192.168.1.142:8000";
 		
-		var webSocket;
+		var webSocket = new WebSocket(ip);
 
 		var elements;
-		
-		var numRows = 10;
-		var numColumns = 10;
 
 		var numButtons = 0;
 		var numJoysticks = 0;
@@ -83,72 +77,62 @@
 		{
 			document.body.style.webkitTouchCallout='none';
 			document.body.style.webkitUserSelect='none';
-			
-			jQuery.get('http://localhost/webSocketIp.txt', function(data) 
-			{
-				ip = "ws://" + data;
-				alert("The IP is: " + data);
-			});
-		
-			websocket = new WebSocket(ip);
-			
-			//Print to the console when the websocket connects
-			webSocket.onopen = function(event)
-			{
-				console.log("Websocket open");
-			}
-		
-			//If the websocket fails for some reason, pop up an alert window
-			webSocket.onerror = function(event)
-			{
-				alert("There was an error connecting to the server");
-			}
-		
-			//The server will send data to the client telling it what kind of buttons and joysticks it needs
-			//When this happens, parse the data and build the elements
-			webSocket.onmessage = function(event) 
-			{
-				console.log("Message received!");
-	
-				elements = JSON.parse(event.data).controllerElements;
-			
-				for(i = 0; i < elements.length; i++)
-				{
-					switch(elements[i].type)
-					{
-						case "JOYSTICK":
-							numJoysticks++;
-							break;
-						case "BUTTON":
-							numButtons++;
-							break;
-						default:
-							alert("Received unknown element: " + elements[i].id);
-							break;
-					}
-				}
-			
-				for(i = 0; i < elements.length; i++)
-				{
-					switch(elements[i].type)
-					{
-					/*
-						case "JOYSTICK":
-							console.log("Received joystick: " + elements[i].id);
-							createJoystick(document.body, elements[i].id);
-							break;
-					*/
-						case "BUTTON":
-							console.log("Recieved button: " + elements[i].id);
-							createButton(document.body, elements[i].id, i, i + 1, i, i + 1);
-							break;
-						default:
-							console.log("Received unknown element: " + elements[i].id);
-							break;
-					}
-				}
-			};
 		}
+		
+		//Print to the console when the websocket connects
+		webSocket.onopen = function(event)
+		{
+			console.log("Websocket open");
+		}
+		
+		//If the websocket fails for some reason, pop up an alert window
+		webSocket.onerror = function(event)
+		{
+			alert("There was an error connecting to the server");
+		}
+		
+		//The server will send data to the client telling it what kind of buttons and joysticks it needs
+		//When this happens, parse the data and build the elements
+		webSocket.onmessage = function(event) 
+		{
+			console.log("Message received!");
+
+			elements = JSON.parse(event.data).controllerElements;
+			
+			for(i = 0; i < elements.length; i++)
+			{
+				switch(elements[i].type)
+				{
+					case "JOYSTICK":
+						numJoysticks++;
+						break;
+					case "BUTTON":
+						numButtons++;
+						break;
+					default:
+						alert("Received unknown element: " + elements[i].id);
+						break;
+				}
+			}
+			
+			for(i = 0; i < elements.length; i++)
+			{
+				switch(elements[i].type)
+				{
+					case "JOYSTICK":
+						console.log("Received joystick: " + elements[i].id);
+						createJoystick(document.body, elements[i].id);
+						break;
+					case "BUTTON":
+						console.log("Recieved button: " + elements[i].id);
+						createButton(document.body, elements[i].id);
+						break;
+					default:
+						console.log("Received unknown element: " + elements[i].id);
+						break;
+				}
+			}
+		};
 		
 		//Programatically creates a joystick with the given id and adds it to the given context
 		function createJoystick(context, joystickId)
@@ -205,7 +189,7 @@
 		}
 		
 		//Programatically creates a button with the given id and adds it to the given context
-		function createButton(context, buttonId, rowStart, rowEnd, colStart, colEnd)
+		function createButton(context, buttonId)
 		{			
 			var img = document.createElement("img");
 			img.id = buttonId;
@@ -213,14 +197,12 @@
 			img.src = buttonImg.src; 
             img.className = "imgClass";
 
-			var screenWidth  = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
 			var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 						
-			// Programatically sets the width and height of the button
-			img.width  = screenWidth / numColumns * (colEnd - colStart); 
-			img.height = screenHeight / numRows * (rowEnd - rowStart);
+			img.width = screenHeight / 16 / (numButtons / 8);
+			img.height = screenHeight / 16 / (numButtons / 8); 
 
-			button = document.createElement("div");
+			button = document.createElement("p");
 			button.href = "#";
 			button.id = buttonId;
 			button.style.background = "none";
@@ -228,15 +210,8 @@
 			button.style.outline = "none";
 			button.appendChild(img);
 			
-			// Set position of the button
-			var xPos = (screenWidth / numColumns * colStart) + "px";
-			var yPos = (screenHeight / numRows * rowStart) + "px";
+			document.getElementById("right").appendChild(button);
 			
-			button.style.left = xPos;
-			button.style.top = yPos;
-			
-			document.body.appendChild(button);
-
 			//Adds touch and mouse listeners to each button
 			//Please be careful with this code, it is VERY finnicky
 			document.getElementById(buttonId).onmousedown = function(){onButtonPress(this.id);}
