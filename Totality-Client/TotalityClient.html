@@ -120,11 +120,7 @@
 		
 		//Programatically creates a joystick with the given id and adds it to the given context
 		function createJoystick(joystickId, xPos, yPos, width, height)
-		{
-			var joystickNum = 0;
-			joystickNum = parseInt(joystickId.substring(8));
-			console.log("joystickNum: " + joystickNum);
-
+		{			
 			joystickDiv = document.createElement("div");
 			joystickDiv.href = "#";
 			joystickDiv.id = joystickId + "div";
@@ -159,7 +155,7 @@
 				mode: 'static',
 				position: { left: '0%', top: '0%' },
 				color: 'green',
-				size: (window.screen.availWidth / 5)
+				size: (joystickDiv.width)
 			});
 
 			joystick.id = joystickId;
