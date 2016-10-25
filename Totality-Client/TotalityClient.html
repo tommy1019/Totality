@@ -31,8 +31,8 @@
         }
 
         .imgClass {
-            display: block; 
-            margin-left: auto; 
+            display: block;
+            margin-left: auto;
             margin-right: auto
         }
 
@@ -44,6 +44,7 @@
 		style="position: relative; top: 50%; -webkit-transform: translateY(-50%); -ms-transform: translateY(-50%); transform: translateY(-50%); left: 1px; right: 1px;"
 		></div>
 		</div>
+<<<<<<< HEAD
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
@@ -61,25 +62,25 @@
 
 		var numButtons = 0;
 		var numJoysticks = 0;
-		
+
 		var percentJoyDataSent = 50;
-		
+
 		buttonImg = new Image();
 		buttonImg.src = "button.png";
-		
+
 		buttonPressedImg = new Image();
 		buttonPressedImg.src = "buttonPressed.png"
-			
+
 		//This disables the context menu for android
-		window.oncontextmenu = function(event) 
+		window.oncontextmenu = function(event)
 		{
 			event.preventDefault();
 			event.stopPropagation();
 			return false;
 		};
-			
+
 		//This is necessary to remove force touch on ios
-		window.onload = function () 
+		window.onload = function ()
 		{
 			document.body.style.webkitTouchCallout='none';
 			document.body.style.webkitUserSelect='none';
@@ -154,13 +155,13 @@
 		function createJoystick(context, joystickId)
 		{
 			var  verticalPosition = Math.round(100 / (numJoysticks + 1));
-			
+
 			var joystickNum = 0;
 			joystickNum = parseInt(joystickId.substring(8));
 			console.log("joystickNum: " + joystickNum);
-			
+
 			console.log("verticalPosition: " + verticalPosition);
-			
+
 			var joystick = nipplejs.create(
 			{
 				zone: document.getElementById('left'),
@@ -169,53 +170,53 @@
 				color: 'green',
 				size: (window.screen.availWidth / 5)
 			});
-			
+
 			joystick.id = joystickId;
-			
+
 			//These keep track of the movement of the joystick
 			var dx;
 			var dy;
-			
+
 			var count = 0;
-			
-			joystick.on('move', function (evt, data) 
+
+			joystick.on('move', function (evt, data)
 			{
 				count++;
-				
+
 				if(count % Math.round(100 / percentJoyDataSent) == 0)
 				{
 					dx = Math.cos(data.angle.radian);
 					dy = Math.sin(data.angle.radian);
 				
-					webSocket.send("JOYSTICK:" + joystick.id + ":state:" + dx + ":" + dy);
+					webSocket.send("JOYSTICK:" + joystick.id + ":state:" + dx + ":" + dy + ":" + data.distance);
 				}
 				if(count >= 10)
 				{
 					count = 0;
 				}
-				
-			}).on('removed', function (evt, nipple) 
+
+			}).on('removed', function (evt, nipple)
 			{
 				nipple.off('move', 'end');
-				
-			}).on('end', function (evt, nipple) 
+
+			}).on('end', function (evt, nipple)
 			{
-				webSocket.send("JOYSTICK:" + joystick.id + ":state:" + 0 + ":" + 0);
+				webSocket.send("JOYSTICK:" + joystick.id + ":state:" + 0 + ":" + 0 + ":" + 0);
 			});
 		}
-		
+
 		//Programatically creates a button with the given id and adds it to the given context
 		function createButton(context, buttonId, rowStart, rowEnd, colStart, colEnd)
 		{			
 			var img = document.createElement("img");
 			img.id = buttonId;
-			img.name = buttonId + "Img"; 
-			img.src = buttonImg.src; 
+			img.name = buttonId + "Img";
+			img.src = buttonImg.src;
             img.className = "imgClass";
 
 			var screenWidth  = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
 			var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-						
+		
 			// Programatically sets the width and height of the button
 			img.width  = screenWidth / numColumns * (colEnd - colStart); 
 			img.height = screenHeight / numRows * (rowEnd - rowStart);
@@ -227,7 +228,7 @@
 			button.style.border = "none";
 			button.style.outline = "none";
 			button.appendChild(img);
-			
+
 			// Set position of the button
 			var xPos = (screenWidth / numColumns * colStart) + "px";
 			var yPos = (screenHeight / numRows * rowStart) + "px";
@@ -243,34 +244,34 @@
 			document.getElementById(buttonId).onmouseup = function(){onStopButtonPress(this.id);}
 			document.getElementById(buttonId).ontouchstart = function(){onButtonPress(this.id);}
 			document.getElementById(buttonId).ontouchend = function(){onStopButtonPress(this.id);}
-			
+
 		}
-		
+
 		function onButtonPress(buttonId)
 		{
 			//When a button is pressed, tell the server
-		
+
 			webSocket.send("BUTTON:" + buttonId + ":state:" + "true");
-			
+
 			document.images[buttonId + "Img"].src = buttonPressedImg.src;
-			
+
 			return true;
 		}
 		function onStopButtonPress(buttonId)
 		{
 			//When a button is released, tell the server
-			
+
 			webSocket.send("BUTTON:" + buttonId + ":state:" + "false");
-		
+
 			document.images[buttonId + "Img"].src = buttonImg.src;
-			
+
 			return true;
 		}
-        
+
 		//This is supposed to disable pinch zoom on ios
-        document.documentElement.addEventListener('gesturestart', function (event) 
+        document.documentElement.addEventListener('gesturestart', function (event)
         {
-            event.preventDefault();      
+            event.preventDefault();
         }, false);
 
 		//This is supposed to disable scrolling on ios
@@ -286,7 +287,7 @@
         };
 	</script>
 	</head>
-	
+
 	<body>
         <script src="dist/nipplejs.min.js" charset="utf-8"></script>
         <script>

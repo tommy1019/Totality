@@ -3,7 +3,6 @@ package self.totality_example;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.UUID;
 
 import javax.swing.JFrame;
@@ -14,18 +13,21 @@ import self.totality.ConnectListener;
 import self.totality.ControllerElement;
 import self.totality.ControllerElementType;
 import self.totality.DataListener;
+import self.totality.DisconnectListener;
 import self.totality.Joystick;
 import self.totality.TotalityServer;
 
 public class Example extends JPanel
 {
 	private static final long serialVersionUID = 1L;
-	public static int windowWidth = 800;
-	public static int windowHeight = 600;
+	public static int windowWidth = 1400;
+	public static int windowHeight = 800;
 
 	public static void main(String args[])
 	{
-		JFrame frame = new JFrame("test!");
+		System.setProperty("sun.java2d.opengl", "True");
+
+		JFrame frame = new JFrame("Totality Example");
 		frame.setSize(windowWidth, windowHeight);
 		frame.setLocationRelativeTo(null);
 		frame.setContentPane(new Example());
@@ -38,12 +40,13 @@ public class Example extends JPanel
 	ArrayList<Bullet> bulletList = new ArrayList<>();
 	HashMap<UUID, User> userMap = new HashMap<>();
 
+	ArrayList<UUID> usersToRemove = new ArrayList<>();
+
 	public Example()
 	{
 		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button1");
 		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button2");
 		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick1");
-		//TrekServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick2");
 
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
@@ -53,6 +56,15 @@ public class Example extends JPanel
 				User user = new User();
 				userList.add(user);
 				userMap.put(uuid, user);
+			}
+		});
+
+		TotalityServer.instance.addDisconnectListener(new DisconnectListener()
+		{
+			@Override
+			public void onDisconnect(UUID uuid)
+			{
+				usersToRemove.add(uuid);
 			}
 		});
 
@@ -69,8 +81,9 @@ public class Example extends JPanel
 
 					u.xVel = j.getXVal();
 					u.yVel = j.getYVal();
+					u.speed = j.getForce();
 
-					if(u.xVel != 0 && u.yVel != 0)
+					if (u.xVel != 0 && u.yVel != 0)
 					{
 						u.angle = Math.atan2(-u.yVel, u.xVel);
 					}
@@ -79,7 +92,14 @@ public class Example extends JPanel
 				{
 					Button b = (Button) e;
 
-					u.pressed = b.pressed();
+					if (b.id.equals("button1"))
+					{
+						u.pressed1 = b.pressed();
+					}
+					else if (b.id.equals("button2"))
+					{
+						u.pressed2 = b.pressed();
+					}
 				}
 			}
 		});
@@ -89,42 +109,53 @@ public class Example extends JPanel
 	{
 		for (User u : userList)
 		{
-			if(u.alive)
+			if (u.alive)
 			{
-				u.xPos += u.xVel;
-				u.yPos += u.yVel;
+				u.xPos += u.xVel * u.speed;
+				u.yPos += u.yVel * u.speed;
 
-				//Keeps the players roughly contained within the window
-				if(u.xPos <= 0)
+				// Keeps the players roughly contained within the window
+				if (u.xPos <= 0)
 				{
 					u.xPos = 0;
 				}
-				else if(u.xPos >= this.getWidth() - u.width)
+				else if (u.xPos >= this.getWidth() - u.width)
 				{
 					u.xPos = this.getWidth() - u.width;
 				}
-				if(u.yPos - u.height <= 0)
+				if (u.yPos - u.height <= 0)
 				{
 					u.yPos = u.height;
 				}
-				else if(u.yPos >= this.getHeight())
+				else if (u.yPos >= this.getHeight())
 				{
 					u.yPos = this.getHeight();
 				}
 
-				if(u.pressed && u.timeSinceLastShot >= 200)
+				// Shoot a bullet either forwards or backwards, depending on
+				// which button was pressed
+				if ((u.pressed1 || u.pressed2) && u.timeSinceLastShot >= User.FIRE_RATE)
 				{
-					bulletList.add(new Bullet(u.angle));
+					if (u.pressed1)
+					{
+						bulletList.add(new Bullet(u.xPos + u.width / 2, u.yPos - u.height / 2, u.angle, u));
+					}
+					else if (u.pressed2)
+					{
+						bulletList.add(new Bullet(u.xPos + u.width / 2, u.yPos - u.height / 2, u.angle + Math.PI, u));
+					}
 					u.timeSinceLastShot = 0;
 				}
-					
+
 				u.timeSinceLastShot++;
 
 				u.draw(g);
 			}
-			else if(u.timeSinceDeath >= User.RESPAWN_TIME)
+			else if (u.timeSinceDeath >= User.RESPAWN_TIME)
 			{
 				u.alive = true;
+				u.xPos = windowWidth / 2;
+				u.yPos = windowHeight / 2;
 				u.timeSinceDeath = 0;
 			}
 			else
@@ -133,41 +164,53 @@ public class Example extends JPanel
 			}
 		}
 
-		Iterator<Bullet> itr = bulletList.iterator();
-		while (itr.hasNext())
+		for (int j = 0; j < bulletList.size(); j++)
 		{
-			Bullet b = itr.next();
+			Bullet b = bulletList.get(j);
 
 			b.xPos += b.xVel;
 			b.yPos += b.yVel;
 
 			b.draw(g);
 
-			//Disposes of the bullet if it goes off screen
-			if(b.xPos + b.width <= 0
-					|| b.xPos >= this.getWidth()
-					|| b.yPos - b.height >= this.getHeight()
-					|| b.yPos <= 0)
+			// Disposes of the bullet if it goes off screen
+			if (b.xPos + b.width <= 0 || b.xPos >= this.getWidth() || b.yPos - b.height >= this.getHeight() || b.yPos <= 0)
 			{
-				itr.remove();
-			}			
+				bulletList.remove(j);
+			}
 			else
 			{
-				Iterator<User> userItr = userList.iterator();
-				while(userItr.hasNext())
+				for (int i = 0; i < userList.size(); i++)
 				{
-					User u = userItr.next();
+					User u = userList.get(i);
 
-					if(u.alive)
+					if (u.alive && !b.source.equals(u))
 					{
-						if(Math.sqrt(Math.pow(u.xPos - b.xPos, 2) + Math.pow(u.yPos - b.yPos, 2)) < u.width + b.width)
+						if (Math.sqrt(Math.pow(u.xPos - b.xPos, 2) + Math.pow(u.yPos - b.yPos, 2)) < u.width + b.width)
 						{
 							u.alive = false;
-							itr.remove();
+							if (bulletList.size() > 0)
+								bulletList.remove(j);
 						}
 					}
 				}
 			}
+		}
+
+		for (UUID uuid : usersToRemove)
+		{
+			User u = userMap.get(uuid);
+			userList.remove(u);
+			userMap.remove(uuid);
+		}
+
+		try
+		{
+			Thread.sleep(1);
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
 		}
 
 		repaint();

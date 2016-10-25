@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Bullet
 {
-	static final double SPEED = 5;
+	static final double SPEED = 1;
 	
 	static Random random = new Random();
 
@@ -23,14 +23,20 @@ public class Bullet
 	
 	double angle;
 
+	User source;
+	
 	Color color;
 
-	public Bullet(double angle)
+	public Bullet(double x, double y, double angle, User source)
 	{
+		xPos = x;
+		yPos = y;
 		this.angle = angle;
 		
 		xVel = SPEED * Math.cos(angle);
-		yVel = SPEED * Math.sin(angle);
+		yVel = -SPEED * Math.sin(angle);
+		
+		this.source = source;
 	}
 
 	public void draw(Graphics g)

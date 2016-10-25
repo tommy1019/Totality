@@ -93,7 +93,7 @@ public class ConnectedClient extends Thread
 								e = new Button(msgParts[1], msgParts[3].equals("true"));
 								break;
 							case "JOYSTICK":
-								e = new Joystick(msgParts[1], Double.parseDouble(msgParts[3]), Double.parseDouble(msgParts[4]));
+								e = new Joystick(msgParts[1], Double.parseDouble(msgParts[3]), Double.parseDouble(msgParts[4]), Double.parseDouble(msgParts[5]));
 								break;
 						}
 						
