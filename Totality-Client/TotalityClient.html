@@ -50,9 +50,10 @@
 			document.body.style.webkitTouchCallout = 'none';
 			document.body.style.webkitUserSelect = 'none';
 
-			screenWidth = window.innerWidth;  //|| document.documentElement.clientWidth  || document.body.clientWidth;
-			screenHeight = window.innerHeight; //|| document.documentElement.clientHeight || document.body.clientHeight;
-
+			screenWidth = $(window).width();
+			screenHeight = $(window).height();
+			
+			
 			// Get the ip of the websocket server from the web server
 			// Once this is done, initialize the websocket with the new ip
 			jQuery.get('webSocketIp.txt', function(data)
