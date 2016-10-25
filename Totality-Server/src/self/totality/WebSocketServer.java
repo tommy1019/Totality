@@ -8,19 +8,19 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class WebSocketServer extends Thread
 {
 	public static final int PORT = 8000;
 
 	ServerSocket serverSocket;	
-	public ArrayList<ConnectedClient> connectedClients;
+	public HashMap<UUID, ConnectedClient> connectedClients;
 
 	public WebSocketServer()
 	{
-		connectedClients = new ArrayList<>();
+		connectedClients = new HashMap<UUID, ConnectedClient>();
 		
 		try
 		{
@@ -75,7 +75,7 @@ public class WebSocketServer extends Thread
 				System.out.println("Client connected");
 				ConnectedClient client = new ConnectedClient(socket);
 				
-				connectedClients.add(client);
+				connectedClients.put(client.uuid, client);
 				client.start();
 			}
 			catch (SocketTimeoutException e)

@@ -19,7 +19,7 @@ public class TotalityServer
 
 	boolean running = true;
 
-	String localIp = "0.0.0.0";
+	String localIp;
 	
 	WebServer webServer;
 	WebSocketServer webSocketServer;
@@ -57,35 +57,10 @@ public class TotalityServer
 		}
 		catch (UnknownHostException e)
 		{
-			
+			localIp = "0.0.0.0";
 		}
 		
 		System.out.println("[Totality server] Local ip: " + localIp);
-
-		// TODO: Better system for removing users
-		// new Thread(new Runnable()
-		// {
-		//
-		// @Override
-		// public void run()
-		// {
-		// while(true)
-		// {
-		// for (int i = 0; i < connectedClients.size(); i++)
-		// if (!connectedClients.get(i).connected)
-		// connectedClients.remove(i);
-		//
-		// try
-		// {
-		// Thread.sleep(1000);
-		// }
-		// catch (InterruptedException e)
-		// {
-		// e.printStackTrace();
-		// }
-		// }
-		// }
-		// }).start();
 
 		webSocketServer.start();
 		System.out.println("[Totality server] Started web socket server.");

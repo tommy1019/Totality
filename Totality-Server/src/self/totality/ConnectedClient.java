@@ -19,9 +19,6 @@ public class ConnectedClient extends Thread
 	
 	DataInputStream in;
 	DataOutputStream out;
-		
-	public float tmpX = 0.0f;
-	public float tmpY = 0.0f;
 	
 	boolean connected = true;
 	
@@ -57,6 +54,8 @@ public class ConnectedClient extends Thread
 			e.printStackTrace();
 		}
 		
+		TotalityServer.instance.webSocketServer.connectedClients.remove(uuid);
+		
 		for (DisconnectListener l : TotalityServer.instance.disconnectListeners)
 			l.onDisconnect(uuid);
 	}
@@ -80,9 +79,6 @@ public class ConnectedClient extends Thread
 					case 1:
 					case 2:
 						String msg = new String(clientMessage.x);
-						
-						//System.out.println(new String(clientMessage.x));
-						
 						String[] msgParts = msg.split(":");
 						
 						ControllerElement e = null;
