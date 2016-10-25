@@ -13,11 +13,8 @@ public class Testing
 {
 	public static void main(String args[])
 	{
-		for (int i = 0; i < 10; i++)
-		{
-			TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button" + i, 0.1f, 0.1f * i, 0.1f, 0.1f);
-			TotalityServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick" + i, 0.6f, 0.1f * i, 0.1f, 0.1f);
-		}
+		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button", .3f - .2f / 2f, 0.4f, 0.2f, 0.2f);
+		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick", 0.7f - .2f / 2f, 0.4f, 0.2f, 0.2f);
 		
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
