@@ -198,7 +198,7 @@
 			img.height = height * screenHeight;
 			
 			// Preserve the aspect ratio of the button by limiting the size to the smallest component
-			if(img.width > img.height)
+			if(img.width < img.height)
 			{
 				img.height = img.width;
 			}
