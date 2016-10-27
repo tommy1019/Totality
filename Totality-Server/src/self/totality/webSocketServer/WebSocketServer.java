@@ -31,10 +31,12 @@ public class WebSocketServer extends Thread
 		}
 		catch (IOException e)
 		{
-			System.out.println("Error starting web socket server");
+			System.out.println("[Totality server] Error starting web socket server");
 			e.printStackTrace();
 			System.exit(1);
 		}
+		
+		System.out.println("[Totality server] Started web socket server.");
 	}
 
 	public void run()

@@ -24,6 +24,8 @@ public class WebServer extends Thread
 			e.printStackTrace();
 			System.exit(1);
 		}
+		
+		System.out.println("[Totality server] Started web server.");
 	}
 
 	public void run()

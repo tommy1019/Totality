@@ -9,10 +9,10 @@ import com.google.gson.GsonBuilder;
 
 import self.totality.webServer.WebServer;
 import self.totality.webSocketServer.WebSocketServer;
-import self.totality.webSocketServer.controller.Button;
+import self.totality.webSocketServer.controller.ControllerElement;
 import self.totality.webSocketServer.controller.ControllerElementType;
 import self.totality.webSocketServer.controller.GameController;
-import self.totality.webSocketServer.controller.Joystick;
+import self.totality.webSocketServer.controller.VisibleControllerElement;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DataListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
@@ -71,26 +71,24 @@ public class TotalityServer
 		
 		System.out.println("[Totality server] Local ip: " + localIp);
 		
-		webSocketServer.start();
-		System.out.println("[Totality server] Started web socket server.");
-		
+		webSocketServer.start();		
 		webServer.start();
-		System.out.println("[Totality server] Started web server.");
 	}
 	
-	public void addDefaultControllerElement(ControllerElementType type, String id, float x, float y, float width, float height)
+	public void addControllerElement(String id, ControllerElementType type)
 	{
-		switch (type)
-		{
-			case BUTTON:
-				defaultController.controllerElements.add(new Button(id, false, x, y, width, height));
-				break;
-			case JOYSTICK:
-				defaultController.controllerElements.add(new Joystick(id, 0, 0, 0, x, y, width, height));
-				break;
-			default:
-				break;
-		}
+		if (type.visible)
+			throw new IllegalArgumentException("Controller element is visible: " + id);
+		
+		defaultController.controllerElements.add(new ControllerElement(id, type));
+	}
+	
+	public void addControllerElement(String id, ControllerElementType type, float x, float y, float width, float height)
+	{
+		if (!type.visible)
+			throw new IllegalArgumentException("Controller element is not visible: " + id);
+		
+		defaultController.controllerElements.add(new VisibleControllerElement(id, type, x, y, width, height));
 	}
 	
 	public GameController getDefaultController()

@@ -1,12 +1,12 @@
 package self.totality.webSocketServer.controller;
 
-public class Button extends VisibleControllerElement
+public class Button extends ControllerElement
 {
 	protected boolean pressed;
 
-	public Button(String id, boolean isPressed, float x, float y, float width, float height)
+	public Button(String id, boolean isPressed)
 	{
-		super(id, ControllerElementType.BUTTON, x, y, width, height);
+		super(id, ControllerElementType.BUTTON);
 		
 		this.pressed = isPressed;
 	}

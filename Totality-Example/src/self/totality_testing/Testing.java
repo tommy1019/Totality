@@ -13,8 +13,8 @@ public class Testing
 {
 	public static void main(String args[])
 	{
-		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.BUTTON, "button", .3f - .2f / 2f, 0.4f, 0.2f, 0.2f);
-		TotalityServer.instance.addDefaultControllerElement(ControllerElementType.JOYSTICK, "joystick", 0.7f - .2f / 2f, 0.4f, 0.2f, 0.2f);
+		TotalityServer.instance.addControllerElement("button1", ControllerElementType.BUTTON, .3f - .2f / 2f, 0.4f, 0.2f, 0.2f);
+		TotalityServer.instance.addControllerElement("joystick1", ControllerElementType.JOYSTICK, 0.7f - .2f / 2f, 0.4f, 0.2f, 0.2f);
 		
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
