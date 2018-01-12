@@ -107,6 +107,7 @@ public class Example extends JPanel
 
 	public void paint(Graphics g)
 	{
+		g.clearRect(0, 0, windowWidth, windowHeight);
 		for (User u : userList)
 		{
 			if (u.alive)
