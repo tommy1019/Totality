@@ -14,7 +14,7 @@ import self.totality.webSocketServer.WebSocketServer;
 
 public class WebServerConnection extends Thread
 {
-	public static final String CONTENT_DIRECTORY = "/Totality-Client";
+	public static final String CONTENT_DIRECTORY = "/resources";
 	public static final String INDEX_PAGE = "/TotalityClient.html";
 	
 	Socket socket;
@@ -103,7 +103,8 @@ public class WebServerConnection extends Thread
 	{
 		String extension = path.substring(path.lastIndexOf('.') + 1);
 		
-		System.out.println("[Totality server] Serving file: " + CONTENT_DIRECTORY + path);
+		//For debug purposes
+		//System.out.println("[Totality server] Serving file: " + CONTENT_DIRECTORY + path);
 		
 		InputStream in;
 		
