@@ -78,7 +78,10 @@
 					console.log("Message received!");
 
 					//Clear the existing elements, if any
-					document.open();
+					while (document.body.firstChild) 
+					{
+						document.body.removeChild(document.body.firstChild);
+					}
 					
 					elements = JSON.parse(event.data).controllerElements;
 
