@@ -113,6 +113,8 @@ public class ConnectedClient extends Thread
 							case "TEXTINPUT":
 								e = new TextInput(msgParts[1], msgParts[3]);
 								break;
+								default:
+									System.err.println("[Totality server] Error: Unsupported packet type: " + msgParts[0]);
 						}
 						
 						for (DataListener l : TotalityServer.instance.getDataListeners())

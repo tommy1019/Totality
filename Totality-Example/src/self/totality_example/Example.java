@@ -47,10 +47,10 @@ public class Example extends JPanel
 	public Example()
 	{
 		GameController defaultController = new GameController();
-		//defaultController.addControllerElement("playButton", ControllerElementType.BUTTON, 0.5f, 0.5f, 0.3f, 0.3f);
+		// defaultController.addControllerElement("playButton", ControllerElementType.BUTTON, 0.5f, 0.5f, 0.3f, 0.3f);
 		defaultController.addControllerElement("text", ControllerElementType.TEXTINPUT, 0.5f, 0.5f, 0.3f, 0.3f);
 		TotalityServer.instance.setDefaultController(defaultController);
-		
+
 		GameController newController = new GameController();
 		newController.addControllerElement("button1", ControllerElementType.BUTTON, 0.6f, 0.5f, 0.1f, 0.1f);
 		newController.addControllerElement("button2", ControllerElementType.BUTTON, 0.8f, 0.4f, 0.1f, 0.1f);
