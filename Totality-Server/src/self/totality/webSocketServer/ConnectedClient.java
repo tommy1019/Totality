@@ -111,7 +111,14 @@ public class ConnectedClient extends Thread
 										Double.parseDouble(msgParts[5]));
 								break;
 							case "TEXTINPUT":
-								e = new TextInput(msgParts[1], msgParts[3]);
+								if(msgParts.length > 3)
+								{
+									e = new TextInput(msgParts[1], msgParts[3]);
+								}
+								else
+								{
+									e = new TextInput(msgParts[1], "");
+								}
 								break;
 								default:
 									System.err.println("[Totality server] Error: Unsupported packet type: " + msgParts[0]);

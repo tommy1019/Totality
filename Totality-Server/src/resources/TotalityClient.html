@@ -13,6 +13,8 @@
 <script src="dist/jquery-3.3.1.min.js"
 <script src="dist/jquery-ui-1.12.1/jquery-ui.js"></script>
 <script src="dist/nipplejs.min.js" charset="utf-8"></script>
+</head>
+<body>
 <script type="text/javascript">
 
 		var ip;
@@ -41,7 +43,7 @@
 			return false;
 		};
 
-		window.onload = function ()
+		document.body.onload = function ()
 		{
 			// This is necessary to remove force touch on ios
 			document.body.style.webkitTouchCallout = 'none';
@@ -100,6 +102,7 @@
 							case "TEXTINPUT":
 								console.log("Received textinput: " + elements[i].id);
 								createTextInput(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+								break;
 							default:
 								console.log("Received unknown element: " + elements[i].id);
 								break;
@@ -234,25 +237,26 @@
 		{
 			var input = document.createElement("INPUT");
 			input.id = textInputId;
-
+			input.type = 'text';
+			
 			// Programatically sets the width and height of the textField
 			input.width  = width * screenWidth;
 			input.height = height * screenHeight;
 
-			input.addEventListener("input", onTextChanged(textInputId));
+			document.body.appendChild(input);
+			
+			input.addEventListener("input", function(){ return onTextChanged(textInputId); });
 			
 			// Set position of the textInput
 			input.style.position = "absolute";
 			input.style.left = xPos * screenWidth + "px";
 			input.style.top = yPos * screenHeight + "px";
-
-			document.body.appendChild(input);
 		}
 		
 		function onTextChanged(textInputId)
 		{
 			console.log("Text changed!");
-			webSocket.send("TEXTINPUT:" + textInputId + ":value:" + input.value);
+			webSocket.send("TEXTINPUT:" + textInputId + ":value:" + document.getElementById(textInputId).value);
 		}
 		
 		function onButtonPress(buttonId)
@@ -295,5 +299,5 @@
             event.preventDefault();
         };
 	</script>
-</head>
+</body>
 </html>
