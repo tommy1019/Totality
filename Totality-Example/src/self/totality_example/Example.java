@@ -12,6 +12,7 @@ import self.totality.TotalityServer;
 import self.totality.webSocketServer.controller.Button;
 import self.totality.webSocketServer.controller.ControllerElement;
 import self.totality.webSocketServer.controller.ControllerElementType;
+import self.totality.webSocketServer.controller.GameController;
 import self.totality.webSocketServer.controller.Joystick;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DataListener;
@@ -44,9 +45,14 @@ public class Example extends JPanel
 
 	public Example()
 	{
-		TotalityServer.instance.addControllerElement("button1", ControllerElementType.BUTTON, 0.6f, 0.5f, 0.1f, 0.1f);
-		TotalityServer.instance.addControllerElement("button2", ControllerElementType.BUTTON, 0.8f, 0.4f, 0.1f, 0.1f);
-		TotalityServer.instance.addControllerElement("joystick1", ControllerElementType.JOYSTICK, 0.1f, 0.3f, 0.4f, 0.4f);
+		GameController defaultController = new GameController();
+		defaultController.addControllerElement("playButton", ControllerElementType.BUTTON, 0.5f, 0.5f, 0.3f, 0.3f);
+		TotalityServer.instance.setDefaultController(defaultController);
+		
+		GameController newController = new GameController();
+		newController.addControllerElement("button1", ControllerElementType.BUTTON, 0.6f, 0.5f, 0.1f, 0.1f);
+		newController.addControllerElement("button2", ControllerElementType.BUTTON, 0.8f, 0.4f, 0.1f, 0.1f);
+		newController.addControllerElement("joystick1", ControllerElementType.JOYSTICK, 0.1f, 0.3f, 0.4f, 0.4f);
 
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
@@ -99,6 +105,10 @@ public class Example extends JPanel
 					else if (b.id.equals("button2"))
 					{
 						u.pressed2 = b.pressed();
+					}
+					else if (b.id.equals("playButton"))
+					{
+						TotalityServer.instance.sendControllerToPlayer(uuid, newController);
 					}
 				}
 			}

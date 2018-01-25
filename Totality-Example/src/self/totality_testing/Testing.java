@@ -5,6 +5,7 @@ import java.util.UUID;
 import self.totality.TotalityServer;
 import self.totality.webSocketServer.controller.ControllerElement;
 import self.totality.webSocketServer.controller.ControllerElementType;
+import self.totality.webSocketServer.controller.GameController;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DataListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
@@ -13,8 +14,10 @@ public class Testing
 {
 	public static void main(String args[])
 	{
-		TotalityServer.instance.addControllerElement("button1", ControllerElementType.BUTTON, .3f - .2f / 2f, 0.4f, 0.2f, 0.2f);
-		TotalityServer.instance.addControllerElement("joystick1", ControllerElementType.JOYSTICK, 0.7f - .2f / 2f, 0.4f, 0.2f, 0.2f);
+		GameController defaultController = new GameController();
+		defaultController.addControllerElement("button1", ControllerElementType.BUTTON, .3f - .2f / 2f, 0.4f, 0.2f, 0.2f);
+		defaultController.addControllerElement("joystick1", ControllerElementType.JOYSTICK, 0.7f - .2f / 2f, 0.4f, 0.2f, 0.2f);
+		TotalityServer.instance.setDefaultController(defaultController);
 		
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{

@@ -3,16 +3,14 @@ package self.totality;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import self.totality.webServer.WebServer;
 import self.totality.webSocketServer.WebSocketServer;
-import self.totality.webSocketServer.controller.ControllerElement;
-import self.totality.webSocketServer.controller.ControllerElementType;
 import self.totality.webSocketServer.controller.GameController;
-import self.totality.webSocketServer.controller.VisibleControllerElement;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DataListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
@@ -28,15 +26,13 @@ public class TotalityServer
 	{
 		instance = new TotalityServer();
 	}
-	
-	boolean running = true;
-	
-	WebServer webServer;
-	WebSocketServer webSocketServer;
+		
+	private WebServer webServer;
+	private WebSocketServer webSocketServer;
 	
 	private GameController defaultController;
 	
-	ArrayList<ConnectListener> connectionListeners;
+	private ArrayList<ConnectListener> connectionListeners;
 	private ArrayList<DataListener> dataListeners;
 	private ArrayList<DisconnectListener> disconnectListeners;
 	
@@ -74,25 +70,19 @@ public class TotalityServer
 		webServer.start();
 	}
 	
-	public void addControllerElement(String id, ControllerElementType type)
+	public void setDefaultController(GameController defaultController)
 	{
-		if (type.visible)
-			throw new IllegalArgumentException("Controller element is visible: " + id);
-		
-		defaultController.controllerElements.add(new ControllerElement(id, type));
-	}
-	
-	public void addControllerElement(String id, ControllerElementType type, float x, float y, float width, float height)
-	{
-		if (!type.visible)
-			throw new IllegalArgumentException("Controller element is not visible: " + id);
-		
-		defaultController.controllerElements.add(new VisibleControllerElement(id, type, x, y, width, height));
+		this.defaultController = defaultController;
 	}
 	
 	public GameController getDefaultController()
 	{
 		return defaultController;
+	}
+	
+	public void sendControllerToPlayer(UUID uuid, GameController gameController)
+	{
+		webSocketServer.sendControllerToPlayer(uuid, gameController);
 	}
 	
 	public void addDataListener(DataListener l)

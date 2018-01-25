@@ -11,6 +11,7 @@ import java.util.UUID;
 import self.totality.TotalityServer;
 import self.totality.webSocketServer.controller.Button;
 import self.totality.webSocketServer.controller.ControllerElement;
+import self.totality.webSocketServer.controller.GameController;
 import self.totality.webSocketServer.controller.Joystick;
 import self.totality.webSocketServer.controller.TextInput;
 import self.totality.webSocketServer.listener.ConnectListener;
@@ -70,6 +71,11 @@ public class ConnectedClient extends Thread
 		
 		for (DisconnectListener l : TotalityServer.instance.getDisconnectListeners())
 			l.onDisconnect(uuid);
+	}
+	
+	void updateController(GameController controller)
+	{
+		ClientUtils.sendMessage(out, TEXT_OPCODE, TotalityServer.gson.toJson(controller).getBytes());
 	}
 	
 	public void run()

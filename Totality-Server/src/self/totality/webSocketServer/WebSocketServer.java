@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import self.totality.webServer.WebUtils;
+import self.totality.webSocketServer.controller.GameController;
 
 public class WebSocketServer extends Thread
 {
@@ -39,6 +40,11 @@ public class WebSocketServer extends Thread
 		System.out.println("[Totality server] Started web socket server.");
 	}
 
+	public void sendControllerToPlayer(UUID uuid, GameController controller)
+	{
+		connectedClients.get(uuid).updateController(controller);
+	}
+	
 	public void run()
 	{
 		while (!this.isInterrupted())
