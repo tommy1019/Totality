@@ -10,7 +10,7 @@
 }
 </style>
 
-<script src="dist/jquery-3.3.1.min"
+<script src="dist/jquery-3.3.1.min.js"
 <script src="dist/jquery-ui-1.12.1/jquery-ui.js"></script>
 <script src="dist/nipplejs.min.js" charset="utf-8"></script>
 <script type="text/javascript">
@@ -20,9 +20,6 @@
 		var webSocket;
 
 		var elements;
-
-		var numButtons = 0;
-		var numJoysticks = 0;
 
 		var percentJoyDataSent = 50;
 
@@ -81,22 +78,6 @@
 					console.log("Message received!");
 
 					elements = JSON.parse(event.data).controllerElements;
-
-					for(i = 0; i < elements.length; i++)
-					{
-						switch(elements[i].type)
-						{
-							case "JOYSTICK":
-								numJoysticks++;
-								break;
-							case "BUTTON":
-								numButtons++;
-								break;
-							default:
-								alert("Received unknown element: " + elements[i].id);
-								break;
-						}
-					}
 
 					for(i = 0; i < elements.length; i++)
 					{
