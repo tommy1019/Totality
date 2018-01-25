@@ -12,6 +12,7 @@ import self.totality.TotalityServer;
 import self.totality.webSocketServer.controller.Button;
 import self.totality.webSocketServer.controller.ControllerElement;
 import self.totality.webSocketServer.controller.Joystick;
+import self.totality.webSocketServer.controller.TextInput;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DataListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
@@ -102,6 +103,9 @@ public class ConnectedClient extends Thread
 							case "JOYSTICK":
 								e = new Joystick(msgParts[1], Double.parseDouble(msgParts[3]), Double.parseDouble(msgParts[4]),
 										Double.parseDouble(msgParts[5]));
+								break;
+							case "TEXTINPUT":
+								e = new TextInput(msgParts[1], msgParts[3]);
 								break;
 						}
 						

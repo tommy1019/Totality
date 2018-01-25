@@ -4,9 +4,9 @@ public class TextInput extends ControllerElement
 {
 	String value;
 	
-	public TextInput(String id, ControllerElementType type, String value) 
+	public TextInput(String id, String value) 
 	{
-		super(id, type);
+		super(id, ControllerElementType.TEXTINPUT);
 		
 		this.value = value;
 	}
