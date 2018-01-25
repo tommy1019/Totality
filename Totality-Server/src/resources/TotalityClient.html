@@ -251,6 +251,7 @@
 		
 		function onTextChanged(textInputId)
 		{
+			console.log("Text changed!");
 			webSocket.send("TEXTINPUT:" + textInputId + ":value:" + input.value);
 		}
 		
