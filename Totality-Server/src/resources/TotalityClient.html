@@ -71,12 +71,18 @@
 					alert("There was an error connecting to the server");
 				}
 
-				//The server will send data to the client telling it what kind of buttons and joysticks it needs
+				//The server will send data to the client telling it what kind controller elements it needs
 				//When this happens, parse the data and build the elements
 				webSocket.onmessage = function(event)
 				{
 					console.log("Message received!");
 
+					//Clear the existing elements, if any
+					while (document.firstChild) 
+					{
+						document.removeChild(document.firstChild);
+					}
+					
 					elements = JSON.parse(event.data).controllerElements;
 
 					for(i = 0; i < elements.length; i++)
@@ -91,6 +97,9 @@
 								console.log("Recieved button: " + elements[i].id);
 								createButton(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
 								break;
+							case "TEXTINPUT":
+								console.log("Received textinput: " + elements[i].id);
+								creatTextInput(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
 							default:
 								console.log("Received unknown element: " + elements[i].id);
 								break;
@@ -218,9 +227,26 @@
 			document.getElementById(buttonId).onmouseup = function(){onStopButtonPress(this.id);}
 			document.getElementById(buttonId).ontouchstart = function(){onButtonPress(this.id);}
 			document.getElementById(buttonId).ontouchend = function(){onStopButtonPress(this.id);}
-
 		}
+		
+		//Programatically creates a text input field and adds it to the given context
+		function createTextInput(textInputId, xPos, yPos, width, height)
+		{
+			var input = document.createElement("INPUT");
+			input.id = textInputId;
 
+			// Programatically sets the width and height of the textField
+			input.width  = width * screenWidth;
+			input.height = height * screenHeight;
+
+			// Set position of the textInput
+			input.style.position = "absolute";
+			input.style.left = xPos * screenWidth + "px";
+			input.style.top = yPos * screenHeight + "px";
+
+			document.body.appendChild(input);
+		}
+		
 		function onButtonPress(buttonId)
 		{
 			//When a button is pressed, tell the server
