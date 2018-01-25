@@ -14,6 +14,7 @@ import self.totality.webSocketServer.controller.ControllerElement;
 import self.totality.webSocketServer.controller.ControllerElementType;
 import self.totality.webSocketServer.controller.GameController;
 import self.totality.webSocketServer.controller.Joystick;
+import self.totality.webSocketServer.controller.TextInput;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DataListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
@@ -46,7 +47,8 @@ public class Example extends JPanel
 	public Example()
 	{
 		GameController defaultController = new GameController();
-		defaultController.addControllerElement("playButton", ControllerElementType.BUTTON, 0.5f, 0.5f, 0.3f, 0.3f);
+		//defaultController.addControllerElement("playButton", ControllerElementType.BUTTON, 0.5f, 0.5f, 0.3f, 0.3f);
+		defaultController.addControllerElement("text", ControllerElementType.TEXTINPUT, 0.5f, 0.5f, 0.3f, 0.3f);
 		TotalityServer.instance.setDefaultController(defaultController);
 		
 		GameController newController = new GameController();
@@ -110,6 +112,11 @@ public class Example extends JPanel
 					{
 						TotalityServer.instance.sendControllerToPlayer(uuid, newController);
 					}
+				}
+				else if (e.type == ControllerElementType.TEXTINPUT)
+				{
+					TextInput i = (TextInput) e;
+					System.out.println(i.value);
 				}
 			}
 		});
