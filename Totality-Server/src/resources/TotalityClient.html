@@ -239,6 +239,11 @@
 			input.width  = width * screenWidth;
 			input.height = height * screenHeight;
 
+			input.oninput = function()
+			{
+				webSocket.send("TEXTINPUT:" + buttonId + ":value:" + input.value);
+			};
+			
 			// Set position of the textInput
 			input.style.position = "absolute";
 			input.style.left = xPos * screenWidth + "px";
