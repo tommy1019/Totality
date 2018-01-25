@@ -2,7 +2,7 @@ package self.totality.webSocketServer.controller;
 
 public enum ControllerElementType
 {	
-	JOYSTICK(true), BUTTON(true), DEFAULT(false);
+	JOYSTICK(true), BUTTON(true), TEXTINPUT(true), DEFAULT(false);
 	
 	public boolean visible;
 	

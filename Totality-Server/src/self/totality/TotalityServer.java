@@ -19,7 +19,6 @@ import self.totality.webSocketServer.listener.DisconnectListener;
 
 public class TotalityServer
 {
-	
 	public static TotalityServer instance;
 	
 	public static String localIp;
