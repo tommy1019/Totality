@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta name="viewport"
-	content="initial-scale=1.0, user-scalable=no, width=device-width, height=device-height" />
+	content="initial-scale=1.0, user-scalable=no, width=device-width, height=device-height, user-scalable=0" />
 <style>
 .imgClass {
 	display: block;
@@ -293,11 +293,15 @@
             event.preventDefault();
         };
 
-        //This is supposed to disable double tapping on ios
-        document.ontouchstart = function(event)
-        {
-            event.preventDefault();
-        };
+		//This should disable double-tap zoom without disabling normal touch
+		$('.no-zoom').bind('touchend', function(e) 
+		{
+			e.preventDefault();
+			// Add your code here. 
+			$(this).click();
+			// This line still calls the standard click event, in case the user needs to interact with the element that is being clicked on, but still avoids zooming in cases of double clicking.
+		})
+		
 	</script>
 </body>
 </html>
