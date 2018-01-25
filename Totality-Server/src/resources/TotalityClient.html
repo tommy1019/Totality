@@ -239,12 +239,19 @@
 			input.width  = width * screenWidth;
 			input.height = height * screenHeight;
 
+			input.addEventListener("input", onTextChanged(textInputId));
+			
 			// Set position of the textInput
 			input.style.position = "absolute";
 			input.style.left = xPos * screenWidth + "px";
 			input.style.top = yPos * screenHeight + "px";
 
 			document.body.appendChild(input);
+		}
+		
+		function onTextChanged(textInputId)
+		{
+			webSocket.send("TEXTINPUT:" + textInputId + ":value:" + input.value);
 		}
 		
 		function onButtonPress(buttonId)
