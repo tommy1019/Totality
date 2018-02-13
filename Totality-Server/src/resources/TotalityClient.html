@@ -27,7 +27,8 @@
 
 		var screenWidth;
 		var screenHeight;
-
+		
+		var controller;
 
 		buttonImg = new Image();
 		buttonImg.src = "button.png";
@@ -42,6 +43,13 @@
 			event.stopPropagation();
 			return false;
 		};
+		
+		// Listen for orientation changes
+		window.addEventListener("orientationchange", function() 
+		{
+			// Announce the new orientation number
+			buildController();
+		}, false);
 
 		document.body.onload = function ()
 		{
@@ -79,37 +87,51 @@
 				{
 					console.log("Message received!");
 
-					//Clear the existing elements, if any
-					while (document.body.firstChild) 
-					{
-						document.body.removeChild(document.body.firstChild);
-					}
-					
-					elements = JSON.parse(event.data).controllerElements;
-
-					for(i = 0; i < elements.length; i++)
-					{
-						switch(elements[i].type)
-						{
-							case "JOYSTICK":
-								console.log("Received joystick: " + elements[i].id);
-								createJoystick(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
-								break;
-							case "BUTTON":
-								console.log("Recieved button: " + elements[i].id);
-								createButton(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
-								break;
-							case "TEXTINPUT":
-								console.log("Received textinput: " + elements[i].id);
-								createTextInput(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
-								break;
-							default:
-								console.log("Received unknown element: " + elements[i].id);
-								break;
-						}
-					}
+					controller = event.data;
+					buildController();
 				};
 			});
+		}
+		
+		function buildController()
+		{
+			if(controller == null)
+			{
+				return;
+			}
+		
+			screenWidth = window.innerWidth;
+			screenHeight = window.innerHeight;
+			
+			//Clear the existing elements, if any
+			while (document.body.firstChild) 
+			{
+				document.body.removeChild(document.body.firstChild);
+			}
+			
+			elements = JSON.parse(controller).controllerElements;
+
+			for(i = 0; i < elements.length; i++)
+			{
+				switch(elements[i].type)
+				{
+					case "JOYSTICK":
+						console.log("Received joystick: " + elements[i].id);
+						createJoystick(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+						break;
+					case "BUTTON":
+						console.log("Recieved button: " + elements[i].id);
+						createButton(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+						break;
+					case "TEXTINPUT":
+						console.log("Received textinput: " + elements[i].id);
+						createTextInput(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+						break;
+					default:
+						console.log("Received unknown element: " + elements[i].id);
+						break;
+				}
+			}
 		}
 
 		//Programatically creates a joystick with the given id and adds it to the given context
