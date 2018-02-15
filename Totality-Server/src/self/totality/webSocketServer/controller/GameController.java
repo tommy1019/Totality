@@ -19,19 +19,23 @@ public class GameController
 		controllerElements.add(ce);
 	}
 	
+	public void addControllerElement(ControllerElement ce, float x, float y, float width, float height)
+	{
+		ce.x = x;
+		ce.y = y;
+		ce.width = width;
+		ce.height = height;
+		
+		controllerElements.add(ce);
+	}
+	
 	public void addControllerElement(String id, ControllerElementType type)
 	{
-		if (type.visible)
-			throw new IllegalArgumentException("Controller element is visible: " + id);
-		
 		this.controllerElements.add(new ControllerElement(id, type));
 	}
 	
 	public void addControllerElement(String id, ControllerElementType type, float x, float y, float width, float height)
 	{
-		if (!type.visible)
-			throw new IllegalArgumentException("Controller element is not visible: " + id);
-		
 		this.controllerElements.add(new VisibleControllerElement(id, type, x, y, width, height));
 	}
 }

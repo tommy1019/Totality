@@ -128,7 +128,7 @@
 						break;
 					case "TEXT":
 						console.log("Received text: " + elements[i].id);
-						createText(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+						createText(elements[i].id, elements[i].content, elements[i].fontSize, elements[i].x, elements[i].y);
 						break;
 					default:
 						console.log("Received unknown element: " + elements[i].id);
@@ -280,25 +280,27 @@
 		}
 
 		//Programatically creates a text box and adds it to the given context
-		function createText(textID, xPos, yPos, width, height)
+		function createText(textID, content, fontSize, xPos, yPos)
 		{
 			var textDiv = document.createElement("div");
 			textDiv.id = textID;
-			textDiv.innerHTML = textID;
+			textDiv.innerHTML = content;
 			
-			// Programatically sets the width and height of the text
-			textDiv.style.width  = width * screenWidth + "px";
-			textDiv.style.height = height * screenHeight + "px";
-			
+			textDiv.style.fontSize = fontSize + "px";
 			textDiv.style.textAlign = "center";
 			textDiv.style.verticalAlign = "middle";
 			
+			// Size of the div will be determined by the size of the text
+			textDiv.style.height = "auto";
+			textDiv.style.width = "auto";
+			textDiv.style.whiteSpace = "nowrap";
+			
 			document.body.appendChild(textDiv);
 
-			// Set position of the textInput
+			// Set position of the text
 			textDiv.style.position = "absolute";
-			textDiv.style.left = xPos * screenWidth - (width * screenWidth / 2) + "px";
-			textDiv.style.top = yPos * screenHeight - (height * screenHeight / 2) + "px";
+			textDiv.style.left = xPos * screenWidth - (textDiv.offsetWidth / 2) + "px";
+			textDiv.style.top = yPos * screenHeight - (textDiv.offsetHeight / 2) + "px";
 		}
 		
 		function onTextChanged(textInputId)

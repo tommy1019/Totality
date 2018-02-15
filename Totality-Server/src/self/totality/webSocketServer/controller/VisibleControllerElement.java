@@ -1,17 +1,7 @@
 package self.totality.webSocketServer.controller;
 
-import com.google.gson.annotations.Expose;
-
 public class VisibleControllerElement extends ControllerElement
 {
-	@Expose
-	float x;
-	@Expose
-	float y;
-	@Expose
-	float width;
-	@Expose
-	float height;
 	
 	public VisibleControllerElement(String id, ControllerElementType type, float x, float y, float width, float height)
 	{
