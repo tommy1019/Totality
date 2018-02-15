@@ -52,7 +52,7 @@ public class WebServerConnection extends Thread
 			switch (requestParts[1])
 			{
 				case "/":
-					handelFile(INDEX_PAGE, out);
+					handleFile(INDEX_PAGE, out);
 					break;
 				case "/webSocketIp.txt":
 					handelIp(out);
@@ -61,7 +61,7 @@ public class WebServerConnection extends Thread
 					handelController(out);
 					break;
 				default:
-					handelFile(requestParts[1], out);
+					handleFile(requestParts[1], out);
 					break;
 			}
 
@@ -101,7 +101,7 @@ public class WebServerConnection extends Thread
 		out.flush();
 	}
 
-	void handelFile(String path, BufferedWriter out) throws IOException
+	void handleFile(String path, BufferedWriter out) throws IOException
 	{
 		String extension = path.substring(path.lastIndexOf('.') + 1);
 

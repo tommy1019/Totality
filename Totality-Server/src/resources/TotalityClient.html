@@ -60,7 +60,6 @@
 			screenWidth = $(window).width();
 			screenHeight = $(window).height();
 			
-			
 			// Get the ip of the websocket server from the web server
 			// Once this is done, initialize the websocket with the new ip
 			jQuery.get('webSocketIp.txt', function(data)
@@ -126,6 +125,10 @@
 					case "TEXTINPUT":
 						console.log("Received textinput: " + elements[i].id);
 						createTextInput(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+						break;
+					case "TEXT":
+						console.log("Received text: " + elements[i].id);
+						createText(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
 						break;
 					default:
 						console.log("Received unknown element: " + elements[i].id);
@@ -274,6 +277,28 @@
 			input.style.left = xPos * screenWidth - (width * screenWidth / 2) + "px";
 			input.style.top = yPos * screenHeight - (height * screenHeight / 2) + "px";
 			input.style.padding = "5px";
+		}
+
+		//Programatically creates a text box and adds it to the given context
+		function createText(textID, xPos, yPos, width, height)
+		{
+			var textDiv = document.createElement("div");
+			textDiv.id = textID;
+			textDiv.innerHTML = textID;
+			
+			// Programatically sets the width and height of the text
+			textDiv.style.width  = width * screenWidth + "px";
+			textDiv.style.height = height * screenHeight + "px";
+			
+			textDiv.style.textAlign = "center";
+			textDiv.style.verticalAlign = "middle";
+			
+			document.body.appendChild(textDiv);
+
+			// Set position of the textInput
+			textDiv.style.position = "absolute";
+			textDiv.style.left = xPos * screenWidth - (width * screenWidth / 2) + "px";
+			textDiv.style.top = yPos * screenHeight - (height * screenHeight / 2) + "px";
 		}
 		
 		function onTextChanged(textInputId)

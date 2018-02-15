@@ -120,8 +120,9 @@ public class ConnectedClient extends Thread
 									e = new TextInput(msgParts[1], "");
 								}
 								break;
-								default:
-									System.err.println("[Totality server] Error: Unsupported packet type: " + msgParts[0]);
+							default:
+								System.err.println("[Totality server] Error: Unsupported packet type: " + msgParts[0]);
+								break;
 						}
 						
 						for (DataListener l : TotalityServer.instance.getDataListeners())
