@@ -2,12 +2,12 @@ package self.totality.webSocketServer.controller;
 
 public enum ControllerElementType
 {	
-	JOYSTICK(true), BUTTON(true), TEXTINPUT(true), TEXT(true), DEFAULT(false);
+	JOYSTICK(1), BUTTON(2), TEXTINPUT(3), TEXT(4), DEFAULT(0);
 	
-	public boolean visible;
+	public int typeID;
 	
-	ControllerElementType(boolean visible)
+	private ControllerElementType(int id)
 	{
-		this.visible = visible;
+		this.typeID = id;
 	}
 }

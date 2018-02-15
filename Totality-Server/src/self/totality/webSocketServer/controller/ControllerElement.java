@@ -18,11 +18,23 @@ public class ControllerElement
 	public float width = 0;
 	@Expose
 	public float height = 0;
+	@Expose
+	public boolean visible = false;
 	
 	public ControllerElement(String id, ControllerElementType type)
 	{
 		this.id = id;
 		this.type = type;
+	}
+	
+	public ControllerElement(String id, ControllerElementType type, float x, float y, float width, float height)
+	{
+		this.id = id;
+		this.type = type;
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 	}
 	
 	public String getId()

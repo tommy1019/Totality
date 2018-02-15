@@ -29,13 +29,38 @@ public class GameController
 		controllerElements.add(ce);
 	}
 	
-	public void addControllerElement(String id, ControllerElementType type)
+	public Button addButton(String id, float x, float y, float width, float height)
 	{
-		this.controllerElements.add(new ControllerElement(id, type));
+		Button button = new Button(id, x, y, width, height);		
+		controllerElements.add(button);
+		return button;
 	}
 	
-	public void addControllerElement(String id, ControllerElementType type, float x, float y, float width, float height)
+	public TextInput addTextInput(String id, float x, float y, float width, float height)
 	{
-		this.controllerElements.add(new VisibleControllerElement(id, type, x, y, width, height));
+		TextInput textInput = new TextInput(id, x, y, width, height);
+		controllerElements.add(textInput);
+		return textInput;
+	}
+	
+	public Joystick addJoystick(String id, float x, float y, float width, float height)
+	{
+		Joystick joystick = new Joystick(id, x, y, width, height);
+		controllerElements.add(joystick);
+		return joystick;
+	}
+	
+	public Text addText(String id, String content, float x, float y)
+	{
+		Text text = new Text(id, content, x, y);
+		controllerElements.add(text);
+		return text;
+	}
+	
+	public Text addText(String id, String content, int fontSize, float x, float y)
+	{
+		Text text = new Text(id, content, fontSize, x, y);
+		controllerElements.add(text);
+		return text;
 	}
 }
