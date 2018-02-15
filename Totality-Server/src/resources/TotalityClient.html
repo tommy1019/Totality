@@ -160,8 +160,8 @@
 
 			// Set position of the button
 			joystickDiv.style.position = "absolute";
-			joystickDiv.style.left = xPos * screenWidth + "px";
-			joystickDiv.style.top = yPos * screenHeight + "px";
+			joystickDiv.style.left = xPos * screenWidth - (joystickDiv.width / 2) + "px";
+			joystickDiv.style.top = yPos * screenHeight - (joystickDiv.height / 2) + "px";
 
 			document.body.appendChild(joystickDiv);
 
@@ -169,7 +169,7 @@
 			{
 				zone: joystickDiv,
 				mode: 'static',
-				position: { x: xPos * screenWidth + joystickDiv.width / 2, y: yPos * screenHeight + joystickDiv.width / 2 },
+				position: { x: xPos * screenWidth, y: yPos * screenHeight },
 				color: 'blue',
 				size: (joystickDiv.width)
 			});
@@ -241,8 +241,8 @@
 
 			// Set position of the button
 			button.style.position = "absolute";
-			button.style.left = xPos * screenWidth + "px";
-			button.style.top = yPos * screenHeight + "px";
+			button.style.left = xPos * screenWidth - (img.width / 2) + "px";
+			button.style.top = yPos * screenHeight - (img.height / 2) + "px";
 
 			document.body.appendChild(button);
 
@@ -262,17 +262,18 @@
 			input.type = 'text';
 			
 			// Programatically sets the width and height of the textField
-			input.width  = width * screenWidth;
-			input.height = height * screenHeight;
-
+			input.style.width  = width * screenWidth + "px";
+			input.style.height = height * screenHeight + "px";
+			
 			document.body.appendChild(input);
 			
 			input.addEventListener("input", function(){ return onTextChanged(textInputId); });
 			
 			// Set position of the textInput
 			input.style.position = "absolute";
-			input.style.left = xPos * screenWidth + "px";
-			input.style.top = yPos * screenHeight + "px";
+			input.style.left = xPos * screenWidth - (width * screenWidth / 2) + "px";
+			input.style.top = yPos * screenHeight - (height * screenHeight / 2) + "px";
+			input.style.padding = "5px";
 		}
 		
 		function onTextChanged(textInputId)
