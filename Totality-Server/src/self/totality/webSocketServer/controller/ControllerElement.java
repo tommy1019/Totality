@@ -9,15 +9,7 @@ public class ControllerElement
 	
 	@Expose
 	public ControllerElementType type;
-		
-	@Expose
-	public float x = 0;
-	@Expose
-	public float y = 0;
-	@Expose
-	public float width = 0;
-	@Expose
-	public float height = 0;
+	
 	@Expose
 	public boolean visible = false;
 	
@@ -31,10 +23,6 @@ public class ControllerElement
 	{
 		this.id = id;
 		this.type = type;
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
 	}
 	
 	public String getId()

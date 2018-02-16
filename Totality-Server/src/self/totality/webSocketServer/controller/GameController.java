@@ -19,16 +19,6 @@ public class GameController
 		controllerElements.add(ce);
 	}
 	
-	public void addControllerElement(ControllerElement ce, float x, float y, float width, float height)
-	{
-		ce.x = x;
-		ce.y = y;
-		ce.width = width;
-		ce.height = height;
-		
-		controllerElements.add(ce);
-	}
-	
 	public Button addButton(String id, float x, float y, float width, float height)
 	{
 		Button button = new Button(id, x, y, width, height);		
