@@ -43,18 +43,20 @@ public class Example extends JPanel
 	HashMap<UUID, User> userMap = new HashMap<>();
 
 	ArrayList<UUID> usersToRemove = new ArrayList<>();
+	
+	GameController newController;
 
 	public Example()
 	{
 		GameController defaultController = new GameController();
-		// defaultController.addControllerElement("playButton", ControllerElementType.BUTTON, 0.5f, 0.5f, 0.3f, 0.3f);
-		defaultController.addControllerElement("text", ControllerElementType.TEXTINPUT, 0.5f, 0.5f, 0.3f, 0.3f);
+		defaultController.addControllerElement(new TextInput("text", 0.5f, 0.2f, 0.3f, 0.3f));
+		defaultController.addControllerElement(new Button("playButton", 0.5f, 0.7f, 0.3f, 0.3f));
 		TotalityServer.instance.setDefaultController(defaultController);
 
-		GameController newController = new GameController();
-		newController.addControllerElement("button1", ControllerElementType.BUTTON, 0.6f, 0.5f, 0.1f, 0.1f);
-		newController.addControllerElement("button2", ControllerElementType.BUTTON, 0.8f, 0.4f, 0.1f, 0.1f);
-		newController.addControllerElement("joystick1", ControllerElementType.JOYSTICK, 0.1f, 0.3f, 0.4f, 0.4f);
+		newController = new GameController();
+		newController.addControllerElement(new Button("button1", 0.6f, 0.5f, 0.1f, 0.1f));
+		newController.addControllerElement(new Button("button2", 0.8f, 0.4f, 0.1f, 0.1f));
+		newController.addControllerElement(new Joystick("joystick1", 0.1f, 0.3f, 0.4f, 0.4f));
 
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
