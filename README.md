@@ -17,7 +17,7 @@ Totality hosts a web server on the main machine. Users connect to the server usi
     gc.addJoystick("joystick1", 0.5f, 0.75f, 1.0f, 0.5f);
   
     //Sends the controller to the Totality server
-    TotalityServer.instance.setDefaultController(gcController);
+    TotalityServer.instance.setDefaultController(gc);
 ```
 
 3. Define the controller behavior using the following code:
@@ -50,6 +50,11 @@ TotalityServer.instance.addDataListener(new DataListener()
       //This is called whenever any controller sends data
       //The uuid corresponds to the user
       //The ControllerElement object contains the data from the controller
+      
+      if(e.id.equals("button1")
+      {
+           System.out.println("User " + uuid + " pressed button 1!");
+      }
   }
 });
 ```
