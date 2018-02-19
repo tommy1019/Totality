@@ -6,16 +6,14 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 
 public class WebServer extends Thread
-{
-	public static final int PORT = 8080;
-	
+{	
 	ServerSocket serverSocket;
 
-	public WebServer()
+	public WebServer(int port)
 	{
 		try
 		{
-			serverSocket = new ServerSocket(PORT);
+			serverSocket = new ServerSocket(port);
 			serverSocket.setSoTimeout(1000);
 		}
 		catch (IOException e)

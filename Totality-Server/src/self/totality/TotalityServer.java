@@ -23,6 +23,8 @@ public class TotalityServer
 	public static String localIp;
 	public static Gson gson;
 	
+	private static int webServerPort = 80;
+	
 	static
 	{
 		instance = new TotalityServer();
@@ -41,7 +43,7 @@ public class TotalityServer
 	private TotalityServer()
 	{
 		webSocketServer = new WebSocketServer();
-		webServer = new WebServer();
+		webServer = new WebServer(webServerPort);
 		
 		defaultController = new GameController();
 		
@@ -76,6 +78,11 @@ public class TotalityServer
 		
 		webSocketServer.start();		
 		webServer.start();
+	}
+	
+	public void setWebPort(int port)
+	{
+		webServerPort = port;
 	}
 	
 	public void setDefaultController(GameController defaultController)
