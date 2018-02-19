@@ -36,6 +36,7 @@ public class Example extends JPanel
 		frame.setVisible(true);
 
 		TotalityServer.instance.start();
+		TotalityServer.instance.startMulticastServer("ex");
 	}
 
 	ArrayList<User> userList = new ArrayList<>();

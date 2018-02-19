@@ -8,6 +8,7 @@ import java.util.UUID;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import self.totality.multicastServer.MulticastServer;
 import self.totality.webServer.WebServer;
 import self.totality.webSocketServer.WebSocketServer;
 import self.totality.webSocketServer.controller.GameController;
@@ -29,6 +30,7 @@ public class TotalityServer
 		
 	private WebServer webServer;
 	private WebSocketServer webSocketServer;
+	private MulticastServer multicastServer;
 	
 	private GameController defaultController;
 	
@@ -49,6 +51,12 @@ public class TotalityServer
 		
 		GsonBuilder builder = new GsonBuilder();
 		gson = builder.serializeNulls().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+	}
+	
+	public void startMulticastServer(String domain)
+	{
+		multicastServer = new MulticastServer(domain);
+		multicastServer.start();
 	}
 	
 	public void start()
