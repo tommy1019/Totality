@@ -71,7 +71,7 @@ And you're ready to go!
 Once your server is up and running, users can connect to it with their smartphones. To do so, simply:
 1. Connect your phone to the same wifi network that the main computer is connected to.
 2. Open the web browser on your phone.
-3. Type in the ip address of the main computer to your search bar (or use a multicast address, if supported).
+3. Type in the ip address of the main computer to your search bar [(or use a multicast address, if supported)](https://github.com/tommy1019/Totality/wiki/Multicast-DNS).
 4. Press enter. You should now be connected to the Totality server!
 
 ## Still have questions?
