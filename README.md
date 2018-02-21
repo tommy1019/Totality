@@ -11,14 +11,15 @@ Totality hosts a web server on the main machine. Users connect to the server usi
 
 2. Create a controller object and define its layout:
 ```
-    //Creates a controller with one button and one joystick
+    //Create a controller with one button and one joystick
     GameController gc = new GameController();
     gc.addButton("button1", 0.5f, 0.25f, 1.0f, 0.5f);
     gc.addJoystick("joystick1", 0.5f, 0.75f, 1.0f, 0.5f);
   
-    //Sends the controller to the Totality server
+    //Send the controller to the Totality server
     TotalityServer.instance.setDefaultController(gc);
 ```
+(Need help with this? Check out our [controller formatting guide](https://github.com/tommy1019/Totality/wiki/Controller-Formatting-Guide))
 
 3. Define the controller behavior using the following code:
 ```
