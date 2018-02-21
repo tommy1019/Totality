@@ -65,3 +65,7 @@ TotalityServer.instance.start();
 ```
 
 And you're ready to go!
+
+## Still have questions?
+[Check out our wiki!](https://github.com/tommy1019/Totality/wiki)
+If you can't find an answer there, feel free to [open an issue.](https://github.com/tommy1019/Totality/issues)
