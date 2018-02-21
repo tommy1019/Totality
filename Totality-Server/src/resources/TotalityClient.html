@@ -111,27 +111,39 @@
 
 			for(i = 0; i < elements.length; i++)
 			{
+				var controllerElement;
+			
+				//Create the appropriate element
 				switch(elements[i].type)
 				{
 					case "JOYSTICK":
 						console.log("Received joystick: " + elements[i].id);
-						createJoystick(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+						controllerElement = createJoystick(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
 						break;
 					case "BUTTON":
 						console.log("Recieved button: " + elements[i].id);
-						createButton(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+						controllerElement = createButton(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
 						break;
 					case "TEXTINPUT":
 						console.log("Received textinput: " + elements[i].id);
-						createTextInput(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+						controllerElement = createTextInput(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
 						break;
 					case "TEXT":
 						console.log("Received text: " + elements[i].id);
-						createText(elements[i].id, elements[i].content, elements[i].fontSize, elements[i].x, elements[i].y);
+						controllerElement = createText(elements[i].id, elements[i].content, elements[i].fontSize, elements[i].x, elements[i].y);
 						break;
 					default:
 						console.log("Received unknown element: " + elements[i].id);
 						break;
+				}
+				
+				//If the controller element is not visible, hide it
+				if(controllerElement != null)
+				{
+					if(!elements[i].visible)
+					{
+							controllerElement.style.display = "none";
+					}
 				}
 			}
 		}
@@ -208,6 +220,8 @@
 			{
 				webSocket.send("JOYSTICK:" + joystick.id + ":state:" + 0 + ":" + 0 + ":" + 0);
 			});
+			
+			return joystickDiv;
 		}
 
 		//Programatically creates a button with the given id and adds it to the given context
@@ -254,6 +268,8 @@
 			document.getElementById(buttonId).onmouseup = function(){onStopButtonPress(this.id);}
 			document.getElementById(buttonId).ontouchstart = function(){onButtonPress(this.id);}
 			document.getElementById(buttonId).ontouchend = function(){onStopButtonPress(this.id);}
+			
+			return button;
 		}
 		
 		//Programatically creates a text input field and adds it to the given context
@@ -276,6 +292,8 @@
 			input.style.left = xPos * screenWidth - (width * screenWidth / 2) + "px";
 			input.style.top = yPos * screenHeight - (height * screenHeight / 2) + "px";
 			input.style.padding = "5px";
+			
+			return input;
 		}
 
 		//Programatically creates a text box and adds it to the given context
@@ -300,6 +318,8 @@
 			textDiv.style.position = "absolute";
 			textDiv.style.left = xPos * screenWidth - (textDiv.offsetWidth / 2) + "px";
 			textDiv.style.top = yPos * screenHeight - (textDiv.offsetHeight / 2) + "px";
+			
+			return textDiv;
 		}
 		
 		function onTextChanged(textInputId)
