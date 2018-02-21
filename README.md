@@ -6,7 +6,7 @@ Totality is a Java library that allows you to use any smartphone as a video game
 ## How Does it Work?
 Totality hosts a web server on the main machine. Users connect to the server using the web browser on their phone. The server sends a javascript controller to the phone, and listens for input.
 
-## Getting started
+## Setting up Totality
 1. Download TotalityServer.jar and include it in your project.
 
 2. Create a controller object and define its layout:
@@ -65,6 +65,13 @@ TotalityServer.instance.start();
 ```
 
 And you're ready to go!
+
+## Using Totality
+Once your server is up and running, users can connect to it with their smartphones. To do so, simply:
+1. Connect your phone to the same wifi network that the main computer is connected to.
+2. Open the web browser on your phone.
+3. Type in the ip address of the main computer to your search bar (or use a multicast address, if supported).
+4. Press enter. You should now be connected to the Totality server!
 
 ## Still have questions?
 [Check out our wiki!](https://github.com/tommy1019/Totality/wiki)
