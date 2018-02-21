@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 
 import self.totality.multicastServer.MulticastServer;
 import self.totality.webServer.WebServer;
+import self.totality.webSocketServer.RemoveThread;
 import self.totality.webSocketServer.WebSocketServer;
 import self.totality.webSocketServer.controller.GameController;
 import self.totality.webSocketServer.listener.ConnectListener;
@@ -19,52 +20,50 @@ import self.totality.webSocketServer.listener.DisconnectListener;
 public class TotalityServer
 {
 	public static TotalityServer instance;
-	
+
 	public static String localIp;
 	public static Gson gson;
-	
-	private static int webServerPort = 80;
-	
+
 	static
 	{
 		instance = new TotalityServer();
 	}
-		
+
 	private WebServer webServer;
 	private WebSocketServer webSocketServer;
+	private RemoveThread removeThread;
 	private MulticastServer multicastServer;
-	
+
 	private GameController defaultController;
-	
+
 	private ArrayList<ConnectListener> connectionListeners;
 	private ArrayList<DataListener> dataListeners;
 	private ArrayList<DisconnectListener> disconnectListeners;
+
+	private int webServerPort = 80;
 	
 	private TotalityServer()
 	{
-		webSocketServer = new WebSocketServer();
-		webServer = new WebServer(webServerPort);
-		
 		defaultController = new GameController();
-		
+
 		connectionListeners = new ArrayList<>();
 		dataListeners = new ArrayList<>();
 		disconnectListeners = new ArrayList<>();
-		
+
 		GsonBuilder builder = new GsonBuilder();
 		gson = builder.serializeNulls().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
 	}
-	
+
 	public void startMulticastServer(String domain)
 	{
 		multicastServer = new MulticastServer(domain);
 		multicastServer.start();
 	}
-	
+
 	public void start()
 	{
 		System.out.println("[Totality server] Starting");
-		
+
 		try
 		{
 			localIp = InetAddress.getLocalHost().getHostAddress();
@@ -73,58 +72,64 @@ public class TotalityServer
 		{
 			localIp = "0.0.0.0";
 		}
-		
+
 		System.out.println("[Totality server] Local ip: " + localIp);
-		
-		webSocketServer.start();		
+
+		webServer = new WebServer(webServerPort);
+		webSocketServer = new WebSocketServer();
+
+		webSocketServer.start();
 		webServer.start();
+		
+		removeThread = new RemoveThread(webSocketServer);
+		removeThread.start();
 	}
-	
+
 	public void setWebPort(int port)
 	{
-		webServerPort = port;
+		this.webServerPort = port;
 	}
-	
+
 	public void setDefaultController(GameController defaultController)
 	{
 		this.defaultController = defaultController;
 	}
-	
+
 	public GameController getDefaultController()
 	{
 		return defaultController;
 	}
-	
+
 	public void sendControllerToPlayer(UUID uuid, GameController gameController)
 	{
 		webSocketServer.sendControllerToPlayer(uuid, gameController);
 	}
-	
+
 	public void addDataListener(DataListener l)
 	{
 		dataListeners.add(l);
 	}
-	
+
 	public void addConnectListener(ConnectListener l)
 	{
 		connectionListeners.add(l);
 	}
-	
+
 	public void addDisconnectListener(DisconnectListener l)
 	{
 		disconnectListeners.add(l);
 	}
-	
+
 	public ArrayList<DataListener> getDataListeners()
 	{
 		return dataListeners;
 	}
-	
+
 	public ArrayList<ConnectListener> getConnectListeners()
 	{
 		return connectionListeners;
 	}
-	
+
 	public ArrayList<DisconnectListener> getDisconnectListeners()
 	{
 		return disconnectListeners;

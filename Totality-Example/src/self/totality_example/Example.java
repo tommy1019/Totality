@@ -35,8 +35,9 @@ public class Example extends JPanel
 		frame.setContentPane(new Example());
 		frame.setVisible(true);
 
+		TotalityServer.instance.setWebPort(8080);
 		TotalityServer.instance.start();
-		TotalityServer.instance.startMulticastServer("ex");
+		TotalityServer.instance.startMulticastServer("e");
 	}
 
 	ArrayList<User> userList = new ArrayList<>();
@@ -64,6 +65,7 @@ public class Example extends JPanel
 			@Override
 			public void onConnect(UUID uuid)
 			{
+				System.out.println(uuid + " connected");
 				User user = new User();
 				userList.add(user);
 				userMap.put(uuid, user);
