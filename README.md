@@ -1,5 +1,5 @@
 # Totality
-Totality is a Java framework that allows you to use any smartphone as a video game controller.
+Totality is a Java library that allows you to use any smartphone as a video game controller.
 
 **Note: Totality is currently a work in progress. Use at your own risk.**
 
@@ -64,4 +64,4 @@ TotalityServer.instance.addDataListener(new DataListener()
 TotalityServer.instance.start();
 ```
 
-And you're done!
+And you're ready to go!
