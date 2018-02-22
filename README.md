@@ -1,24 +1,25 @@
 # Totality
-Totality is a Java framework that allows you to use any smartphone as a video game controller.
+Totality is a Java library that allows you to use any smartphone as a video game controller.
 
 **Note: Totality is currently a work in progress. Use at your own risk.**
 
 ## How Does it Work?
 Totality hosts a web server on the main machine. Users connect to the server using the web browser on their phone. The server sends a javascript controller to the phone, and listens for input.
 
-## Getting started
+## Setting up Totality
 1. Download TotalityServer.jar and include it in your project.
 
 2. Create a controller object and define its layout:
 ```
-    //Creates a controller with one button and one joystick
+    //Create a controller with one button and one joystick
     GameController gc = new GameController();
     gc.addButton("button1", 0.5f, 0.25f, 1.0f, 0.5f);
     gc.addJoystick("joystick1", 0.5f, 0.75f, 1.0f, 0.5f);
   
-    //Sends the controller to the Totality server
+    //Send the controller to the Totality server
     TotalityServer.instance.setDefaultController(gc);
 ```
+(Need help with this? Check out our [controller formatting guide](https://github.com/tommy1019/Totality/wiki/Controller-Formatting-Guide))
 
 3. Define the controller behavior using the following code:
 ```
@@ -64,4 +65,15 @@ TotalityServer.instance.addDataListener(new DataListener()
 TotalityServer.instance.start();
 ```
 
-And you're done!
+And you're ready to go!
+
+## Using Totality
+Once your server is up and running, users can connect to it with their smartphones. To do so, simply:
+1. Connect your phone to the same wifi network that the main computer is connected to.
+2. Open the web browser on your phone.
+3. Type in the ip address of the main computer to your search bar [(or use a multicast address, if supported)](https://github.com/tommy1019/Totality/wiki/Multicast-DNS).
+4. Press enter. You should now be connected to the Totality server!
+
+## Still have questions?
+[Check out our wiki!](https://github.com/tommy1019/Totality/wiki)
+If you can't find an answer there, feel free to [open an issue.](https://github.com/tommy1019/Totality/issues)
