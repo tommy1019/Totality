@@ -11,6 +11,7 @@ import java.util.UUID;
 import self.totality.TotalityServer;
 import self.totality.webSocketServer.controller.Button;
 import self.totality.webSocketServer.controller.ControllerElement;
+import self.totality.webSocketServer.controller.DPad;
 import self.totality.webSocketServer.controller.GameController;
 import self.totality.webSocketServer.controller.Joystick;
 import self.totality.webSocketServer.controller.TextInput;
@@ -119,6 +120,12 @@ public class ConnectedClient extends Thread
 								{
 									e = new TextInput(msgParts[1], "");
 								}
+								break;
+							case "DPAD":
+								e = new DPad(msgParts[1], Boolean.parseBoolean(msgParts[3]), 
+														  Boolean.parseBoolean(msgParts[4]),
+														  Boolean.parseBoolean(msgParts[5]),
+														  Boolean.parseBoolean(msgParts[6]));
 								break;
 							default:
 								System.err.println("[Totality server] Error: Unsupported packet type: " + msgParts[0]);

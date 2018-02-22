@@ -40,6 +40,13 @@ public class GameController
 		return joystick;
 	}
 	
+	public DPad addDPad(String id, float x, float y, float width, float height)
+	{
+		DPad dpad = new DPad(id, x, y, width, height);
+		controllerElements.add(dpad);
+		return dpad;
+	}
+	
 	public Text addText(String id, String content, float x, float y)
 	{
 		Text text = new Text(id, content, x, y);

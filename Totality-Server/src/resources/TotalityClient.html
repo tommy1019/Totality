@@ -28,13 +28,29 @@
 		var screenHeight;
 		
 		var controller;
+		
+		var dPadStates = new Object();
 
+		var dPadSprites = new Object();
+		var dPadPressedSprites = new Object();
+		
+		//Load sprites
 		buttonImg = new Image();
 		buttonImg.src = "button.png";
 
 		buttonPressedImg = new Image();
 		buttonPressedImg.src = "buttonPressed.png"
-
+		
+		dPadSprites["UP"] = "dPadUp.png";
+		dPadSprites["DOWN"] = "dPadDown.png";
+		dPadSprites["LEFT"] = "dPadLeft.png";
+		dPadSprites["RIGHT"] = "dPadRight.png";
+		
+		dPadPressedSprites["UP"] = "dPadUpPressed.png";
+		dPadPressedSprites["DOWN"] = "dPadDownPressed.png";
+		dPadPressedSprites["LEFT"] = "dPadLeftPressed.png";
+		dPadPressedSprites["RIGHT"] = "dPadRightPressed.png";
+		
 		//This disables the context menu for android
 		window.oncontextmenu = function(event)
 		{
@@ -46,7 +62,7 @@
 		// Listen for orientation changes
 		window.addEventListener("orientationchange", function() 
 		{
-			// Announce the new orientation number
+			// Rebuild the controller to fit the new screen dimensions
 			buildController();
 		}, false);
 
@@ -56,6 +72,7 @@
 			document.body.style.webkitTouchCallout = 'none';
 			document.body.style.webkitUserSelect = 'none';
 
+			//Get screen dimensions from the device
 			screenWidth = $(window).width();
 			screenHeight = $(window).height();
 			
@@ -107,6 +124,7 @@
 				document.body.removeChild(document.body.firstChild);
 			}
 			
+			//Load the controller elements from JSON
 			elements = JSON.parse(controller).controllerElements;
 
 			for(i = 0; i < elements.length; i++)
@@ -131,6 +149,10 @@
 					case "TEXT":
 						console.log("Received text: " + elements[i].id);
 						controllerElement = createText(elements[i].id, elements[i].content, elements[i].fontSize, elements[i].x, elements[i].y);
+						break;
+					case "DPAD":
+						console.log("Received dPad: " + elements[i].id);
+						controllerElement = createDPad(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
 						break;
 					default:
 						console.log("Received unknown element: " + elements[i].id);
@@ -265,9 +287,9 @@
 			// Adds touch and mouse listeners to each button
 			// Please be careful with this code, it is VERY finnicky
 			document.getElementById(buttonId).onmousedown = function(){onButtonPress(this.id);}
-			document.getElementById(buttonId).onmouseup = function(){onStopButtonPress(this.id);}
+			document.getElementById(buttonId).onmouseup = function(){onButtonRelease(this.id);}
 			document.getElementById(buttonId).ontouchstart = function(){onButtonPress(this.id);}
-			document.getElementById(buttonId).ontouchend = function(){onStopButtonPress(this.id);}
+			document.getElementById(buttonId).ontouchend = function(){onButtonRelease(this.id);}
 			
 			return button;
 		}
@@ -322,12 +344,135 @@
 			return textDiv;
 		}
 		
+		//Programatically creates a dPad with the given id and adds it to the given context
+		function createDPad(dPadId, xPos, yPos, width, height)
+		{
+			//Create up, down, left, and right images
+			var upImg = document.createElement("img");
+			upImg.id = dPadId + "UP";
+			upImg.name = dPadId + "UpImg";
+			upImg.src = dPadSprites["UP"];
+            upImg.className = "imgClass";
+			
+			var downImg = document.createElement("img");
+			downImg.id = dPadId + "DOWN";
+			downImg.name = dPadId + "DownImg";
+			downImg.src = dPadSprites["DOWN"];
+            downImg.className = "imgClass";
+			
+			var leftImg = document.createElement("img");
+			leftImg.id = dPadId + "LEFT";
+			leftImg.name = dPadId + "LeftImg";
+			leftImg.src = dPadSprites["LEFT"];
+            leftImg.className = "imgClass";
+			
+			var rightImg = document.createElement("img");
+			rightImg.id = dPadId + "RIGHT";
+			rightImg.name = dPadId + "RightImg";
+			rightImg.src = dPadSprites["RIGHT"];
+            rightImg.className = "imgClass";
+			
+			// Calculates absolute (not relative) width and height
+			var absWidth = width * screenWidth;
+			var absHeight = height * screenHeight;
+
+			// Preserve the aspect ratio of the dPad by limiting the size to the smallest component
+			if(absWidth > absHeight)
+			{
+				absWidth = absHeight;
+			}
+			else
+			{
+				absHeight = absWidth;
+			}
+			
+			// Programatically sets the width and height of the buttons
+			upImg.width = absWidth / 4;
+			upImg.height = absHeight / 2;
+			
+			downImg.width = absWidth / 4;
+			downImg.height = absHeight / 2;
+			
+			leftImg.width = absWidth / 2;
+			leftImg.height = absHeight / 4;
+			
+			rightImg.width = absWidth / 2;
+			rightImg.height = absHeight / 4;
+
+			dPad = document.createElement("div");
+			dPad.href = "#";
+			dPad.id = dPadId;
+			dPad.style.background = "none";
+			dPad.style.border = "none";
+			dPad.style.outline = "none";
+			dPad.appendChild(upImg);
+			dPad.appendChild(downImg);
+			dPad.appendChild(leftImg);
+			dPad.appendChild(rightImg);
+
+			// Set the position of each of the buttons within the div
+			upImg.style.position = "absolute";
+			upImg.style.left = (absWidth / 2) - (upImg.width / 2) + "px";
+			upImg.style.top = 0 + "px";
+			
+			downImg.style.position = "absolute";
+			downImg.style.left = (absWidth / 2) - (upImg.width / 2) + "px";
+			downImg.style.top = (absHeight / 2) + "px";
+			
+			leftImg.style.position = "absolute";
+			leftImg.style.left = 0 + "px";
+			leftImg.style.top = (absHeight / 2) - (leftImg.height / 2) + "px";
+			
+			rightImg.style.position = "absolute";
+			rightImg.style.left = (absWidth / 2) + "px";
+			rightImg.style.top = (absHeight / 2) - (rightImg.height / 2) + "px";
+			
+			// Set position of the dPad on the screen
+			dPad.style.position = "absolute";
+			dPad.style.left = xPos * screenWidth - (absWidth / 2) + "px";
+			dPad.style.top = yPos * screenHeight - (absHeight / 2) + "px";
+
+			document.body.appendChild(dPad);
+
+			// Adds touch and mouse listeners to each button
+			// Please be careful with this code, it is VERY finnicky
+			upImg.ontouchstart = function(){onDPadPress(dPad.id, "UP");}
+			upImg.ontouchend = function(){onDPadRelease(dPad.id, "UP");}
+			upImg.onmousedown = function(){onDPadPress(dPad.id, "UP");}
+			upImg.onmouseup = function(){onDPadRelease(dPad.id, "UP");}
+			
+			downImg.ontouchstart = function(){onDPadPress(dPad.id, "DOWN");}
+			downImg.ontouchend = function(){onDPadRelease(dPad.id, "DOWN");}
+			downImg.onmousedown = function(){onDPadPress(dPad.id, "DOWN");}
+			downImg.onmouseup = function(){onDPadRelease(dPad.id, "DOWN");}
+			
+			leftImg.ontouchstart = function(){onDPadPress(dPad.id, "LEFT");}
+			leftImg.ontouchend = function(){onDPadRelease(dPad.id, "LEFT");}
+			leftImg.onmousedown = function(){onDPadPress(dPad.id, "LEFT");}
+			leftImg.onmouseup = function(){onDPadRelease(dPad.id, "LEFT");}
+			
+			rightImg.ontouchstart = function(){onDPadPress(dPad.id, "RIGHT");}
+			rightImg.ontouchend = function(){onDPadRelease(dPad.id, "RIGHT");}
+			rightImg.onmousedown = function(){onDPadPress(dPad.id, "RIGHT");}
+			rightImg.onmouseup = function(){onDPadRelease(dPad.id, "RIGHT");}
+			
+			//Initialize button states to false
+			dPadStates[dPadId + "UP"] = "false";
+			dPadStates[dPadId + "DOWN"] = "false";
+			dPadStates[dPadId + "LEFT"] = "false";
+			dPadStates[dPadId + "RIGHT"] = "false";
+			
+			return dPad;
+		}
+		
+		//Called when the user types in a text input field
 		function onTextChanged(textInputId)
 		{
 			console.log("Text changed!");
 			webSocket.send("TEXTINPUT:" + textInputId + ":value:" + document.getElementById(textInputId).value);
 		}
 		
+		//Called when a button is pressed
 		function onButtonPress(buttonId)
 		{
 			//When a button is pressed, tell the server
@@ -339,7 +484,8 @@
 			return true;
 		}
 
-		function onStopButtonPress(buttonId)
+		//Called when the user releases a button
+		function onButtonRelease(buttonId)
 		{
 			//When a button is released, tell the server
 
@@ -347,6 +493,30 @@
 
 			document.images[buttonId + "Img"].src = buttonImg.src;
 
+			return true;
+		}
+		
+		//Called when a dPad button is pressed
+		function onDPadPress(dPadId, direction)
+		{
+			dPadStates[dPadId + direction] = "true";
+		
+			//When a button is pressed, tell the server
+			webSocket.send("DPAD:" + dPadId + ":state:" + dPadStates[dPadId + "UP"] + ":" + dPadStates[dPadId + "DOWN"] + ":" + dPadStates[dPadId + "LEFT"] + ":" + dPadStates[dPadId + "RIGHT"]);
+			
+			document.images[dPadId + direction].src = dPadPressedSprites[direction];
+			return true;
+		}
+
+		//Called when the user releases a dPad button
+		function onDPadRelease(dPadId, direction)
+		{
+			dPadStates[dPadId + direction] = "false";
+		
+			//When a button is released, tell the server
+			webSocket.send("DPAD:" + dPadId + ":state:" + dPadStates[dPadId + "UP"] + ":" + dPadStates[dPadId + "DOWN"] + ":" + dPadStates[dPadId + "LEFT"] + ":" + dPadStates[dPadId + "RIGHT"]);
+			
+			document.images[dPadId + direction].src = dPadSprites[direction];
 			return true;
 		}
 
@@ -361,15 +531,22 @@
         {
             event.preventDefault();
         };
-
-		//This should disable double-tap zoom without disabling normal touch
-		$('.no-zoom').bind('touchend', function(e) 
+		
+		//This disables double-tap zoom
+		$(document).ready(function()
 		{
-			e.preventDefault();
-			// Add your code here. 
-			$(this).click();
-			// This line still calls the standard click event, in case the user needs to interact with the element that is being clicked on, but still avoids zooming in cases of double clicking.
-		})
+			//Intercept touch events and turn them into click events
+			$(document).bind('touchend', function(e) 
+			{
+				e.preventDefault();
+				
+				e.target.focus();
+
+				$(e.target).trigger("click");
+			})
+		});
+
+
 		
 	</script>
 </body>
