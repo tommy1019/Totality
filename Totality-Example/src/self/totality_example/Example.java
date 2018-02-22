@@ -34,6 +34,7 @@ public class Example extends JPanel
 		frame.setLocationRelativeTo(null);
 		frame.setContentPane(new Example());
 		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		TotalityServer.instance.setWebPort(8080);
 		TotalityServer.instance.start();
