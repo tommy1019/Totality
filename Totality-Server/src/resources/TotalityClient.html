@@ -71,7 +71,9 @@
 			// This is necessary to remove force touch on ios
 			document.body.style.webkitTouchCallout = 'none';
 			document.body.style.webkitUserSelect = 'none';
-
+			document.body.style.overflow = "hidden";
+			document.documentElement.style.overflow = "hidden";
+			
 			//Get screen dimensions from the device
 			screenWidth = $(window).width();
 			screenHeight = $(window).height();
@@ -115,8 +117,8 @@
 				return;
 			}
 		
-			screenWidth = window.innerWidth;
-			screenHeight = window.innerHeight;
+			screenWidth = $(window).width();
+			screenHeight = $(window).height();
 			
 			//Clear the existing elements, if any
 			while (document.body.firstChild) 
