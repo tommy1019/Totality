@@ -77,7 +77,14 @@ public class ConnectedClient extends Thread
 	
 	void updateController(GameController controller)
 	{
-		ClientUtils.sendMessage(out, TEXT_OPCODE, TotalityServer.gson.toJson(controller).getBytes());
+		try
+		{
+			ClientUtils.sendMessage(out, TEXT_OPCODE, TotalityServer.gson.toJson(controller).getBytes());
+		}
+		catch (Exception e)
+		{
+			connected = false;
+		}
 	}
 	
 	public void run()
@@ -85,7 +92,14 @@ public class ConnectedClient extends Thread
 		for (ConnectListener l : TotalityServer.instance.getConnectListeners())
 			l.onConnect(uuid);
 		
-		ClientUtils.sendMessage(out, TEXT_OPCODE, TotalityServer.gson.toJson(TotalityServer.instance.getDefaultController()).getBytes());
+		try
+		{
+			ClientUtils.sendMessage(out, TEXT_OPCODE, TotalityServer.gson.toJson(TotalityServer.instance.getDefaultController()).getBytes());
+		}
+		catch (Exception e2)
+		{
+			connected = false;
+		}
 		
 		while (connected)
 		{
