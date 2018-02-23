@@ -393,11 +393,14 @@
 			dPad.style.left = absX + "px";
 			dPad.style.top = absY + "px";
 			
+			//Keeps buttons from overlapping in the middle
+			var offset = absWidth / 6;
+			
 			//Create up, down, left, and right buttons
 			var upDiv = document.createElement("div");
 			upDiv.id = dPadId + "UP";
-			upDiv.width = absWidth / 4;
-			upDiv.height = absHeight / 2;
+			upDiv.width = absWidth / 3;
+			upDiv.height = absHeight / 2 - offset;
 			upDiv.style.width = upDiv.width + "px";
 			upDiv.style.height = upDiv.height + "px";
 			upDiv.style.position = "absolute";
@@ -406,18 +409,18 @@
 
 			var downDiv = document.createElement("div");
 			downDiv.id = dPadId + "DOWN";
-			downDiv.width = absWidth / 4;
-			downDiv.height = absHeight / 2;
+			downDiv.width = absWidth / 3;
+			downDiv.height = absHeight / 2 - offset;
 			downDiv.style.width = downDiv.width + "px";
 			downDiv.style.height = downDiv.height + "px";
 			downDiv.style.position = "absolute";
 			downDiv.style.left = (absWidth / 2) - (downDiv.width / 2) + "px";
-			downDiv.style.top = (absHeight / 2) + "px";
+			downDiv.style.top = (absHeight / 2) + offset + "px";
 
 			var leftDiv = document.createElement("div");
 			leftDiv.id = dPadId + "LEFT";
-			leftDiv.width = absWidth / 2;
-			leftDiv.height = absHeight / 4;
+			leftDiv.width = absWidth / 2 - offset;
+			leftDiv.height = absHeight / 3;
 			leftDiv.style.width = leftDiv.width + "px";
 			leftDiv.style.height = leftDiv.height + "px";
 			leftDiv.style.position = "absolute";
@@ -426,12 +429,12 @@
 			
 			var rightDiv = document.createElement("div");
 			rightDiv.id = dPadId + "RIGHT";
-			rightDiv.width = absWidth / 2;
-			rightDiv.height = absHeight / 4;
+			rightDiv.width = absWidth / 2 - offset;
+			rightDiv.height = absHeight / 3;
 			rightDiv.style.width = rightDiv.width + "px";
 			rightDiv.style.height = rightDiv.height + "px";
 			rightDiv.style.position = "absolute";
-			rightDiv.style.left = (absWidth / 2) + "px";
+			rightDiv.style.left = (absWidth / 2) + offset + "px";
 			rightDiv.style.top = (absHeight / 2) - (rightDiv.height / 2) + "px";
 
 			//Add the buttons to the dPad
