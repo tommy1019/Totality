@@ -57,9 +57,9 @@ public class Example extends JPanel
 		TotalityServer.instance.setDefaultController(defaultController);
 
 		newController = new GameController();
-		newController.addControllerElement(new Button("button1", 0.6f, 0.5f, 0.1f, 0.1f));
-		newController.addControllerElement(new Button("button2", 0.8f, 0.4f, 0.1f, 0.1f));
-		newController.addControllerElement(new Joystick("joystick1", 0.1f, 0.3f, 0.4f, 0.4f));
+		newController.addControllerElement(new Button("button1", 0.6f, 0.6f, 0.1f, 0.1f));
+		newController.addControllerElement(new Button("button2", 0.8f, 0.5f, 0.1f, 0.1f));
+		newController.addControllerElement(new Joystick("joystick1", 0.2f, 0.3f, 0.4f, 0.4f));
 
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
@@ -78,6 +78,7 @@ public class Example extends JPanel
 			@Override
 			public void onDisconnect(UUID uuid)
 			{
+				System.out.println(uuid + " disconnected");
 				usersToRemove.add(uuid);
 			}
 		});

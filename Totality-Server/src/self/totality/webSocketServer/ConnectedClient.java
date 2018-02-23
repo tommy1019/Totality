@@ -2,7 +2,6 @@ package self.totality.webSocketServer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Random;
@@ -32,6 +31,8 @@ public class ConnectedClient extends Thread
 	DataOutputStream out;
 	
 	boolean connected = true;
+	
+	boolean respondedToPing = true;
 	
 	UUID uuid;
 	
@@ -140,11 +141,11 @@ public class ConnectedClient extends Thread
 						ClientUtils.sendMessage(out, PONG_OPCODE, clientMessage.x);
 						break;
 					case 10:
-						System.out.println(new String(clientMessage.x));
+						respondedToPing = true;
 						break;
 				}
 			}
-			catch (EOFException e)
+			catch (Exception e1)
 			{
 				connected = false;
 			}
