@@ -9,14 +9,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import self.totality.TotalityServer;
-import self.totality.webSocketServer.controller.Button;
-import self.totality.webSocketServer.controller.ControllerElement;
-import self.totality.webSocketServer.controller.ControllerElementType;
+import self.totality.webSocketServer.PacketProcessor;
+import self.totality.webSocketServer.PacketProcessor.ControllerElementProcessor.Listener;
+import self.totality.webSocketServer.controller.ButtonElement;
+import self.totality.webSocketServer.controller.ButtonElement.DataClass;
 import self.totality.webSocketServer.controller.GameController;
-import self.totality.webSocketServer.controller.Joystick;
-import self.totality.webSocketServer.controller.TextInput;
+import self.totality.webSocketServer.controller.JoystickElement;
+import self.totality.webSocketServer.controller.TextElement;
+import self.totality.webSocketServer.controller.TextInputElement;
 import self.totality.webSocketServer.listener.ConnectListener;
-import self.totality.webSocketServer.listener.DataListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
 
 public class Example extends JPanel
@@ -46,20 +47,21 @@ public class Example extends JPanel
 	HashMap<UUID, User> userMap = new HashMap<>();
 
 	ArrayList<UUID> usersToRemove = new ArrayList<>();
-	
+
 	GameController newController;
 
 	public Example()
 	{
 		GameController defaultController = new GameController();
-		defaultController.addControllerElement(new TextInput("text", 0.5f, 0.2f, 0.3f, 0.3f));
-		defaultController.addControllerElement(new Button("playButton", 0.5f, 0.7f, 0.3f, 0.3f));
+		defaultController.addControllerElement(new TextInputElement("text", 0.5f, 0.2f, 0.3f, 0.1f));
+		defaultController.addControllerElement(new ButtonElement("playButton", 0.5f, 0.7f, 0.3f, 0.3f));
+		defaultController.addControllerElement(new TextElement("vText", 0.5f, .1f, 0.3f, 0.3f, "Enter Name and Press Button"));
 		TotalityServer.instance.setDefaultController(defaultController);
 
 		newController = new GameController();
-		newController.addControllerElement(new Button("button1", 0.6f, 0.6f, 0.1f, 0.1f));
-		newController.addControllerElement(new Button("button2", 0.8f, 0.5f, 0.1f, 0.1f));
-		newController.addControllerElement(new Joystick("joystick1", 0.2f, 0.3f, 0.4f, 0.4f));
+		newController.addControllerElement(new ButtonElement("button1", 0.6f, 0.6f, 0.1f, 0.1f));
+		newController.addControllerElement(new ButtonElement("button2", 0.8f, 0.5f, 0.1f, 0.1f));
+		newController.addControllerElement(new JoystickElement("joystick1", 0.2f, 0.3f, 0.4f, 0.4f));
 
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
@@ -83,48 +85,54 @@ public class Example extends JPanel
 			}
 		});
 
-		TotalityServer.instance.addDataListener(new DataListener()
+		PacketProcessor.registerListener("JOYSTICK", new Listener<JoystickElement.DataClass>()
 		{
 			@Override
-			public void onDataUpdate(UUID uuid, ControllerElement e)
+			public void onData(UUID uuid, JoystickElement.DataClass data)
 			{
 				User u = userMap.get(uuid);
 
-				if (e.type == ControllerElementType.JOYSTICK)
-				{
-					Joystick j = (Joystick) e;
+				u.xVel = data.xVal;
+				u.yVel = data.yVal;
+				u.speed = data.force;
 
-					u.xVel = j.getXVal();
-					u.yVel = j.getYVal();
-					u.speed = j.getForce();
-
-					if (u.xVel != 0 && u.yVel != 0)
-					{
-						u.angle = Math.atan2(-u.yVel, u.xVel);
-					}
-				}
-				else if (e.type == ControllerElementType.BUTTON)
+				if (u.xVel != 0 && u.yVel != 0)
 				{
-					Button b = (Button) e;
+					u.angle = Math.atan2(-u.yVel, u.xVel);
+				}
+			}
+		});
 
-					if (b.id.equals("button1"))
-					{
-						u.pressed1 = b.pressed();
-					}
-					else if (b.id.equals("button2"))
-					{
-						u.pressed2 = b.pressed();
-					}
-					else if (b.id.equals("playButton"))
-					{
-						TotalityServer.instance.sendControllerToPlayer(uuid, newController);
-					}
-				}
-				else if (e.type == ControllerElementType.TEXTINPUT)
+		PacketProcessor.registerListener("BUTTON", new Listener<ButtonElement.DataClass>()
+		{
+
+			@Override
+			public void onData(UUID uuid, DataClass data)
+			{
+				User u = userMap.get(uuid);
+
+				if (data.id.equals("button1"))
 				{
-					TextInput i = (TextInput) e;
-					System.out.println(i.value);
+					u.pressed1 = data.pressed;
 				}
+				else if (data.id.equals("button2"))
+				{
+					u.pressed2 = data.pressed;
+				}
+				else if (data.id.equals("playButton"))
+				{
+					TotalityServer.instance.sendControllerToPlayer(uuid, newController);
+				}
+			}
+		});
+
+		PacketProcessor.registerListener("TEXTINPUT", new Listener<TextInputElement.DataClass>()
+		{
+			@Override
+			public void onData(UUID uuid, TextInputElement.DataClass data)
+			{
+				System.out.println(data.text);
+
 			}
 		});
 	}
@@ -136,8 +144,10 @@ public class Example extends JPanel
 		{
 			if (u.alive)
 			{
-				u.xPos += u.xVel * u.speed;
-				u.yPos += u.yVel * u.speed;
+				u.xPos += Math.cos(u.angle);
+				u.yPos += Math.sin(u.angle);
+				//u.xPos += u.xVel * u.speed;
+				//u.yPos += u.yVel * u.speed;
 
 				// Keeps the players roughly contained within the window
 				if (u.xPos <= 0)

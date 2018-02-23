@@ -18,46 +18,4 @@ public class GameController
 	{
 		controllerElements.add(ce);
 	}
-	
-	public Button addButton(String id, float x, float y, float width, float height)
-	{
-		Button button = new Button(id, x, y, width, height);		
-		controllerElements.add(button);
-		return button;
-	}
-	
-	public TextInput addTextInput(String id, float x, float y, float width, float height)
-	{
-		TextInput textInput = new TextInput(id, x, y, width, height);
-		controllerElements.add(textInput);
-		return textInput;
-	}
-	
-	public Joystick addJoystick(String id, float x, float y, float width, float height)
-	{
-		Joystick joystick = new Joystick(id, x, y, width, height);
-		controllerElements.add(joystick);
-		return joystick;
-	}
-	
-	public DPad addDPad(String id, float x, float y, float width, float height)
-	{
-		DPad dpad = new DPad(id, x, y, width, height);
-		controllerElements.add(dpad);
-		return dpad;
-	}
-	
-	public Text addText(String id, String content, float x, float y)
-	{
-		Text text = new Text(id, content, x, y);
-		controllerElements.add(text);
-		return text;
-	}
-	
-	public Text addText(String id, String content, int fontSize, float x, float y)
-	{
-		Text text = new Text(id, content, fontSize, x, y);
-		controllerElements.add(text);
-		return text;
-	}
 }

@@ -1,32 +1,44 @@
 package self.totality.webSocketServer.controller;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 import com.google.gson.annotations.Expose;
 
-public class ControllerElement
+public abstract class ControllerElement
 {
 	@Expose
 	public String id;
+	@Expose
+	public float x;
+	@Expose
+	public float y;
+	@Expose
+	public float width;
+	@Expose
+	public float height;
 	
 	@Expose
-	public ControllerElementType type;
+	public boolean visible = true;
 	
-	@Expose
-	public boolean visible = false;
-	
-	public ControllerElement(String id, ControllerElementType type)
+	public static class DataClass
 	{
-		this.id = id;
-		this.type = type;
+		
 	}
 	
-	public ControllerElement(String id, ControllerElementType type, float x, float y, float width, float height)
+	public static abstract class ControllerListener
 	{
-		this.id = id;
-		this.type = type;
+		public abstract void onData(UUID uuid, DataClass data);
 	}
 	
-	public String getId()
+	public static ArrayList<ControllerListener> listeners;
+	
+	public ControllerElement(String id, float x, float y, float width, float height)
 	{
-		return id;
+		this.id = id;
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 	}
 }

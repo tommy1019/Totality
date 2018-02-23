@@ -14,7 +14,6 @@ import self.totality.webSocketServer.RemoveThread;
 import self.totality.webSocketServer.WebSocketServer;
 import self.totality.webSocketServer.controller.GameController;
 import self.totality.webSocketServer.listener.ConnectListener;
-import self.totality.webSocketServer.listener.DataListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
 
 public class TotalityServer
@@ -37,7 +36,6 @@ public class TotalityServer
 	private GameController defaultController;
 
 	private ArrayList<ConnectListener> connectionListeners;
-	private ArrayList<DataListener> dataListeners;
 	private ArrayList<DisconnectListener> disconnectListeners;
 
 	private int webServerPort = 80;
@@ -47,7 +45,6 @@ public class TotalityServer
 		defaultController = new GameController();
 
 		connectionListeners = new ArrayList<>();
-		dataListeners = new ArrayList<>();
 		disconnectListeners = new ArrayList<>();
 
 		GsonBuilder builder = new GsonBuilder();
@@ -104,12 +101,7 @@ public class TotalityServer
 	{
 		webSocketServer.sendControllerToPlayer(uuid, gameController);
 	}
-
-	public void addDataListener(DataListener l)
-	{
-		dataListeners.add(l);
-	}
-
+	
 	public void addConnectListener(ConnectListener l)
 	{
 		connectionListeners.add(l);
@@ -118,11 +110,6 @@ public class TotalityServer
 	public void addDisconnectListener(DisconnectListener l)
 	{
 		disconnectListeners.add(l);
-	}
-
-	public ArrayList<DataListener> getDataListeners()
-	{
-		return dataListeners;
 	}
 
 	public ArrayList<ConnectListener> getConnectListeners()
