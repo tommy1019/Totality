@@ -56,8 +56,12 @@
 			// This is necessary to remove force touch on ios
 			document.body.style.webkitTouchCallout = 'none';
 			document.body.style.webkitUserSelect = 'none';
+			document.body.style.webkitTapHighlightColor = "transparent";
 			document.body.style.overflow = "hidden";
+			document.body.style.height = "100%";
+			document.body.style.position = "fixed";
 			document.documentElement.style.overflow = "hidden";
+			document.documentElement.height = "100%";
 			
 			//Get screen dimensions from the device
 			screenWidth = $(window).width();
@@ -115,7 +119,7 @@
 			canvas.id     = "canvas1";
 			canvas.width  = screenWidth;
 			canvas.height = screenHeight;
-			canvas.style.position = "absolute";
+			canvas.style.position = "relative";
 			canvas.style.left = "0px";
 			canvas.style.top = "0px";
 			canvas.style.border   = "none";
