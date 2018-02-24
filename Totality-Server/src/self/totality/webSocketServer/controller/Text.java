@@ -15,17 +15,20 @@ public class Text extends ControllerElement
 	public String content;
 
 	@Expose
-	public int fontSize = DEFAULT_FONT_SIZE;
+	public int fontSize;
 
-	public Text(String id, float x, float y, float width, float height, String content)
+	public Text(String id, float x, float y, String content)
 	{
-		this(id, x, y, width, height, content, DEFAULT_FONT_SIZE);
+		this(id, x, y, content, DEFAULT_FONT_SIZE);
 	}
-
-	public Text(String id, float x, float y, float width, float height, String content, int fontSize)
+	
+	public Text(String id, float x, float y, String content, int fontSize)
 	{
-		super(id, x, y, width, height);
-
+		//Width and height is meaningless for text
+		//Size is determined by the font size and content
+		//So we just pass 1 as a placeholder value
+		super(id, x, y, 1, 1);
+		
 		this.content = content;
 		this.fontSize = fontSize;
 	}
