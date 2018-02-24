@@ -34,21 +34,6 @@
 		buttonPressedImg = loadImage("buttonPressed.png");
 		
 		dPadImg = loadImage("dPad.png");
-		
-		//This disables the context menu for android
-		window.oncontextmenu = function(event)
-		{
-			event.preventDefault();
-			event.stopPropagation();
-			return false;
-		};
-		
-		// Listen for orientation changes
-		window.addEventListener("orientationchange", function() 
-		{
-			// Rebuild the controller to fit the new screen dimensions
-			buildController();
-		}, false);
 
 		document.body.onload = function ()
 		{		
@@ -619,15 +604,30 @@
 			newImg.src = src;
 			return newImg;
 		}
-
-		//This is supposed to disable pinch zoom on ios
-        document.documentElement.addEventListener('gesturestart', function (event)
-        {
-            event.preventDefault();
-        }, false);
+		
+		//This disables the context menu for android
+		window.oncontextmenu = function(event)
+		{
+			event.preventDefault();
+			event.stopPropagation();
+			return false;
+		};
 		
 		$(document).ready(function()
 		{
+			// Listen for orientation changes
+			$(document).on("orientationchange load resize", function (e)
+			{
+				// Rebuild the controller to fit the new screen dimensions
+				buildController();
+			})
+		
+			//This is supposed to disable pinch zoom on ios
+			$(document).bind('gesturestart', function(e)
+			{
+				event.preventDefault();
+			})
+		
 			//Intercept touch events and turn them into click events
 			//This disables double-tap zoom
 			$(document).bind('touchend', function(e) 
@@ -641,11 +641,7 @@
 			
 			$(document).bind('touchstart', function(e)
 			{
-				//Disable pinch zoom
-				if(e.touches.length > 1)
-				{
-					event.preventDefault()
-				}
+				event.preventDefault();
 			})
 			
 			//Disable force touch on iOS
