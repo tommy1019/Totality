@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import self.totality.Totality;
-import self.totality.webSocketServer.PacketProcessor;
 import self.totality.webSocketServer.PacketProcessor.ControllerElementProcessor.Listener;
 import self.totality.webSocketServer.controller.Button;
 import self.totality.webSocketServer.controller.Button.DataClass;
@@ -53,6 +52,8 @@ public class Example extends JPanel
 	public Example()
 	{
 		GameController defaultController = new GameController();
+		
+		
 
 		defaultController.addControllerElement(new TextInput("text", 0.5f, 0.2f, 0.3f, 0.1f));
 		defaultController.addControllerElement(new Button("playButton", 0.5f, 0.7f, 0.3f, 0.3f));
@@ -120,7 +121,7 @@ public class Example extends JPanel
 			}
 		});
 
-		PacketProcessor.registerListener(TextInput.TYPE, new Listener<TextInput.DataClass>()
+		Totality.addDataListener(TextInput.TYPE, new Listener<TextInput.DataClass>()
 		{
 			@Override
 			public void onData(UUID uuid, TextInput.DataClass data)
