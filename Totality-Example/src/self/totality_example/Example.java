@@ -8,7 +8,7 @@ import java.util.UUID;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import self.totality.TotalityServer;
+import self.totality.Totality;
 import self.totality.webSocketServer.PacketProcessor;
 import self.totality.webSocketServer.PacketProcessor.ControllerElementProcessor.Listener;
 import self.totality.webSocketServer.controller.Button;
@@ -37,9 +37,9 @@ public class Example extends JPanel
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		TotalityServer.instance.setWebPort(8080);
-		TotalityServer.instance.start();
-		TotalityServer.instance.startMulticastServer("e");
+		Totality.instance.setWebPort(8080);
+		Totality.instance.start();
+		Totality.instance.startMulticastServer("e");
 	}
 
 	ArrayList<User> userList = new ArrayList<>();
@@ -58,14 +58,14 @@ public class Example extends JPanel
 		defaultController.addControllerElement(new Button("playButton", 0.5f, 0.7f, 0.3f, 0.3f));
 		defaultController.addControllerElement(new Text("vText", 0.5f, .1f, "Enter Name and Press Button", 24));
 
-		TotalityServer.instance.setDefaultController(defaultController);
+		Totality.instance.setDefaultController(defaultController);
 
 		newController = new GameController();
 		newController.addControllerElement(new Button("button1", 0.6f, 0.6f, 0.1f, 0.1f));
 		newController.addControllerElement(new Button("button2", 0.8f, 0.5f, 0.1f, 0.1f));
 		newController.addControllerElement(new Joystick("joystick1", 0.2f, 0.3f, 0.4f, 0.4f));
-
-		TotalityServer.instance.addConnectListener(new ConnectListener()
+		
+		Totality.instance.addConnectListener(new ConnectListener()
 		{
 			@Override
 			public void onConnect(UUID uuid)
@@ -77,7 +77,7 @@ public class Example extends JPanel
 			}
 		});
 
-		TotalityServer.instance.addDisconnectListener(new DisconnectListener()
+		Totality.instance.addDisconnectListener(new DisconnectListener()
 		{
 			@Override
 			public void onDisconnect(UUID uuid)
@@ -87,7 +87,7 @@ public class Example extends JPanel
 			}
 		});
 
-		TotalityServer.registerDataListener(Joystick.TYPE, new Listener<Joystick.DataClass>()
+		Totality.addDataListener(Joystick.TYPE, new Listener<Joystick.DataClass>()
 		{
 			@Override
 			public void onData(UUID uuid, Joystick.DataClass data)
@@ -105,7 +105,7 @@ public class Example extends JPanel
 			}
 		});
 
-		TotalityServer.registerDataListener(Button.TYPE, new Listener<Button.DataClass>()
+		Totality.addDataListener(Button.TYPE, new Listener<Button.DataClass>()
 		{
 
 			@Override
@@ -123,7 +123,7 @@ public class Example extends JPanel
 				}
 				else if (data.id.equals("playButton"))
 				{
-					TotalityServer.instance.sendControllerToPlayer(uuid, newController);
+					Totality.instance.sendControllerToPlayer(uuid, newController);
 				}
 			}
 		});

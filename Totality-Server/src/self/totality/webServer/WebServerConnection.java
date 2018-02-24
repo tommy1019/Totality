@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import self.totality.TotalityServer;
+import self.totality.Totality;
 import self.totality.webSocketServer.WebSocketServer;
 
 public class WebServerConnection extends Thread
@@ -75,7 +75,7 @@ public class WebServerConnection extends Thread
 
 	private void handelController(BufferedWriter out) throws IOException
 	{
-		String data = TotalityServer.gson.toJson(TotalityServer.instance.getDefaultController());
+		String data = Totality.gson.toJson(Totality.instance.getDefaultController());
 
 		out.write("HTTP/1.1 200 OK\r\n");
 		out.write("Content-Length: " + data.length());
@@ -89,7 +89,7 @@ public class WebServerConnection extends Thread
 
 	void handelIp(BufferedWriter out) throws IOException
 	{
-		String ip = TotalityServer.localIp + ":" + WebSocketServer.PORT;
+		String ip = Totality.localIp + ":" + WebSocketServer.PORT;
 
 		out.write("HTTP/1.1 200 OK\r\n");
 		out.write("Content-Length: " + ip.length());

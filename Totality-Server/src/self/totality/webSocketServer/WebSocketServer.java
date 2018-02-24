@@ -42,7 +42,14 @@ public class WebSocketServer extends Thread
 
 	public void sendControllerToPlayer(UUID uuid, GameController controller)
 	{
-		connectedClients.get(uuid).updateController(controller);
+		ConnectedClient c = connectedClients.get(uuid);
+		
+		if (c == null)
+		{
+			throw new IllegalArgumentException("[Totality server] Error: Tried to send a controller to a player who is disconnected.");
+		}
+		
+		c.updateController(controller);
 	}
 	
 	public void run()

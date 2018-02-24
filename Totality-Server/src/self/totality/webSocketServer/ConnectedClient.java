@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.Random;
 import java.util.UUID;
 
-import self.totality.TotalityServer;
+import self.totality.Totality;
 import self.totality.webSocketServer.controller.GameController;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
@@ -65,7 +65,7 @@ class ConnectedClient extends Thread
 		
 		server.connectedClients.remove(uuid);
 		
-		for (DisconnectListener l : TotalityServer.instance.getDisconnectListeners())
+		for (DisconnectListener l : Totality.instance.getDisconnectListeners())
 			l.onDisconnect(uuid);
 	}
 	
@@ -73,7 +73,7 @@ class ConnectedClient extends Thread
 	{
 		try
 		{
-			ClientUtils.sendMessage(out, TEXT_OPCODE, TotalityServer.gson.toJson(controller).getBytes());
+			ClientUtils.sendMessage(out, TEXT_OPCODE, Totality.gson.toJson(controller).getBytes());
 		}
 		catch (Exception e)
 		{
@@ -83,12 +83,12 @@ class ConnectedClient extends Thread
 	
 	public void run()
 	{
-		for (ConnectListener l : TotalityServer.instance.getConnectListeners())
+		for (ConnectListener l : Totality.instance.getConnectListeners())
 			l.onConnect(uuid);
 				
 		try
 		{
-			ClientUtils.sendMessage(out, TEXT_OPCODE, TotalityServer.gson.toJson(TotalityServer.instance.getDefaultController()).getBytes());
+			ClientUtils.sendMessage(out, TEXT_OPCODE, Totality.gson.toJson(Totality.instance.getDefaultController()).getBytes());
 		}
 		catch (Exception e2)
 		{
