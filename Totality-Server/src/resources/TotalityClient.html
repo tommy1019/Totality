@@ -639,10 +639,13 @@
 				$(e.target).trigger("click");
 			})
 			
-			//Disable scrolling on iOS
-			$(document).bind('ontouchmove', function(e) 
+			$(document).bind('touchstart', function(e)
 			{
-				e.preventDefault();
+				//Disable pinch zoom
+				if(e.touches.length > 1)
+				{
+					event.preventDefault()
+				}
 			})
 			
 			//Disable force touch on iOS
