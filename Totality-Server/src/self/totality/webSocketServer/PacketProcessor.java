@@ -87,10 +87,7 @@ public class PacketProcessor
 			public DPad.DataClass process(String packet)
 			{
 				String[] msgParts = packet.split(":");
-				return new DPad.DataClass(msgParts[1], Boolean.parseBoolean(msgParts[3]), 
-						  Boolean.parseBoolean(msgParts[4]),
-						  Boolean.parseBoolean(msgParts[5]),
-						  Boolean.parseBoolean(msgParts[6]));
+				return new DPad.DataClass(msgParts[1], msgParts[3]);
 			}
 		});
 	}
