@@ -4,6 +4,7 @@
 	content="initial-scale=1.0, user-scalable=no, width=device-width, height=device-height, user-scalable=0" />
 <style>
 <!-- css styles go here -->
+
 </style>
 
 <script src="dist/jquery-3.3.1.min.js"></script>
@@ -25,10 +26,8 @@
 		
 		var controller;
 		
-		var canvas;
-		var context;
-		
 		var dPadStates = new Object();
+		var contexts = new Object();
 
 		//Load sprites
 		buttonImg = loadImage("button.png");
@@ -59,6 +58,7 @@
 			document.body.style.webkitTapHighlightColor = "transparent";
 			document.body.style.overflow = "hidden";
 			document.body.style.height = "100%";
+			document.body.style.width = "100%";
 			document.body.style.position = "fixed";
 			document.documentElement.style.overflow = "hidden";
 			document.documentElement.height = "100%";
@@ -114,21 +114,6 @@
 			{
 				document.body.removeChild(document.body.firstChild);
 			}
-			
-			canvas = document.createElement('canvas');
-			canvas.id     = "canvas1";
-			canvas.width  = screenWidth;
-			canvas.height = screenHeight;
-			canvas.style.position = "relative";
-			canvas.style.left = "0px";
-			canvas.style.top = "0px";
-			canvas.style.border   = "none";
-			canvas.style.margin   = "none";
-			canvas.style.padding  = "none";
-			canvas.style.zIndex = -10;
-			document.body.appendChild(canvas);
-			context = canvas.getContext('2d');
-			context.imageSmoothingQuality = "medium";
 			
 			//Load the controller elements from JSON
 			elements = JSON.parse(controller).controllerElements;
@@ -289,7 +274,24 @@
 			
 			document.body.appendChild(button);
 
-			context.drawImage(buttonImg, imgX, imgY, imgWidth, imgHeight);
+			var canvas = document.createElement('canvas');
+			canvas.id     = buttonId + "canvas";
+			canvas.className += " canvasClass";
+			canvas.width  = imgWidth;
+			canvas.height = imgHeight;
+			canvas.style.width = imgWidth + "px";
+			canvas.style.height = imgHeight + "px";
+			canvas.style.top = imgY + "px";
+			canvas.style.left = imgX + "px";
+			canvas.style.position = "absolute";
+			canvas.style.zIndex = "-10";
+			
+			document.body.appendChild(canvas);
+			
+			var context = canvas.getContext('2d');
+			context.imageSmoothingQuality = "medium";
+			context.drawImage(buttonImg, 0, 0, imgWidth, imgHeight);
+			contexts[buttonId] = context;
 			
 			// Adds touch and mouse listeners to each button
 			// Please be careful with this code, it is VERY finnicky
@@ -479,6 +481,24 @@
 
 			document.body.appendChild(dPad);
 			
+			var canvas = document.createElement('canvas');
+			canvas.id     = dPadId + "canvas";
+			canvas.classList.add('canvasClass');
+			canvas.width  = absWidth;
+			canvas.height = absHeight;
+			canvas.style.width = absWidth + "px";
+			canvas.style.height = absHeight + "px";
+			canvas.style.left = absX + "px";
+			canvas.style.top = absY + "px";
+			canvas.style.position = "absolute";
+			canvas.style.zIndex = "-10";
+			document.body.appendChild(canvas);
+			
+			var context = canvas.getContext('2d');
+			context.imageSmoothingQuality = "medium";
+			context.drawImage(dPadImg, 0, 0, absWidth, absHeight);
+			contexts[dPadId] = context;
+			
 			context.drawImage(dPadImg, absX, absY, absWidth, absHeight);
 			
 			// Adds touch and mouse listeners to each button
@@ -546,7 +566,8 @@
 			var buttonDiv = $("#" + buttonId);
 			var buttonPos = buttonDiv.offset();
 			
-			context.drawImage(buttonPressedImg, buttonPos.left, buttonPos.top, buttonDiv.width(), buttonDiv.height());
+			var context = contexts[buttonId];
+			context.drawImage(buttonPressedImg, 0, 0, buttonDiv.width(), buttonDiv.height());
 			
 			return true;
 		}
@@ -561,7 +582,8 @@
 			var buttonDiv = $("#" + buttonId);
 			var buttonPos = buttonDiv.offset();
 			
-			context.drawImage(buttonImg, buttonPos.left, buttonPos.top, buttonDiv.width(), buttonDiv.height());
+			var context = contexts[buttonId];
+			context.drawImage(buttonImg, 0, 0, buttonDiv.width(), buttonDiv.height());
 			
 			return true;
 		}
