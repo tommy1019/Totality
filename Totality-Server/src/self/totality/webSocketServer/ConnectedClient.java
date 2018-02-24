@@ -12,7 +12,7 @@ import self.totality.webSocketServer.controller.GameController;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
 
-public class ConnectedClient extends Thread
+class ConnectedClient extends Thread
 {
 	public static final int TEXT_OPCODE = 1;
 	public static final int BINA_OPCODE = 2;

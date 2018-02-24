@@ -2,10 +2,12 @@ package self.totality.webSocketServer.controller;
 
 import com.google.gson.annotations.Expose;
 
-public class JoystickElement extends ControllerElement
+public class Joystick extends ControllerElement
 {
+	public static final String TYPE = "JOYSTICK";
+	
 	@Expose
-	public String type = "JOYSTICK";
+	public String type = TYPE;
 	
 	public static class DataClass extends ControllerElement.DataClass
 	{
@@ -23,7 +25,7 @@ public class JoystickElement extends ControllerElement
 		}
 	}
 	
-	public JoystickElement(String id, float x, float y, float width, float height)
+	public Joystick(String id, float x, float y, float width, float height)
 	{
 		super(id, x, y, width, height);
 	}

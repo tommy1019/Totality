@@ -2,10 +2,12 @@ package self.totality.webSocketServer.controller;
 
 import com.google.gson.annotations.Expose;
 
-public class DPadElement extends ControllerElement
+public class DPad extends ControllerElement
 {
+	public static final String TYPE = "DPAD";
+	
 	@Expose
-	public String type = "DPAD";
+	public String type = TYPE;
 	
 	public static class DataClass extends ControllerElement.DataClass
 	{
@@ -25,7 +27,7 @@ public class DPadElement extends ControllerElement
 		}
 	}
 
-	public DPadElement(String id, float x, float y, float width, float height)
+	public DPad(String id, float x, float y, float width, float height)
 	{
 		super(id, x, y, width, height);
 	}

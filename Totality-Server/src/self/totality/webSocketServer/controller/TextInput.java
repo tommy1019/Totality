@@ -2,10 +2,12 @@ package self.totality.webSocketServer.controller;
 
 import com.google.gson.annotations.Expose;
 
-public class TextInputElement extends ControllerElement
+public class TextInput extends ControllerElement
 {
+	public static final String TYPE = "TEXTINPUT";
+	
 	@Expose
-	public String type = "TEXTINPUT";
+	public String type = TYPE;
 	
 	public static class DataClass extends ControllerElement.DataClass
 	{
@@ -19,7 +21,7 @@ public class TextInputElement extends ControllerElement
 		}
 	}
 	
-	public TextInputElement(String id, float x, float y, float width, float height)
+	public TextInput(String id, float x, float y, float width, float height)
 	{
 		super(id, x, y, width, height);
 	}

@@ -11,12 +11,12 @@ import javax.swing.JPanel;
 import self.totality.TotalityServer;
 import self.totality.webSocketServer.PacketProcessor;
 import self.totality.webSocketServer.PacketProcessor.ControllerElementProcessor.Listener;
-import self.totality.webSocketServer.controller.ButtonElement;
-import self.totality.webSocketServer.controller.ButtonElement.DataClass;
+import self.totality.webSocketServer.controller.Button;
+import self.totality.webSocketServer.controller.Button.DataClass;
 import self.totality.webSocketServer.controller.GameController;
-import self.totality.webSocketServer.controller.JoystickElement;
-import self.totality.webSocketServer.controller.TextElement;
-import self.totality.webSocketServer.controller.TextInputElement;
+import self.totality.webSocketServer.controller.Joystick;
+import self.totality.webSocketServer.controller.Text;
+import self.totality.webSocketServer.controller.TextInput;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
 
@@ -53,15 +53,15 @@ public class Example extends JPanel
 	public Example()
 	{
 		GameController defaultController = new GameController();
-		defaultController.addControllerElement(new TextInputElement("text", 0.5f, 0.2f, 0.3f, 0.1f));
-		defaultController.addControllerElement(new ButtonElement("playButton", 0.5f, 0.7f, 0.3f, 0.3f));
-		defaultController.addControllerElement(new TextElement("vText", 0.5f, .1f, 0.3f, 0.3f, "Enter Name and Press Button"));
+		defaultController.addControllerElement(new TextInput("text", 0.5f, 0.2f, 0.3f, 0.1f));
+		defaultController.addControllerElement(new Button("playButton", 0.5f, 0.7f, 0.3f, 0.3f));
+		defaultController.addControllerElement(new Text("vText", 0.5f, .1f, 0.3f, 0.3f, "Enter Name and Press Button"));
 		TotalityServer.instance.setDefaultController(defaultController);
 
 		newController = new GameController();
-		newController.addControllerElement(new ButtonElement("button1", 0.6f, 0.6f, 0.1f, 0.1f));
-		newController.addControllerElement(new ButtonElement("button2", 0.8f, 0.5f, 0.1f, 0.1f));
-		newController.addControllerElement(new JoystickElement("joystick1", 0.2f, 0.3f, 0.4f, 0.4f));
+		newController.addControllerElement(new Button("button1", 0.6f, 0.6f, 0.1f, 0.1f));
+		newController.addControllerElement(new Button("button2", 0.8f, 0.5f, 0.1f, 0.1f));
+		newController.addControllerElement(new Joystick("joystick1", 0.2f, 0.3f, 0.4f, 0.4f));
 
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
@@ -85,10 +85,10 @@ public class Example extends JPanel
 			}
 		});
 
-		PacketProcessor.registerListener("JOYSTICK", new Listener<JoystickElement.DataClass>()
+		TotalityServer.registerDataListener(Joystick.TYPE, new Listener<Joystick.DataClass>()
 		{
 			@Override
-			public void onData(UUID uuid, JoystickElement.DataClass data)
+			public void onData(UUID uuid, Joystick.DataClass data)
 			{
 				User u = userMap.get(uuid);
 
@@ -103,7 +103,7 @@ public class Example extends JPanel
 			}
 		});
 
-		PacketProcessor.registerListener("BUTTON", new Listener<ButtonElement.DataClass>()
+		TotalityServer.registerDataListener(Button.TYPE, new Listener<Button.DataClass>()
 		{
 
 			@Override
@@ -126,10 +126,10 @@ public class Example extends JPanel
 			}
 		});
 
-		PacketProcessor.registerListener("TEXTINPUT", new Listener<TextInputElement.DataClass>()
+		PacketProcessor.registerListener(TextInput.TYPE, new Listener<TextInput.DataClass>()
 		{
 			@Override
-			public void onData(UUID uuid, TextInputElement.DataClass data)
+			public void onData(UUID uuid, TextInput.DataClass data)
 			{
 				System.out.println(data.text);
 

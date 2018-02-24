@@ -10,8 +10,11 @@ import com.google.gson.GsonBuilder;
 
 import self.totality.multicastServer.MulticastServer;
 import self.totality.webServer.WebServer;
+import self.totality.webSocketServer.PacketProcessor;
+import self.totality.webSocketServer.PacketProcessor.ControllerElementProcessor.Listener;
 import self.totality.webSocketServer.RemoveThread;
 import self.totality.webSocketServer.WebSocketServer;
+import self.totality.webSocketServer.controller.ControllerElement.DataClass;
 import self.totality.webSocketServer.controller.GameController;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
@@ -120,5 +123,10 @@ public class TotalityServer
 	public ArrayList<DisconnectListener> getDisconnectListeners()
 	{
 		return disconnectListeners;
+	}
+
+	public static void registerDataListener(String string, Listener<? extends DataClass> listener)
+	{
+		PacketProcessor.registerListener(string, listener);
 	}
 }
