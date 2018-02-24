@@ -61,10 +61,9 @@ public class Example extends JPanel
 		Totality.instance.setDefaultController(defaultController);
 
 		newController = new GameController();
-		newController.addControllerElement(new Button("button1", 0.6f, 0.6f, 0.1f, 0.1f));
-		newController.addControllerElement(new Button("button2", 0.8f, 0.5f, 0.1f, 0.1f));
-		newController.addControllerElement(new Joystick("joystick1", 0.2f, 0.3f, 0.4f, 0.4f));
-		
+		newController.addControllerElement(new Joystick("moveJoystick", 0.2f, 0.3f, 0.4f, 0.4f));
+		newController.addControllerElement(new Joystick("aimJoystick", 0.8f, 0.3f, 0.4f, 0.4f));
+
 		Totality.instance.addConnectListener(new ConnectListener()
 		{
 			@Override
@@ -94,34 +93,27 @@ public class Example extends JPanel
 			{
 				User u = userMap.get(uuid);
 
-				u.xVel = data.xVal;
-				u.yVel = data.yVal;
-				u.speed = data.force;
-
-				if (u.xVel != 0 && u.yVel != 0)
+				switch (data.id)
 				{
-					u.angle = Math.atan2(-u.yVel, u.xVel);
+					case "moveJoystick":
+						u.xVel = data.xVal;
+						u.yVel = data.yVal;
+						u.speed = data.force / 100;
+						break;
+					case "aimJoystick":
+						u.firing = (data.xVal == 0 && data.yVal == 0) ? false : true;
+						u.angle = Math.atan2(-data.yVal, data.xVal);
+						break;
 				}
 			}
 		});
 
 		Totality.addDataListener(Button.TYPE, new Listener<Button.DataClass>()
 		{
-
 			@Override
 			public void onData(UUID uuid, DataClass data)
 			{
-				User u = userMap.get(uuid);
-
-				if (data.id.equals("button1"))
-				{
-					u.pressed1 = data.pressed;
-				}
-				else if (data.id.equals("button2"))
-				{
-					u.pressed2 = data.pressed;
-				}
-				else if (data.id.equals("playButton"))
+				if (data.id.equals("playButton"))
 				{
 					Totality.instance.sendControllerToPlayer(uuid, newController);
 				}
@@ -133,8 +125,8 @@ public class Example extends JPanel
 			@Override
 			public void onData(UUID uuid, TextInput.DataClass data)
 			{
-				System.out.println(data.text);
-
+				User u = userMap.get(uuid);
+				u.name = data.text;
 			}
 		});
 	}
@@ -146,10 +138,8 @@ public class Example extends JPanel
 		{
 			if (u.alive)
 			{
-				u.xPos += Math.cos(u.angle);
-				u.yPos += Math.sin(u.angle);
-				//u.xPos += u.xVel * u.speed;
-				//u.yPos += u.yVel * u.speed;
+				u.xPos += u.xVel * u.speed;
+				u.yPos += u.yVel * u.speed;
 
 				// Keeps the players roughly contained within the window
 				if (u.xPos <= 0)
@@ -160,27 +150,19 @@ public class Example extends JPanel
 				{
 					u.xPos = this.getWidth() - u.width;
 				}
-				if (u.yPos - u.height <= 0)
+				if (u.yPos - u.height - u.height <= 0)
 				{
-					u.yPos = u.height;
+					u.yPos = u.height * 2;
 				}
 				else if (u.yPos >= this.getHeight())
 				{
 					u.yPos = this.getHeight();
 				}
 
-				// Shoot a bullet either forwards or backwards, depending on
-				// which button was pressed
-				if ((u.pressed1 || u.pressed2) && u.timeSinceLastShot >= User.FIRE_RATE)
+				//Shoot bullets
+				if ((u.firing) && u.timeSinceLastShot >= User.FIRE_RATE)
 				{
-					if (u.pressed1)
-					{
-						bulletList.add(new Bullet(u.xPos + u.width / 2, u.yPos - u.height / 2, u.angle, u));
-					}
-					else if (u.pressed2)
-					{
-						bulletList.add(new Bullet(u.xPos + u.width / 2, u.yPos - u.height / 2, u.angle + Math.PI, u));
-					}
+					bulletList.add(new Bullet(u.xPos + u.width / 2, u.yPos - u.height / 2, u.angle, u));
 					u.timeSinceLastShot = 0;
 				}
 
