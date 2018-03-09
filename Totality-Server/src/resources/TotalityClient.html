@@ -48,6 +48,7 @@
 			document.body.style.height = "100%";
 			document.body.style.width = "100%";
 			document.body.style.position = "fixed";
+			document.body.style.margin = "0px";
 			document.documentElement.style.overflow = "hidden";
 			document.documentElement.height = "100%";
 			
@@ -131,7 +132,7 @@
 						break;
 					case "DPAD":
 						console.log("Received dPad: " + elements[i].id);
-						controllerElement = createDPad(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+						controllerElement = createDPad(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height, elements[i].eightDir);
 						break;
 					default:
 						console.log("Received unknown element: " + elements[i].id);
@@ -159,7 +160,7 @@
 			joystickDiv.style.border = "none";
 			joystickDiv.style.outline = "none";
 
-			// Programatically sets the width and height of the button
+			// Programatically sets the width and height of the joystick
 			joystickDiv.width  = width * screenWidth;
 			joystickDiv.height = height * screenHeight;
 
@@ -334,7 +335,7 @@
 		}
 		
 		//Programatically creates a dPad with the given id and adds it to the given context
-		function createDPad(dPadId, xPos, yPos, width, height)
+		function createDPad(dPadId, xPos, yPos, width, height, eightDir)
 		{			
 			// Calculates absolute (not relative) width and height
 			var absWidth = width * screenWidth;
@@ -364,101 +365,109 @@
 			dPad.style.position = "absolute";
 			dPad.style.left = absX + "px";
 			dPad.style.top = absY + "px";
+			dPad.style.width = absWidth + "px";
+			dPad.style.height = absHeight + "px";
 			
-			//Width and height of a DPad region
-			var regionSize = absWidth / 3;
-			
-			//Create up, down, left, right, and diagonal buttons
-			var upDiv = document.createElement("div");
-			upDiv.id = dPadId + "UP";
-			upDiv.width = regionSize;
-			upDiv.height = regionSize;
-			upDiv.style.width = upDiv.width + "px";
-			upDiv.style.height = upDiv.height + "px";
-			upDiv.style.position = "absolute";
-			upDiv.style.left = regionSize + "px";
-			upDiv.style.top = 0 + "px";
-			
-			var upRightDiv = document.createElement("div");
-			upRightDiv.id = dPadId + "UPRIGHT";
-			upRightDiv.width = regionSize;
-			upRightDiv.height = regionSize;
-			upRightDiv.style.width = upRightDiv.width + "px";
-			upRightDiv.style.height = upRightDiv.height + "px";
-			upRightDiv.style.position = "absolute";
-			upRightDiv.style.left = 2 * regionSize + "px";
-			upRightDiv.style.top = 0 + "px";
-
-			var rightDiv = document.createElement("div");
-			rightDiv.id = dPadId + "RIGHT";
-			rightDiv.width = regionSize;
-			rightDiv.height = regionSize;
-			rightDiv.style.width = rightDiv.width + "px";
-			rightDiv.style.height = rightDiv.height + "px";
-			rightDiv.style.position = "absolute";
-			rightDiv.style.left = 2 * regionSize + "px";
-			rightDiv.style.top = regionSize + "px";
-			
-			var downRightDiv = document.createElement("div");
-			downRightDiv.id = dPadId + "DOWNRIGHT";
-			downRightDiv.height = regionSize;
-			downRightDiv.style.width = downRightDiv.width + "px";
-			downRightDiv.style.height = downRightDiv.height + "px";
-			downRightDiv.style.position = "absolute";
-			downRightDiv.style.left = 2 * regionSize + "px";
-			downRightDiv.style.top = 2 * regionSize + "px";
-			
-			var downDiv = document.createElement("div");
-			downDiv.id = dPadId + "DOWN";
-			downDiv.width = regionSize;
-			downDiv.height = regionSize;
-			downDiv.style.width = downDiv.width + "px";
-			downDiv.style.height = downDiv.height + "px";
-			downDiv.style.position = "absolute";
-			downDiv.style.left = regionSize + "px";
-			downDiv.style.top = 2 * regionSize + "px";
-			
-			var downLeftDiv = document.createElement("div");
-			downLeftDiv.id = dPadId + "DOWNLEFT";
-			downLeftDiv.width = regionSize;
-			downLeftDiv.height = regionSize;
-			downLeftDiv.style.width = downLeftDiv.width + "px";
-			downLeftDiv.style.height = downLeftDiv.height + "px";
-			downLeftDiv.style.position = "absolute";
-			downLeftDiv.style.left = 0 + "px";
-			downLeftDiv.style.top = 2 * regionSize + "px";
-
-			var leftDiv = document.createElement("div");
-			leftDiv.id = dPadId + "LEFT";
-			leftDiv.width = regionSize;
-			leftDiv.height = regionSize;
-			leftDiv.style.width = leftDiv.width + "px";
-			leftDiv.style.height = leftDiv.height + "px";
-			leftDiv.style.position = "absolute";
-			leftDiv.style.left = 0 + "px";
-			leftDiv.style.top = regionSize + "px";
-			
-			var upLeftDiv = document.createElement("div");
-			upLeftDiv.id = dPadId + "UPLEFT";
-			upLeftDiv.width = regionSize;
-			upLeftDiv.height = regionSize;
-			upLeftDiv.style.width = upLeftDiv.width + "px";
-			upLeftDiv.style.height = upLeftDiv.height + "px";
-			upLeftDiv.style.position = "absolute";
-			upLeftDiv.style.left = 0 + "px";
-			upLeftDiv.style.top = 0 + "px";
-
-			//Add the buttons to the dPad
-			dPad.appendChild(upDiv);
-			dPad.appendChild(upRightDiv);
-			dPad.appendChild(rightDiv);
-			dPad.appendChild(downRightDiv);
-			dPad.appendChild(downDiv);
-			dPad.appendChild(downLeftDiv);
-			dPad.appendChild(leftDiv);
-			dPad.appendChild(upLeftDiv);
-
 			document.body.appendChild(dPad);
+			
+			//Create a joystick object to track movement on the dPad
+			var joystick = nipplejs.create(
+			{
+				zone: dPad,
+				mode: 'static',
+				position: { x: (absX + absWidth / 2), y: (absY + absHeight / 2)},
+				color: 'blue',
+				size: absWidth,
+				dataOnly: true
+			});
+
+			joystick.id = dPadId;
+
+			//This keeps track of the angle of the joystick
+			var joyAngle;
+
+			var count = 0;
+
+			joystick.on('move', function (evt, data)
+			{
+				count++;
+
+				if(count % Math.round(100 / percentJoyDataSent) == 0)
+				{
+					joyAngle = data.angle.degree;
+					
+					//Read the joystick angle and output the corresponding dpad direction
+					if(eightDir)
+					{
+						if((joyAngle > 0 && joyAngle < 22.5) || (joyAngle > 337.5 && joyAngle < 360))
+						{
+							dPadStates[dPadId] = "RIGHT";
+						}
+						else if(joyAngle > 22.5 && joyAngle < 67.5)
+						{
+							dPadStates[dPadId] = "UPRIGHT";
+						}
+						else if(joyAngle > 67.5 && joyAngle < 112.5)
+						{
+							dPadStates[dPadId] = "UP";
+						}
+						else if(joyAngle > 112.5 && joyAngle < 157.5)
+						{
+							dPadStates[dPadId] = "UPLEFT";
+						}
+						else if(joyAngle > 157.5 && joyAngle < 202.5)
+						{
+							dPadStates[dPadId] = "LEFT";
+						}
+						else if(joyAngle > 202.5 && joyAngle < 247.5)
+						{
+							dPadStates[dPadId] = "DOWNLEFT";
+						}
+						else if(joyAngle > 247.5 && joyAngle < 292.5)
+						{
+							dPadStates[dPadId] = "DOWN";
+						}
+						else if(joyAngle > 292.5 && joyAngle < 337.5)
+						{
+							dPadStates[dPadId] = "DOWNRIGHT";
+						}
+					}
+					else
+					{
+						if((joyAngle > 0 && joyAngle < 45) || (joyAngle > 315 && joyAngle < 360))
+						{
+							dPadStates[dPadId] = "RIGHT";
+						}
+						else if(joyAngle > 45 && joyAngle < 135)
+						{
+							dPadStates[dPadId] = "UP";
+						}
+						else if(joyAngle > 135 && joyAngle < 225)
+						{
+							dPadStates[dPadId] = "LEFT";
+						}
+						else if(joyAngle > 225 && joyAngle < 315)
+						{
+							dPadStates[dPadId] = "DOWN";
+						}
+					}
+					
+					webSocket.send("DPAD:" + dPadId + ":state:" + dPadStates[dPadId]);
+				}
+				if(count >= 10)
+				{
+					count = 0;
+				}
+
+			}).on('removed', function (evt, nipple)
+			{
+				nipple.off('move', 'end');
+
+			}).on('end', function (evt, nipple)
+			{
+				dPadStates[dPadId] = "NONE";
+				webSocket.send("DPAD:" + dPadId + ":state:" + dPadStates[dPadId]);
+			});
 			
 			var canvas = document.createElement('canvas');
 			canvas.id     = dPadId + "canvas";
@@ -480,48 +489,6 @@
 			
 			context.drawImage(dPadImg, absX, absY, absWidth, absHeight);
 			
-			// Adds touch and mouse listeners to each button
-			// Please be careful with this code, it is VERY finnicky
-			upDiv.ontouchstart = function(){onDPadPress(dPad.id, "UP");}
-			upDiv.ontouchend = function(){onDPadRelease(dPad.id, "UP");}
-			upDiv.onmousedown = function(){onDPadPress(dPad.id, "UP");}
-			upDiv.onmouseup = function(){onDPadRelease(dPad.id, "UP");}
-			
-			upRightDiv.ontouchstart = function(){onDPadPress(dPad.id, "UPRIGHT");}
-			upRightDiv.ontouchend = function(){onDPadRelease(dPad.id, "UPRIGHT");}
-			upRightDiv.onmousedown = function(){onDPadPress(dPad.id, "UPRIGHT");}
-			upRightDiv.onmouseup = function(){onDPadRelease(dPad.id, "UPRIGHT");}
-			
-			rightDiv.ontouchstart = function(){onDPadPress(dPad.id, "RIGHT");}
-			rightDiv.ontouchend = function(){onDPadRelease(dPad.id, "RIGHT");}
-			rightDiv.onmousedown = function(){onDPadPress(dPad.id, "RIGHT");}
-			rightDiv.onmouseup = function(){onDPadRelease(dPad.id, "RIGHT");}
-			
-			downRightDiv.ontouchstart = function(){onDPadPress(dPad.id, "DOWNRIGHT");}
-			downRightDiv.ontouchend = function(){onDPadRelease(dPad.id, "DOWNRIGHT");}
-			downRightDiv.onmousedown = function(){onDPadPress(dPad.id, "DOWNRIGHT");}
-			downRightDiv.onmouseup = function(){onDPadRelease(dPad.id, "DOWNRIgHT");}
-			
-			downDiv.ontouchstart = function(){onDPadPress(dPad.id, "DOWN");}
-			downDiv.ontouchend = function(){onDPadRelease(dPad.id, "DOWN");}
-			downDiv.onmousedown = function(){onDPadPress(dPad.id, "DOWN");}
-			downDiv.onmouseup = function(){onDPadRelease(dPad.id, "DOWN");}
-			
-			downLeftDiv.ontouchstart = function(){onDPadPress(dPad.id, "DOWNLEFT");}
-			downLeftDiv.ontouchend = function(){onDPadRelease(dPad.id, "DOWNLEFT");}
-			downLeftDiv.onmousedown = function(){onDPadPress(dPad.id, "DOWNLEFT");}
-			downLeftDiv.onmouseup = function(){onDPadRelease(dPad.id, "DOWNLEFT");}
-			
-			leftDiv.ontouchstart = function(){onDPadPress(dPad.id, "LEFT");}
-			leftDiv.ontouchend = function(){onDPadRelease(dPad.id, "LEFT");}
-			leftDiv.onmousedown = function(){onDPadPress(dPad.id, "LEFT");}
-			leftDiv.onmouseup = function(){onDPadRelease(dPad.id, "LEFT");}
-			
-			upLeftDiv.ontouchstart = function(){onDPadPress(dPad.id, "UPLEFT");}
-			upLeftDiv.ontouchend = function(){onDPadRelease(dPad.id, "UPLEFT");}
-			upLeftDiv.onmousedown = function(){onDPadPress(dPad.id, "UPLEFT");}
-			upLeftDiv.onmouseup = function(){onDPadRelease(dPad.id, "UPLEFT");}
-		
 			//Initialize dPad state to none
 			dPadStates[dPadId] = "NONE";
 			
@@ -563,31 +530,6 @@
 			
 			var context = contexts[buttonId];
 			context.drawImage(buttonImg, 0, 0, buttonDiv.width(), buttonDiv.height());
-			
-			return true;
-		}
-		
-		//Called when a dPad button is pressed
-		function onDPadPress(dPadId, direction)
-		{
-			dPadStates[dPadId] = direction;
-		
-			//When a button is pressed, tell the server
-			webSocket.send("DPAD:" + dPadId + ":state:" + dPadStates[dPadId]);
-			
-			return true;
-		}
-
-		//Called when the user releases a dPad button
-		function onDPadRelease(dPadId, direction)
-		{
-			if(dPadStates[dPadId] == direction)
-			{
-				dPadStates[dPadId] = "NONE";
-			}
-
-			//When a button is released, tell the server
-			webSocket.send("DPAD:" + dPadId + ":state:" + dPadStates[dPadId]);
 			
 			return true;
 		}

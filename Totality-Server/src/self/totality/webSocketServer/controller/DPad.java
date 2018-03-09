@@ -19,6 +19,9 @@ public class DPad extends ControllerElement
 	@Expose
 	public String type = TYPE;
 	
+	@Expose
+	public boolean eightDir = false;
+	
 	public static class DataClass extends ControllerElement.DataClass
 	{
 		public String id;
@@ -64,5 +67,11 @@ public class DPad extends ControllerElement
 	public DPad(String id, float x, float y, float width, float height)
 	{
 		super(id, x, y, width, height);
+	}
+	
+	public DPad(String id, float x, float y, float width, float height, boolean eightDir)
+	{
+		super(id, x, y, width, height);
+		this.eightDir = eightDir;
 	}
 }
