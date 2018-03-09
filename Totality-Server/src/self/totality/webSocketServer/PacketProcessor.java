@@ -7,7 +7,6 @@ import java.util.UUID;
 import self.totality.webSocketServer.PacketProcessor.ControllerElementProcessor.Listener;
 import self.totality.webSocketServer.controller.Button;
 import self.totality.webSocketServer.controller.ControllerElement;
-import self.totality.webSocketServer.controller.ControllerElement.DataClass;
 import self.totality.webSocketServer.controller.DPad;
 import self.totality.webSocketServer.controller.Joystick;
 import self.totality.webSocketServer.controller.TextInput;
@@ -16,11 +15,11 @@ public class PacketProcessor
 {
 	static HashMap<String, ControllerElementProcessor<?, ?>> typeMap = new HashMap<>();
 
-	public static abstract class ControllerElementProcessor<Element extends ControllerElement, Data extends DataClass>
+	public static abstract class ControllerElementProcessor<Element extends self.totality.webSocketServer.controller.ControllerElement, Data extends self.totality.webSocketServer.controller.ControllerElement.DataClass>
 	{
 		public abstract Data process(String packet);
 
-		public static abstract class Listener<Data extends DataClass>
+		public static abstract class Listener<Data extends self.totality.webSocketServer.controller.ControllerElement.DataClass>
 		{
 			public abstract void onData(UUID uuid, Data data);
 		}
@@ -28,7 +27,7 @@ public class PacketProcessor
 		public ArrayList<Listener<Data>> listeners = new ArrayList<>();
 
 		@SuppressWarnings("unchecked")
-		public void addListener(Listener<? extends ControllerElement.DataClass> l)
+		public void addListener(Listener<? extends self.totality.webSocketServer.controller.ControllerElement.DataClass> l)
 		{
 			listeners.add((Listener<Data>) l);
 		}
@@ -106,12 +105,12 @@ public class PacketProcessor
 		}
 	}
 
-	public static void registerControllerElement(String idString, ControllerElementProcessor<? extends ControllerElement, ? extends DataClass> processor)
+	public static void registerControllerElement(String idString, ControllerElementProcessor<? extends ControllerElement, ? extends self.totality.webSocketServer.controller.ControllerElement.DataClass> processor)
 	{
 		typeMap.put(idString, processor);
 	}
 
-	public static void registerListener(String idString, Listener<? extends ControllerElement.DataClass> l)
+	public static void registerListener(String idString, Listener<? extends self.totality.webSocketServer.controller.ControllerElement.DataClass> l)
 	{
 		typeMap.get(idString).addListener(l);
 	}
