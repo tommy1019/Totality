@@ -1,8 +1,6 @@
 # Totality
 Totality is a Java library that allows you to use any smartphone as a video game controller.
 
-**Note: Totality is currently a work in progress. Use at your own risk.**
-
 ## How Does it Work?
 Totality hosts a web server on the main machine. Users connect to the server using the web browser on their phone. The server sends a javascript controller to the phone, and listens for input.
 
@@ -11,17 +9,19 @@ Totality hosts a web server on the main machine. Users connect to the server usi
 
 2. Create a controller object and define its layout:
 ```
-    //Create a controller with one button and one joystick
+    //Create a controller
     GameController gc = new GameController();
-    gc.addButton("button1", 0.5f, 0.25f, 1.0f, 0.5f);
-    gc.addJoystick("joystick1", 0.5f, 0.75f, 1.0f, 0.5f);
+
+    gc.addControllerElement(new TextInput("textInput", 0.5f, 0.2f, 0.3f, 0.1f));
+    gc.addControllerElement(new Button("playButton", 0.5f, 0.7f, 0.3f, 0.3f));
+    gc.addControllerElement(new Text("text", 0.5f, .1f, "Enter Name and Press Button", 24));
   
-    //Send the controller to the Totality server
-    TotalityServer.instance.setDefaultController(gc);
+    //Set the default controller for new users
+    Totality.instance.setDefaultController(gc);
 ```
 (Need help with this? Check out our [controller formatting guide](https://github.com/tommy1019/Totality/wiki/Controller-Formatting-Guide))
 
-3. Define the controller behavior using the following code:
+3. Define what to do when a user connects or disconnects:
 ```
 TotalityServer.instance.addConnectListener(new ConnectListener()
 {
@@ -42,27 +42,36 @@ TotalityServer.instance.addDisconnectListener(new DisconnectListener()
       //We recommend removing the uuid from your hashmap here
   }
 });
+```
 
-TotalityServer.instance.addDataListener(new DataListener()
+4. Define what happens when the user interacts with a specific controller element:
+```
+Totality.addDataListener(Button.TYPE, new Listener<Button.DataClass>()
 {
-  @Override
-  public void onDataUpdate(UUID uuid, ControllerElement e)
-  {
-      //This is called whenever any controller sends data
-      //The uuid corresponds to the user
-      //The ControllerElement object contains the data from the controller
-      
-      if(e.id.equals("button1")
-      {
-           System.out.println("User " + uuid + " pressed button 1!");
-      }
-  }
+	@Override
+	public void onData(UUID uuid, DataClass data)
+	{
+		if (data.id.equals("playButton"))
+		{
+			Totality.instance.sendControllerToPlayer(uuid, newController);
+		}
+	}
+});
+
+Totality.addDataListener(TextInput.TYPE, new Listener<TextInput.DataClass>()
+{
+    @Override
+    public void onData(UUID uuid, TextInput.DataClass data)
+	{
+		User u = userMap.get(uuid);
+		u.name = data.text;
+	}
 });
 ```
 
-4. Start the totality server with:
+5. Start the totality server with:
 ```
-TotalityServer.instance.start();
+Totality.instance.start();
 ```
 
 And you're ready to go!
