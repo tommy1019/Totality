@@ -56,6 +56,16 @@ public class Totality
 		GsonBuilder builder = new GsonBuilder();
 		gson = builder.serializeNulls().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
 	}
+	
+	/**
+	 * Having a main method lets us export as a runnable jar.
+	 * This allows us to include dependencies in the jar
+	 * @param args
+	 */
+	public static void main(String[] args)
+	{
+		
+	}
 
 	/**
 	 * Start a multicast dns resolver. This allows clients that support multicast dns (mainly iOS) to connect using a .local domain name instead of typing in an ip address.

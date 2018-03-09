@@ -54,11 +54,11 @@ public class WebServerConnection extends Thread
 				case "/":
 					handleFile(INDEX_PAGE, out);
 					break;
-				case "/webSocketIp.txt":
-					handelIp(out);
+				case "/webSocketIp":
+					handleIp(out);
 					break;
 				case "/getController":
-					handelController(out);
+					handleController(out);
 					break;
 				default:
 					handleFile(requestParts[1], out);
@@ -73,7 +73,7 @@ public class WebServerConnection extends Thread
 		}
 	}
 
-	private void handelController(BufferedWriter out) throws IOException
+	private void handleController(BufferedWriter out) throws IOException
 	{
 		String data = Totality.gson.toJson(Totality.instance.getDefaultController());
 
@@ -87,14 +87,15 @@ public class WebServerConnection extends Thread
 		out.flush();
 	}
 
-	void handelIp(BufferedWriter out) throws IOException
+	void handleIp(BufferedWriter out) throws IOException
 	{
 		String ip = Totality.localIp + ":" + WebSocketServer.PORT;
 
 		out.write("HTTP/1.1 200 OK\r\n");
 		out.write("Content-Length: " + ip.length());
-		out.write("Content-Type: text/plain\r\n");
-		out.write("Content-Encoding: UTF-8\r\n");
+		out.write("Content-Type: text/html; charset=utf-8\r\n");
+		out.write("Content-Encoding: identity\r\n");
+		out.write("X-Content-Type-Options: nosniff\r\n");
 		out.write("Connection: close\r\n");
 		out.write("\r\n");
 		out.write(ip);

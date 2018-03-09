@@ -1,3 +1,4 @@
+<!doctype html> 
 <html>
 <head>
 <meta name="viewport"
@@ -7,6 +8,8 @@
 
 </style>
 
+<meta charset="utf-8"/>
+    
 <script src="dist/jquery-3.3.1.min.js"></script>
 <script src="dist/nipplejs.min.js" charset="utf-8"></script>
 </head>
@@ -54,7 +57,7 @@
 			
 			// Get the ip of the websocket server from the web server
 			// Once this is done, initialize the websocket with the new ip
-			jQuery.get('webSocketIp.txt', function(data)
+			jQuery.get('webSocketIp', "", function(data)
 			{
 				ip = "ws://" + data;
 
@@ -81,7 +84,7 @@
 					controller = event.data;
 					buildController();
 				};
-			});
+			}, 'text');
 		}
 		
 		function buildController()
@@ -229,20 +232,11 @@
 			var imgWidth = width * screenWidth;
 			var imgHeight = height * screenHeight;
 			
-			if(imgWidth < imgHeight)
-			{
-				imgHeight = imgWidth;
-			}
-			else
-			{
-				imgWidth = imgHeight;
-			}
-			
 			var imgX = xPos * screenWidth - (imgWidth / 2);
 			var imgY = yPos * screenHeight - (imgHeight / 2);
 			
 			//Create a div that will act as our button
-			button = document.createElement("div");
+			var button = document.createElement("div");
 			button.href = "#";
 			button.id = buttonId;
 			button.style.background = "none";
@@ -253,8 +247,8 @@
 			button.style.position = "absolute";
 			button.style.left = imgX + "px";
 			button.style.top = imgY + "px";
-			button.style.width = imgWidth;
-			button.style.height = imgHeight;
+			button.style.width = imgWidth + "px";
+			button.style.height = imgHeight + "px";
 			button.style.opacity = 0;
 			
 			document.body.appendChild(button);
