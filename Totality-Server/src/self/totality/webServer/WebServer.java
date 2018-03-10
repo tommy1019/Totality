@@ -11,10 +11,12 @@ public class WebServer extends Thread
 	
 	public WebServer(int port)
 	{
+		this.setName("Totality - Web Server");
+		
 		try
 		{
 			serverSocket = new ServerSocket(port);
-			serverSocket.setSoTimeout(1000);
+			serverSocket.setSoTimeout(100);
 		}
 		catch (IOException e)
 		{
@@ -43,6 +45,15 @@ public class WebServer extends Thread
 			{
 				e.printStackTrace();
 			}
+		}
+		
+		try
+		{
+			serverSocket.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
 		}
 	}
 }

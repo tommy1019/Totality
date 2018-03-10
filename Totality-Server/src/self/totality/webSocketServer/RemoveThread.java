@@ -19,6 +19,8 @@ public class RemoveThread extends Thread
 	public RemoveThread(WebSocketServer server)
 	{
 		this.server = server;
+		
+		this.setName("Totality - Remove Thread");
 	}
 	
 	public void run()
@@ -66,7 +68,7 @@ public class RemoveThread extends Thread
 			}
 			catch (InterruptedException e)
 			{
-				
+				this.interrupt();
 			}
 		}
 	}

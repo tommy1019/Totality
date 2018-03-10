@@ -25,10 +25,12 @@ public class WebSocketServer extends Thread
 	{
 		connectedClients = new HashMap<UUID, ConnectedClient>();
 		
+		this.setName("Totality - Web Socket Server");
+		
 		try
 		{
 			serverSocket = new ServerSocket(PORT);
-			serverSocket.setSoTimeout(1000);
+			serverSocket.setSoTimeout(100);
 		}
 		catch (IOException e)
 		{
@@ -100,6 +102,20 @@ public class WebSocketServer extends Thread
 			{
 				e.printStackTrace();
 			}
+		}
+		
+		try
+		{
+			serverSocket.close();
+			
+			for (ConnectedClient c : connectedClients.values())
+			{
+				c.disconnect();
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
 		}
 	}
 }

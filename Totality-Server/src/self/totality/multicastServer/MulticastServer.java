@@ -19,6 +19,8 @@ public class MulticastServer extends Thread
 	public MulticastServer(String domain)
 	{
 		this.domain = domain;
+		
+		this.setName("Totality - Multicast Server");
 
 		if (domain.equals("local"))
 		{
@@ -32,7 +34,7 @@ public class MulticastServer extends Thread
 			socket.setInterface(InetAddress.getLocalHost());
 			socket.joinGroup(InetAddress.getByName("224.0.0.251"));
 			socket.setTimeToLive(10);
-			socket.setSoTimeout(1000);
+			socket.setSoTimeout(100);
 		}
 		catch (IOException e)
 		{
@@ -42,7 +44,7 @@ public class MulticastServer extends Thread
 
 	public void run()
 	{
-		while (true)
+		while (!this.isInterrupted())
 		{
 			byte[] data = new byte[65507];
 			DatagramPacket packet = new DatagramPacket(data, 65507);
@@ -144,5 +146,7 @@ public class MulticastServer extends Thread
 			}
 
 		}
+		
+		socket.close();
 	}
 }

@@ -31,6 +31,15 @@ public class Totality
 
 	static
 	{
+		try
+		{
+			localIp = InetAddress.getLocalHost().getHostAddress();
+		}
+		catch (UnknownHostException e)
+		{
+			localIp = "0.0.0.0";
+		}
+		
 		instance = new Totality();
 	}
 
@@ -89,15 +98,6 @@ public class Totality
 	{
 		System.out.println("[Totality server] Starting");
 
-		try
-		{
-			localIp = InetAddress.getLocalHost().getHostAddress();
-		}
-		catch (UnknownHostException e)
-		{
-			localIp = "0.0.0.0";
-		}
-
 		System.out.println("[Totality server] Local ip: " + localIp);
 
 		webServer = new WebServer(webServerPort);
@@ -108,6 +108,21 @@ public class Totality
 
 		removeThread = new RemoveThread(webSocketServer);
 		removeThread.start();
+	}
+	
+	/**
+	 * Stops all of Totality's services
+	 */
+	public void stop()
+	{
+		System.out.println("[Totality server] Stopping");
+		
+		if (multicastServer != null)
+			multicastServer.interrupt();
+		
+		webSocketServer.interrupt();
+		webServer.interrupt();
+		removeThread.interrupt();
 	}
 
 	/**

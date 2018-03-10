@@ -24,6 +24,8 @@ public class WebServerConnection extends Thread
 	public WebServerConnection(Socket socket)
 	{
 		this.socket = socket;
+		
+		this.setName("Totality - Web Server Connection");
 	}
 
 	public void run()

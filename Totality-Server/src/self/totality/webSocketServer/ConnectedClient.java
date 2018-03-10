@@ -40,6 +40,8 @@ class ConnectedClient extends Thread
 		Random random = new Random();
 		uuid = new UUID(random.nextLong(), random.nextLong());
 		
+		this.setName("Totality - Web Socket Connection - " + uuid);
+		
 		try
 		{
 			in = new DataInputStream(socket.getInputStream());
