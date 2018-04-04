@@ -23,7 +23,7 @@ Totality hosts a web server on the main machine. Users connect to the server usi
 
 3. Define what to do when a user connects or disconnects:
 ```
-TotalityServer.instance.addConnectListener(new ConnectListener()
+Totality.instance.addConnectListener(new ConnectListener()
 {
   @Override
   public void onConnect(UUID uuid)
@@ -33,7 +33,7 @@ TotalityServer.instance.addConnectListener(new ConnectListener()
   }
 });
 
-TotalityServer.instance.addDisconnectListener(new DisconnectListener()
+Totality.instance.addDisconnectListener(new DisconnectListener()
 {
   @Override
   public void onDisconnect(UUID uuid)
