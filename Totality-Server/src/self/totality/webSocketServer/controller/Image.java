@@ -10,6 +10,9 @@ public class Image extends ControllerElement
 	public String type = TYPE;
 	
 	@Expose
+	public boolean preserveAspectRatio = false;
+	
+	@Expose
 	String imgPath;
 
 	public Image(String id, float x, float y, float width, float height, String imgPath)

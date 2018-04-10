@@ -132,7 +132,7 @@
 						break;
 					case "IMAGE":
 						console.log("Received image: " + elements[i].id);
-						controllerElement = createImage(elements[i].id, elements[i].imgPath, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+						controllerElement = createImage(elements[i].id, elements[i].imgPath, elements[i].x, elements[i].y, elements[i].width, elements[i].height, elements[i].preserveAspectRatio);
 						break;
 					case "DPAD":
 						console.log("Received dPad: " + elements[i].id);
@@ -338,7 +338,7 @@
 			return textDiv;
 		}
 				
-		function createImage(imgId, imgPath, xPos, yPos, width, height)
+		function createImage(imgId, imgPath, xPos, yPos, width, height, preserveAspectRatio)
 		{
 			var imgDiv = document.createElement("img");
 			imgDiv.id = imgId;
@@ -347,15 +347,43 @@
 			var absWidth = width * screenWidth;
 			var absHeight = height * screenHeight;
 			
-			var absX = (xPos * screenWidth) - (absWidth / 2);
-			var absY = (yPos * screenHeight) - (absHeight / 2);	
+			if(preserveAspectRatio)
+			{
+				//Wait for the image to be loaded
+				imgDiv.onload = function() 
+				{
+				    //Calculate aspect ratio of the source image
+					var natWidth  = imgDiv.naturalWidth;
+					var natHeight = imgDiv.naturalHeight;
+					var aspectRatio = natWidth / natHeight;
+					
+					absHeight = absWidth * aspectRatio;
+					
+					var absX = (xPos * screenWidth) - (absWidth / 2);
+					var absY = (yPos * screenHeight) - (absHeight / 2);	
+				
+					imgDiv.style.position = "absolute";
+					imgDiv.style.left = absX + "px";
+					imgDiv.style.top = absY + "px";
+					imgDiv.style.width = absWidth + "px";
+					imgDiv.style.height = absHeight + "px";
+				}
+			}
+			else
+			{
+				//Since we don't care about the original dimensions,
+				// we don't have to wait for the image to load
 			
-			imgDiv.style.position = "absolute";
-			imgDiv.style.left = absX + "px";
-			imgDiv.style.top = absY + "px";
-			imgDiv.style.width = absWidth + "px";
-			imgDiv.style.height = absHeight + "px";
-			
+				var absX = (xPos * screenWidth) - (absWidth / 2);
+				var absY = (yPos * screenHeight) - (absHeight / 2);	
+				
+				imgDiv.style.position = "absolute";
+				imgDiv.style.left = absX + "px";
+				imgDiv.style.top = absY + "px";
+				imgDiv.style.width = absWidth + "px";
+				imgDiv.style.height = absHeight + "px";
+			}
+
 			document.body.appendChild(imgDiv);
 			
 			return imgDiv;
