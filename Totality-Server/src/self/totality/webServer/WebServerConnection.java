@@ -16,7 +16,7 @@ import self.totality.webSocketServer.WebSocketServer;
 
 public class WebServerConnection extends Thread
 {
-	public static final String CONTENT_DIRECTORY = "/resources";
+	public static final String CONTENT_DIRECTORY = "resources";
 	public static final String INDEX_PAGE = "/TotalityClient.html";
 
 	Socket socket;
@@ -114,21 +114,23 @@ public class WebServerConnection extends Thread
 		InputStream in;
 
 		// Try to get an input stream of the file
-		in = getClass().getResourceAsStream(CONTENT_DIRECTORY + path);
+		in = getClass().getResourceAsStream("/" + CONTENT_DIRECTORY + path);
 
 		if (in == null)
 		{
-			File fallbackFile = new File(path);
+			File fallbackFile = new File(path.substring(1));
+			
 			if (!fallbackFile.exists())
-			{
+			{				
 				// Give an error if we cannot find the file
-				System.err.println("[Totality server] Could not find file: " + CONTENT_DIRECTORY + path);
+				System.err.println("[Totality server] Could not find file: " + path);
 
 				out.write("HTTP/1.1 404 Not Found\r\n");
 				out.write("\r\n");
 				out.flush();
 				return;
 			}
+			
 			in = new FileInputStream(fallbackFile);
 		}
 

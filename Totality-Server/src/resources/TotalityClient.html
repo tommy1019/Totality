@@ -130,6 +130,10 @@
 						console.log("Received text: " + elements[i].id);
 						controllerElement = createText(elements[i].id, elements[i].content, elements[i].fontSize, elements[i].x, elements[i].y);
 						break;
+					case "IMAGE":
+						console.log("Received image: " + elements[i].id);
+						controllerElement = createImage(elements[i].id, elements[i].imgPath, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+						break;
 					case "DPAD":
 						console.log("Received dPad: " + elements[i].id);
 						controllerElement = createDPad(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height, elements[i].eightDir);
@@ -332,6 +336,29 @@
 			textDiv.style.top = yPos * screenHeight - (textDiv.offsetHeight / 2) + "px";
 			
 			return textDiv;
+		}
+				
+		function createImage(imgId, imgPath, xPos, yPos, width, height)
+		{
+			var imgDiv = document.createElement("img");
+			imgDiv.id = imgId;
+			imgDiv.src = imgPath;
+			
+			var absWidth = width * screenWidth;
+			var absHeight = height * screenHeight;
+			
+			var absX = (xPos * screenWidth) - (absWidth / 2);
+			var absY = (yPos * screenHeight) - (absHeight / 2);	
+			
+			imgDiv.style.position = "absolute";
+			imgDiv.style.left = absX + "px";
+			imgDiv.style.top = absY + "px";
+			imgDiv.style.width = absWidth + "px";
+			imgDiv.style.height = absHeight + "px";
+			
+			document.body.appendChild(imgDiv);
+			
+			return imgDiv;
 		}
 		
 		//Programatically creates a dPad with the given id and adds it to the given context

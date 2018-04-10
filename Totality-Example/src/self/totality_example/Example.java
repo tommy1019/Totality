@@ -14,6 +14,7 @@ import self.totality.webSocketServer.PacketProcessor.ControllerElementProcessor.
 import self.totality.webSocketServer.controller.Button;
 import self.totality.webSocketServer.controller.Button.DataClass;
 import self.totality.webSocketServer.controller.GameController;
+import self.totality.webSocketServer.controller.Image;
 import self.totality.webSocketServer.controller.Joystick;
 import self.totality.webSocketServer.controller.Text;
 import self.totality.webSocketServer.controller.TextInput;
@@ -57,6 +58,7 @@ public class Example extends JPanel
 		defaultController.addControllerElement(new TextInput("text", 0.5f, 0.2f, 0.3f, 0.1f));
 		defaultController.addControllerElement(new Button("playButton", 0.5f, 0.7f, 0.3f, 0.3f));
 		defaultController.addControllerElement(new Text("vText", 0.5f, .1f, "Enter Name and Press Button", 24));
+		defaultController.addControllerElement(new Image("testImg", 0.5f, 0.43f, 0.2f, 0.2f, "resources/test.png"));
 
 		Totality.instance.setDefaultController(defaultController);
 
