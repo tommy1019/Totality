@@ -1,6 +1,7 @@
 package self.totality.webServer;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -18,9 +19,15 @@ public class WebServer extends Thread
 			serverSocket = new ServerSocket(port);
 			serverSocket.setSoTimeout(100);
 		}
+		catch (BindException e)
+		{
+			System.err.println("[Totality Server] Error administrator permissions needed to run Totality on port 80. Read the FAQs for more info.");
+			e.printStackTrace();
+			System.exit(1);
+		}
 		catch (IOException e)
 		{
-			System.out.println("[TotalityServer] Error starting web server");
+			System.out.println("[Totality Server] Error starting web server");
 			e.printStackTrace();
 			System.exit(1);
 		}
