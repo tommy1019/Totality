@@ -17,6 +17,7 @@ import self.totality.webSocketServer.WebSocketServer;
 public class WebServerConnection extends Thread
 {
 	public static final String CONTENT_DIRECTORY = "resources";
+
 	public static final String INDEX_PAGE = "/TotalityClient.html";
 
 	Socket socket;

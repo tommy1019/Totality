@@ -423,6 +423,8 @@
 				{
 					joyAngle = data.angle.degree;
 					
+					var prevState = dPadStates[dPadId];
+					
 					//Read the joystick angle and output the corresponding dpad direction
 					if(eightDir)
 					{
@@ -479,7 +481,10 @@
 						}
 					}
 					
-					webSocket.send("DPAD:" + dPadId + ":state:" + dPadStates[dPadId]);
+					if(dPadStates[dPadId] != prevState)
+					{
+						webSocket.send("DPAD:" + dPadId + ":state:" + dPadStates[dPadId]);
+					}
 				}
 				if(count >= 10)
 				{
