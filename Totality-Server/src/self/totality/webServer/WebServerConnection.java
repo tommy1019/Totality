@@ -1,5 +1,9 @@
 package self.totality.webServer;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -10,6 +14,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+
+import javax.imageio.ImageIO;
 
 import self.totality.Totality;
 import self.totality.webSocketServer.WebSocketServer;
@@ -25,7 +31,7 @@ public class WebServerConnection extends Thread
 	public WebServerConnection(Socket socket)
 	{
 		this.socket = socket;
-		
+
 		this.setName("Totality - Web Server Connection");
 	}
 
@@ -42,7 +48,8 @@ public class WebServerConnection extends Thread
 
 			String[] requestParts = curLine.split(" ");
 
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			BufferedWriter out = new BufferedWriter(
+					new OutputStreamWriter(socket.getOutputStream()));
 
 			if (!requestParts[0].equals("GET"))
 			{
@@ -52,7 +59,11 @@ public class WebServerConnection extends Thread
 				return;
 			}
 
-			switch (requestParts[1])
+			String requestedFile = requestParts[1];
+			if (requestedFile.contains("?"))
+				requestedFile = requestParts[1].substring(0, requestParts[1].indexOf('?'));
+
+			switch (requestedFile)
 			{
 				case "/":
 					handleFile(INDEX_PAGE, out);
@@ -107,7 +118,14 @@ public class WebServerConnection extends Thread
 
 	void handleFile(String path, BufferedWriter out) throws IOException
 	{
-		String extension = path.substring(path.lastIndexOf('.') + 1);
+		String file = path;
+		String[] args = {};
+		if (path.contains("?"))
+		{
+			file = path.substring(0, path.indexOf('?'));
+			args = path.substring(path.indexOf('?') + 1).split("&");
+		}
+		String extension = file.substring(file.lastIndexOf('.') + 1);
 
 		// For debug purposes
 		// System.out.println("[Totality server] Serving file: " + CONTENT_DIRECTORY + path);
@@ -115,40 +133,85 @@ public class WebServerConnection extends Thread
 		InputStream in;
 
 		// Try to get an input stream of the file
-		in = getClass().getResourceAsStream("/" + CONTENT_DIRECTORY + path);
+		in = getClass().getResourceAsStream("/" + CONTENT_DIRECTORY + file);
 
 		if (in == null)
 		{
-			File fallbackFile = new File(path.substring(1));
-			
+			File fallbackFile = new File(file.substring(1));
+
 			if (!fallbackFile.exists())
-			{				
+			{
 				// Give an error if we cannot find the file
-				System.err.println("[Totality server] Could not find file: " + path);
+				System.err.println("[Totality server] Could not find file: " + file);
 
 				out.write("HTTP/1.1 404 Not Found\r\n");
 				out.write("\r\n");
 				out.flush();
 				return;
 			}
-			
+
 			in = new FileInputStream(fallbackFile);
 		}
 
-		// Read inputstream into a byte[]
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		boolean normalFile = true;
 
-		int numBytesRead;
-		byte[] data = new byte[16384];
+		ByteArrayOutputStream dataBuffer = new ByteArrayOutputStream();
 
-		while ((numBytesRead = in.read(data, 0, data.length)) != -1)
+		boolean colorFilter = false;
+		int color = 0;
+		float alpha = 0.5f;
+
+		// Process arguments
+		for (String s : args)
 		{
-			buffer.write(data, 0, numBytesRead);
+			String[] parts = s.split("=");
+			switch (parts[0])
+			{
+				case "color":
+					colorFilter = true;
+					color = Integer.parseInt(parts[1]);
+					break;
+				case "alpha":
+					alpha = Float.parseFloat(parts[1]);
+					break;
+			}
 		}
 
-		buffer.flush();
+		if (colorFilter)
+		{
+			try
+			{
+				normalFile = false;
 
-		byte[] fileData = buffer.toByteArray();
+				BufferedImage b = ImageIO.read(in);
+
+				Graphics2D g = b.createGraphics();
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
+				g.setColor(new Color(color));
+				g.fillRect(0, 0, b.getWidth(), b.getHeight());
+
+				ImageIO.write(b, "PNG", dataBuffer);
+			}
+			catch (IOException e)
+			{
+				normalFile = true;
+				e.printStackTrace();
+			}
+		}
+
+		if (normalFile)
+		{
+			// Read inputstream into a byte[]
+
+			int numBytesRead;
+			byte[] data = new byte[16384];
+
+			while ((numBytesRead = in.read(data, 0, data.length)) != -1)
+				dataBuffer.write(data, 0, numBytesRead);
+		}
+
+		dataBuffer.flush();
+		byte[] fileData = dataBuffer.toByteArray();
 
 		// Make sure the file isn't too big to send
 		if (fileData.length > Integer.MAX_VALUE)

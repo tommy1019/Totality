@@ -21,7 +21,14 @@ public class WebServer extends Thread
 		}
 		catch (BindException e)
 		{
-			System.err.println("[Totality Server] Error administrator permissions needed to run Totality on port 80. Read the FAQs for more info.");
+			if (e.getMessage().equals("Address already in use (Bind failed)"))
+			{
+				System.err.println("[Totality Server] Port already in use, perhaps another instance of Totality is already running.");
+			}
+			else
+			{
+				System.err.println("[Totality Server] Error administrator permissions needed to run Totality on port 80. Read the FAQs for more info.");
+			}
 			e.printStackTrace();
 			System.exit(1);
 		}

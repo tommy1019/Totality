@@ -120,7 +120,7 @@
 						break;
 					case "BUTTON":
 						console.log("Recieved button: " + elements[i].id);
-						controllerElement = createButton(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height);
+						controllerElement = createButton(elements[i].id, elements[i].x, elements[i].y, elements[i].width, elements[i].height, elements[i].color, elements[i].alpha);
 						break;
 					case "TEXTINPUT":
 						console.log("Received textinput: " + elements[i].id);
@@ -231,7 +231,7 @@
 		}
 
 		//Programatically creates a button with the given id and adds it to the given context
-		function createButton(buttonId, xPos, yPos, width, height)
+		function createButton(buttonId, xPos, yPos, width, height, color, alpha)
 		{
 			//Calculate absolute position and size of the button
 			var imgWidth = width * screenWidth;
@@ -274,7 +274,8 @@
 			
 			var context = canvas.getContext('2d');
 			context.imageSmoothingQuality = "medium";
-			context.drawImage(buttonImg, 0, 0, imgWidth, imgHeight);
+			
+			loadImage(("button.png?color=" + color + "&alpha=" + alpha), function(img) {context.drawImage(img, 0, 0, imgWidth, imgHeight);});
 			contexts[buttonId] = context;
 			
 			// Adds touch and mouse listeners to each button
@@ -566,10 +567,14 @@
 			return true;
 		}
 		
-		function loadImage(src)
+		function loadImage(src, callback)
 		{
 			var newImg = new Image();
 			newImg.src = src;
+			newImg.onload = function()
+			{
+				callback(newImg);
+			}
 			return newImg;
 		}
 		
